@@ -1,0 +1,181 @@
+﻿
+@model CPCOrderBooking
+@{
+    ViewBag.Title = "Order Booking Details";
+    var details = ViewBag.Details as List<Vew_Orderbookings>;
+    var annexureIDetails = ViewBag.AnnexureIDetails as List<Vew_CPCAnnexureI>;
+}
+
+<style>
+    .field-validation-error {
+        color: red;
+    }
+</style>
+<form id="lead-frm" class="user-Profile" method="post" enctype="multipart/form-data">
+
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="btn-group" role="group">
+                <a href="javascript://" onclick="window.history.back()" class="btn btn-default"><i class="fa fa-close"></i> Cancel / Back</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4> @ViewBag.Title </h4>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Order Number</label>
+                                        <div class="col-sm-8">
+                                            <label class="label label-primary">@Model.OrderNo</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-3 horizontal-label"> Date</label>
+                                        <div class="col-sm-9">
+                                            <label class="label label-primary">@Model.Date.ToString(Constants.DATE_FORMAT_CLIENT_SIDE)</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-5 text-left horizontal-label">Order Status</label>
+                                        <div class="col-sm-7">
+                                            @if (Model.Status == (int)AnnexureStatus.Sorted)
+                                            {
+                                                <label class="label label-primary">Cash Sorted</label> <br />
+                                            }
+                                            else if (Model.Status == (int)AnnexureStatus.Approved)
+                                            {
+                                                <label class="label label-primary">Approved</label>
+                                            }
+                                            else if (Model.Status == (int)AnnexureStatus.Completed)
+                                            {
+                                                <label class="label label-success">Completed</label>
+                                            }
+                                            else if (Model.Status == (int)AnnexureStatus.PendingDelivery)
+                                            {
+                                                <label class="label label-warning">Pending Delivery</label>
+                                            }
+                                            else if (Model.Status == (int)AnnexureStatus.Delivered)
+                                            {
+                                                <label class="label label-success"> Delivered</label>
+                                            }
+                                            else
+                                            {
+                                                <label class="label label-info">Inprocess</label>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Collection Branch</label>
+                                        <div class="col-sm-8">
+                                            <label class="label label-primary">@details.FirstOrDefault().CollectionBranchName</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-3 horizontal-label">Delivery Branch</label>
+                                        <div class="col-sm-9">
+                                            <label class="label label-primary">@details.FirstOrDefault().DeliveryBranchName</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">To be Billed Branch</label>
+                                        <div class="col-sm-8">
+                                            <label class="label label-primary">@details.FirstOrDefault().BilledBranchName</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row tb-padding">
+                        <table id="Orderbooking" class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Sr No</th>
+                                    @*<th>Cash Processing Cell</th>*@
+                                    @*<th>Branch</th>*@
+                                    <th>Denomination</th>
+                                    <th>No. Of Bundles</th>
+                                    <th>Total Amount</th>
+                                    @*<th>Pickup Point</th>
+                                    <th>Delivery Point</th>*@
+                                    @if (annexureIDetails != null)
+                                    {
+                                        <th>Seal No</th>
+                                        <th>Shipment Receipt</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    if (details != null)
+                                    {
+                                        int i = 1;
+                                        foreach (var item in details)
+                                        {
+                                            <tr>
+                                                <td>@i</td>
+                                                @*<td>@item.CashProcessingCellTitle</td>*@
+                                                @*<td>@($"{item.BranchCode} - {item.BranchName}")</td>*@
+                                                <td>@item.DenominationTitle</td>
+                                                <td>@item.NoOfBundles</td>
+                                                <td>@item.TotalAmount</td>
+                                                @if (annexureIDetails != null && annexureIDetails.Count > 0)
+                                                {
+                                                    <td>@(annexureIDetails.Where(y => y.ProjectBranchId == item.ProjectBranchId).FirstOrDefault().SealNo != null ? annexureIDetails.Where(y => y.ProjectBranchId == item.ProjectBranchId).FirstOrDefault().SealNo : "")</td>
+                                                    <td>@(annexureIDetails.Where(y => y.ProjectBranchId == item.ProjectBranchId).FirstOrDefault().ShipmentReciptNo != null ? annexureIDetails.Where(y => y.ProjectBranchId == item.ProjectBranchId).FirstOrDefault().ShipmentReciptNo : "")</td>
+                                                }
+
+
+                                            </tr>
+                                            i++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr colspan="6">
+                                            <td>No Details Found</td>
+                                        </tr>
+                                    }
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="btn-group" role="group">
+                <a href="javascript://" onclick="window.history.back()" class="btn btn-default"><i class="fa fa-close"></i> Cancel / Back</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+

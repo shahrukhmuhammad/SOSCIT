@@ -1,0 +1,938 @@
+﻿
+@model CPCVaultConsolidated
+@{
+    var queryId = ViewContext.RouteData.Values["Id"];
+    ViewBag.Title = (queryId == null ? "Add New Vault Record" : "Edit Vault Record");
+    var denomList = ViewBag.DenominationList as List<CPCDenomination>;
+    var employeeList = ViewBag.EmployeeList as List<CPCEmployee>;
+}
+<style>
+    .panel-items {
+        padding-right: 30px;
+    }
+
+    .d-t-a {
+        text-decoration: none !important;
+    }
+</style>
+<form id="lead-frm" class="user-Profile" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(x => x.Id)
+
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="btn-group" role="group">
+                <a href="javascript://" onclick="window.history.back()" class="btn btn-default"><i class="fa fa-close"></i> Cancel / Back</a>
+                <button type="submit" id="submit" class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4> Vault Consolidate </h4>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Order Number</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.OrderNumber, new { @class = "form-control input-sm", @required = "required", @readonly = "readonly" })
+                                            @Html.ValidationMessageFor(m => m.OrderNumber)
+                                            @Html.HiddenFor(x => x.OrderBookingId)
+                                            <a href="javascript://" class="btn btn-sm btn-primary addNewCompany"><i class="fa fa-plus"></i> Select Order</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Order Number</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.SerialNumber, new { @class = "form-control input-sm", @type = "number", @required = "required", @autofocus = "true" })
+                                            <span class="duplicate text-danger"></span>
+                                            @Html.ValidationMessageFor(m => m.SerialNumber)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-3 horizontal-label">Date</label>
+                                        <div class="col-sm-9">
+                                            <input name="Date" id="Date" class="form-control input-sm datePicker" type="text" value="@Model.Date.ToShortDateString()" readonly="readonly" required autocomplete="off">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Client/Branch</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control input-sm" id="ProjectBranch" readonly />
+                                            @Html.HiddenFor(x => x.ProjectBranchId)
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">City</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control input-sm" id="CityName" readonly />
+                                            @Html.HiddenFor(x => x.CityId)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="panel-group" id="accordion">
+
+                            <div class="panel panel-default" id="10" style="display:none;">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="d-t-a">
+                                            <span class="fa fa-money text-info"></span>
+                                            <span class="panel-items">Denomination: Rs.10/-</span>
+                                            <span class="panel-items">Volume in Bundles: <span id="tenDenomBundle"> </span></span>
+                                            <span class="panel-items">Amount: <span id="tenDenomAmount"> </span></span>
+                                            <span class="panel-items">Seal No: <span id="tenDenomSeal"></span></span>
+                                            <span class="glyphicon glyphicon-chevron-up pull-right"></span>
+                                        </a>
+                                    </h4>
+                                    <div>
+                                        <!-- Values For CPCVaultConsolidatedDetail -->
+                                        <input type="hidden" name="CPCVaultConsolidatedDetail[0].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 10).FirstOrDefault().Id)" />
+                                        <input id="numberOfPacketsThree" type="hidden" value="0" name="CPCVaultConsolidatedDetail[0].NumberOfBundles" class="form-control input-sm inp totalfinalNumber clearField" />
+                                        <input id="totalValueThree" type="hidden" value="0" name="CPCVaultConsolidatedDetail[0].TotalValue" class="form-control input-sm clearField" />
+                                        <input id="SealNoThree" type="hidden" value="0" name="CPCVaultConsolidatedDetail[0].SealNo" class="form-control input-sm clearField" readonly />
+                                    </div>
+                                </div>
+                                <div id="collapseOne" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <!-- Panel Indexer -->
+                                            <div class="col-sm-12" id="panelOne" data-id="0">
+                                                <div class="row" id="panelOneinnerRow1" data-id="1">
+                                                    <div class="col-sm-3">
+                                                        <input type="hidden" name="CPCVaultConsolidatedBundle[0].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 10).FirstOrDefault().Id)" />
+                                                        <input id="inptenOrderbookingId" type="hidden" name="CPCVaultConsolidatedBundle[0].OrderBookingId" />
+
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-3 text-left horizontal-label">Sorter</label>
+                                                            <div class="col-sm-9">
+                                                                <select id="inptenSorter0" name="CPCVaultConsolidatedBundle[0].CPCVaultConsolidatedBundlesDetails[0].SorterId" class="form-control input-sm select2 clearField">
+                                                                    <option> - Select - </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-6 text-left horizontal-label">Volume in Bundles</label>
+                                                            <div class="col-sm-6">
+                                                                <input data-denom="10" id="inptenDenomBundle0" type="number" class="form-control input-sm inp totalfinalNumber clearField" name="CPCVaultConsolidatedBundle[0].CPCVaultConsolidatedBundlesDetails[0].NumberOfBundles" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-6 text-left horizontal-label">Assigned Amount</label>
+                                                            <div class="col-sm-6">
+                                                                <input id="inptenDenomAmount0" type="number" class="form-control input-sm" name="CPCVaultConsolidatedBundle[0].CPCVaultConsolidatedBundlesDetails[0].Amount" readonly="readonly" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <button class="btn btn-primary btn-sm btn-custom" data-denom="10" data-id="panelOneinnerRow" type="button" id="AddNewRow" title="Add Sorter"><i class="fa fa-plus"></i> Add Sorter</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default" id="20" style="display:none;">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="d-t-a">
+                                            <span class="fa fa-money text-info"></span>
+                                            <span class="panel-items">Denomination: Rs.20/-</span>
+                                            <span class="panel-items">Volume in Bundles: <span id="twentyDenomBundle"> </span></span>
+                                            <span class="panel-items">Amount: <span id="twentyDenomAmount"> </span></span>
+                                            <span class="panel-items">Seal No: <span id="twentyDenomSeal"></span></span>
+                                            <span class="glyphicon glyphicon-chevron-up pull-right"></span>
+                                        </a>
+                                    </h4>
+                                    <div>
+                                        <!-- Values For CPCVaultConsolidatedDetail -->
+                                        <input type="hidden" name="CPCVaultConsolidatedDetail[1].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 20).FirstOrDefault().Id)" />
+                                        <input id="numberOfPacketsFour" type="hidden" value="0" name="CPCVaultConsolidatedDetail[1].NumberOfBundles" class="form-control input-sm inp totalfinalNumber clearField" />
+                                        <input id="totalValueFour" type="hidden" value="0" name="CPCVaultConsolidatedDetail[1].TotalValue" class="form-control input-sm clearField" />
+                                        <input id="SealNoFour" type="hidden" value="0" name="CPCVaultConsolidatedDetail[1].SealNo" class="form-control input-sm clearField" readonly />
+                                    </div>
+                                </div>
+                                <div id="collapseTwo" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <!-- Panel Indexer -->
+                                            <div class="col-sm-12" id="panelTwo" data-id="1">
+                                                <!-- Row Counter -->
+                                                <div class="row" id="panelTwoinnerRow1" data-id="1">
+                                                    <div class="col-sm-3">
+                                                        <input type="hidden" name="CPCVaultConsolidatedBundle[1].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 20).FirstOrDefault().Id)" />
+                                                        <input id="inptenOrderbookingId" type="hidden" name="CPCVaultConsolidatedBundle[1].OrderBookingId" />
+
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-3 text-left horizontal-label">Sorter</label>
+                                                            <div class="col-sm-9">
+                                                                <select id="inptwentySorter0" name="CPCVaultConsolidatedBundle[1].CPCVaultConsolidatedBundlesDetails[0].SorterId" class="form-control input-sm select2 clearField">
+                                                                    <option> - Select - </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-6 text-left horizontal-label">Volume in Bundles</label>
+                                                            <div class="col-sm-6">
+                                                                <input data-denom="20" id="inptwentyDenomBundle0" type="number" class="form-control input-sm inp totalfinalNumber clearField" name="CPCVaultConsolidatedBundle[1].CPCVaultConsolidatedBundlesDetails[0].NumberOfBundles" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-6 text-left horizontal-label">Assigned Amount</label>
+                                                            <div class="col-sm-6">
+                                                                <input id="inptwentyDenomAmount0" type="number" class="form-control input-sm" name="CPCVaultConsolidatedBundle[1].CPCVaultConsolidatedBundlesDetails[0].Amount" readonly="readonly" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <button class="btn btn-primary btn-sm btn-custom" data-denom="20" data-id="panelTwoinnerRow" type="button" id="AddNewRow" title="Add Sorter"><i class="fa fa-plus"></i> Add Sorter</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default" id="50" style="display:none;">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" class="d-t-a">
+                                            <span class="fa fa-money text-info"></span>
+                                            <span class="panel-items">Denomination: Rs.50/-</span>
+                                            <span class="panel-items">Volume in Bundles: <span id="fiftyDenomBundle"> </span></span>
+                                            <span class="panel-items">Amount: <span id="fiftyDenomAmount"> </span></span>
+                                            <span class="panel-items">Seal No: <span id="fiftyDenomSeal"></span></span>
+                                            <span class="glyphicon glyphicon-chevron-up pull-right"></span>
+                                        </a>
+                                    </h4>
+                                    <div>
+                                        <!-- Values For CPCVaultConsolidatedDetail -->
+                                        <input type="hidden" name="CPCVaultConsolidatedDetail[2].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 50).FirstOrDefault().Id)" />
+                                        <input id="numberOfPacketsFive" type="hidden" value="0" name="CPCVaultConsolidatedDetail[2].NumberOfBundles" class="form-control input-sm inp totalfinalNumber clearField" />
+                                        <input id="totalValueFive" type="hidden" value="0" name="CPCVaultConsolidatedDetail[2].TotalValue" class="form-control input-sm clearField" />
+                                        <input id="SealNoFive" type="hidden" value="0" name="CPCVaultConsolidatedDetail[2].SealNo" class="form-control input-sm clearField" readonly />
+                                    </div>
+                                </div>
+                                <div id="collapseThree" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <!-- Panel Indexer -->
+                                            <div class="col-sm-12" id="panelThree" data-id="2">
+                                                <!-- Row Counter -->
+                                                <div class="row" id="panelThreeinnerRow1" data-id="1">
+                                                    <div class="col-sm-3">
+                                                        <input type="hidden" name="CPCVaultConsolidatedBundle[2].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 50).FirstOrDefault().Id)" />
+                                                        <input id="inptenOrderbookingId" type="hidden" name="CPCVaultConsolidatedBundle[2].OrderBookingId" />
+
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-3 text-left horizontal-label">Sorter</label>
+                                                            <div class="col-sm-9">
+                                                                <select id="inpfiftySorter0" name="CPCVaultConsolidatedBundle[2].CPCVaultConsolidatedBundlesDetails[0].SorterId" class="form-control input-sm select2 clearField">
+                                                                    <option> - Select - </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-6 text-left horizontal-label">Volume in Bundles</label>
+                                                            <div class="col-sm-6">
+                                                                <input data-denom="50" id="inpfiftyDenomBundle0" type="number" class="form-control input-sm inp totalfinalNumber clearField" name="CPCVaultConsolidatedBundle[2].CPCVaultConsolidatedBundlesDetails[0].NumberOfBundles" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-6 text-left horizontal-label">Assigned Amount</label>
+                                                            <div class="col-sm-6">
+                                                                <input id="inpfiftyDenomAmount0" type="number" class="form-control input-sm" name="CPCVaultConsolidatedBundle[2].CPCVaultConsolidatedBundlesDetails[0].Amount" readonly="readonly" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <button class="btn btn-primary btn-sm btn-custom" data-denom="50" data-id="panelThreeinnerRow" type="button" id="AddNewRow" title="Add Sorter"><i class="fa fa-plus"></i> Add Sorter</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default" id="100" style="display:none;">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" class="d-t-a">
+                                            <span class="fa fa-money text-info"></span>
+                                            <span class="panel-items">Denomination: Rs.100/-</span>
+                                            <span class="panel-items">Volume in Bundles: <span id="hundredDenomBundle"> </span></span>
+                                            <span class="panel-items">Amount: <span id="hundredDenomAmount"> </span></span>
+                                            <span class="panel-items">Seal No: <span id="hundredDenomSeal"></span></span>
+                                            <span class="glyphicon glyphicon-chevron-up pull-right"></span>
+                                        </a>
+                                    </h4>
+                                    <div>
+                                        <!-- Values For CPCVaultConsolidatedDetail -->
+                                        <input type="hidden" name="CPCVaultConsolidatedDetail[3].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 100).FirstOrDefault().Id)" />
+                                        <input id="numberOfPacketsSix" type="hidden" value="0" name="CPCVaultConsolidatedDetail[3].NumberOfBundles" class="form-control input-sm inp totalfinalNumber clearField" />
+                                        <input id="totalValueSix" type="hidden" value="0" name="CPCVaultConsolidatedDetail[3].TotalValue" class="form-control input-sm clearField" />
+                                        <input id="SealNoSix" type="hidden" value="0" name="CPCVaultConsolidatedDetail[3].SealNo" class="form-control input-sm clearField" readonly />
+                                    </div>
+                                </div>
+                                <div id="collapseFour" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <!-- Panel Indexer -->
+                                            <div class="col-sm-12" id="panelFour" data-id="3">
+                                                <!-- Row Counter -->
+                                                <div class="row" id="panelFourinnerRow1" data-id="1">
+                                                    <div class="col-sm-3">
+                                                        <input type="hidden" name="CPCVaultConsolidatedBundle[3].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 100).FirstOrDefault().Id)" />
+                                                        <input id="inptenOrderbookingId" type="hidden" name="CPCVaultConsolidatedBundle[3].OrderBookingId" />
+
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-3 text-left horizontal-label">Sorter</label>
+                                                            <div class="col-sm-9">
+                                                                <select id="inphundredSorter0" name="CPCVaultConsolidatedBundle[3].CPCVaultConsolidatedBundlesDetails[0].SorterId" class="form-control input-sm select2 clearField">
+                                                                    <option> - Select - </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-6 text-left horizontal-label">Volume in Bundles</label>
+                                                            <div class="col-sm-6">
+                                                                <input data-denom="100" id="inphundredDenomBundle0" type="number" class="form-control input-sm inp totalfinalNumber clearField" name="CPCVaultConsolidatedBundle[3].CPCVaultConsolidatedBundlesDetails[0].NumberOfBundles" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-6 text-left horizontal-label">Assigned Amount</label>
+                                                            <div class="col-sm-6">
+                                                                <input id="inphundredDenomAmount0" type="number" class="form-control input-sm" name="CPCVaultConsolidatedBundle[3].CPCVaultConsolidatedBundlesDetails[0].Amount" readonly="readonly" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <button class="btn btn-primary btn-sm btn-custom" data-denom="100" data-id="panelFourinnerRow" type="button" id="AddNewRow" title="Add Sorter"><i class="fa fa-plus"></i> Add Sorter</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default" id="500" style="display:none;">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" class="d-t-a">
+                                            <span class="fa fa-money text-info"></span>
+                                            <span class="panel-items">Denomination: Rs.500/-</span>
+                                            <span class="panel-items">Volume in Bundles: <span id="fiveHundredDenomBundle"> </span></span>
+                                            <span class="panel-items">Amount: <span id="fiveHundredDenomAmount"> </span></span>
+                                            <span class="panel-items">Seal No: <span id="fiveHundredDenomSeal"></span></span>
+                                            <span class="glyphicon glyphicon-chevron-up pull-right"></span>
+                                        </a>
+                                    </h4>
+                                    <div>
+                                        <!-- Values For CPCVaultConsolidatedDetail -->
+                                        <input type="hidden" name="CPCVaultConsolidatedDetail[4].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 500).FirstOrDefault().Id)" />
+                                        <input id="numberOfPacketsSeven" type="hidden" value="0" name="CPCVaultConsolidatedDetail[4].NumberOfBundles" class="form-control input-sm inp totalfinalNumber clearField" />
+                                        <input id="totalValueSeven" type="hidden" value="0" name="CPCVaultConsolidatedDetail[4].TotalValue" class="form-control input-sm clearField" />
+                                        <input id="SealNoSeven" type="hidden" value="0" name="CPCVaultConsolidatedDetail[4].SealNo" class="form-control input-sm clearField" readonly />
+                                    </div>
+                                </div>
+                                <div id="collapseFive" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <!-- Panel Indexer -->
+                                            <div class="col-sm-12" id="panelFour" data-id="4">
+                                                <!-- Row Counter -->
+                                                <div class="row" id="panelFiveinnerRow1" data-id="1">
+                                                    <div class="col-sm-3">
+                                                        <input type="hidden" name="CPCVaultConsolidatedBundle[4].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 500).FirstOrDefault().Id)" />
+                                                        <input id="inptenOrderbookingId" type="hidden" name="CPCVaultConsolidatedBundle[4].OrderBookingId" />
+
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-3 text-left horizontal-label">Sorter</label>
+                                                            <div class="col-sm-9">
+                                                                <select id="inpfiveHundredSorter0" name="CPCVaultConsolidatedBundle[4].CPCVaultConsolidatedBundlesDetails[0].SorterId" class="form-control input-sm select2 clearField">
+                                                                    <option> - Select - </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-6 text-left horizontal-label">Volume in Bundles</label>
+                                                            <div class="col-sm-6">
+                                                                <input data-denom="500" id="inpfiveHundredDenomBundle0" type="number" class="form-control input-sm inp totalfinalNumber clearField" name="CPCVaultConsolidatedBundle[4].CPCVaultConsolidatedBundlesDetails[0].NumberOfBundles" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-6 text-left horizontal-label">Assigned Amount</label>
+                                                            <div class="col-sm-6">
+                                                                <input id="inpfiveHundredDenomAmount0" type="number" class="form-control input-sm" name="CPCVaultConsolidatedBundle[4].CPCVaultConsolidatedBundlesDetails[0].Amount" readonly="readonly" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <button class="btn btn-primary btn-sm btn-custom" data-denom="500" data-id="panelFiveinnerRow" type="button" id="AddNewRow" title="Add Sorter"><i class="fa fa-plus"></i> Add Sorter</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default" id="1000" style="display:none;">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseSix" class="d-t-a">
+                                            <span class="fa fa-money text-info"></span>
+                                            <span class="panel-items">Denomination: Rs.1000/-</span>
+                                            <span class="panel-items">Volume in Bundles: <span id="thousandDenomBundle"> </span></span>
+                                            <span class="panel-items">Amount: <span id="thousandDenomAmount"> </span></span>
+                                            <span class="panel-items">Seal No: <span id="thousandDenomSeal"></span></span>
+                                            <span class="glyphicon glyphicon-chevron-up pull-right"></span>
+                                        </a>
+                                    </h4>
+                                    <div>
+                                        <!-- Values For CPCVaultConsolidatedDetail -->
+                                        <input type="hidden" name="CPCVaultConsolidatedDetail[5].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 1000).FirstOrDefault().Id)" />
+                                        <input id="numberOfPacketsEight" type="hidden" value="0" name="CPCVaultConsolidatedDetail[5].NumberOfBundles" class="form-control input-sm inp totalfinalNumber clearField" />
+                                        <input id="totalValueEight" type="hidden" value="0" name="CPCVaultConsolidatedDetail[5].TotalValue" class="form-control input-sm clearField" />
+                                        <input id="SealNoEight" type="hidden" value="0" name="CPCVaultConsolidatedDetail[5].SealNo" class="form-control input-sm clearField" readonly />
+                                    </div>
+                                </div>
+                                <div id="collapseSix" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <!-- Panel Indexer -->
+                                            <div class="col-sm-12" id="panelFour" data-id="5">
+                                                <!-- Row Counter -->
+                                                <div class="row" id="panelSixinnerRow1" data-id="1">
+                                                    <div class="col-sm-3">
+                                                        <input type="hidden" name="CPCVaultConsolidatedBundle[5].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 1000).FirstOrDefault().Id)" />
+                                                        <input id="inptenOrderbookingId" type="hidden" name="CPCVaultConsolidatedBundle[5].OrderBookingId" />
+
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-3 text-left horizontal-label">Sorter</label>
+                                                            <div class="col-sm-9">
+                                                                <select id="inpthousandSorter0" name="CPCVaultConsolidatedBundle[5].CPCVaultConsolidatedBundlesDetails[0].SorterId" class="form-control input-sm select2 clearField">
+                                                                    <option> - Select - </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-6 text-left horizontal-label">Volume in Bundles</label>
+                                                            <div class="col-sm-6">
+                                                                <input data-denom="1000" id="inpthousandDenomBundle0" type="number" class="form-control input-sm inp totalfinalNumber clearField" name="CPCVaultConsolidatedBundle[5].CPCVaultConsolidatedBundlesDetails[0].NumberOfBundles" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-6 text-left horizontal-label">Assigned Amount</label>
+                                                            <div class="col-sm-6">
+                                                                <input id="inpthousandDenomAmount0" type="number" class="form-control input-sm" name="CPCVaultConsolidatedBundle[5].CPCVaultConsolidatedBundlesDetails[0].Amount" readonly="readonly" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <button class="btn btn-primary btn-sm btn-custom" data-denom="1000" data-id="panelSixinnerRow" type="button" id="AddNewRow" title="Add Sorter"><i class="fa fa-plus"></i> Add Sorter</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default" id="5000" style="display:none;">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" class="d-t-a">
+                                            <span class="fa fa-money text-info"></span>
+                                            <span class="panel-items">Denomination: Rs.5000/-</span>
+                                            <span class="panel-items">Volume in Bundles: <span id="fiveThousandDenomBundle"> </span></span>
+                                            <span class="panel-items">Amount: <span id="fiveThousandDenomAmount"> </span></span>
+                                            <span class="panel-items">Seal No: <span id="fiveThousandDenomSeal"></span></span>
+                                            <span class="glyphicon glyphicon-chevron-up pull-right"></span>
+                                        </a>
+                                    </h4>
+                                    <div>
+                                        <!-- Values For CPCVaultConsolidatedDetail -->
+                                        <input type="hidden" name="CPCVaultConsolidatedDetail[6].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 5000).FirstOrDefault().Id)" />
+                                        <input id="numberOfPacketsNine" type="hidden" value="0" name="CPCVaultConsolidatedDetail[6].NumberOfBundles" class="form-control input-sm inp totalfinalNumber clearField" />
+                                        <input id="totalValueNine" type="hidden" value="0" name="CPCVaultConsolidatedDetail[6].TotalValue" class="form-control input-sm clearField" />
+                                        <input id="SealNoNine" type="hidden" value="0" name="CPCVaultConsolidatedDetail[6].SealNo" class="form-control input-sm clearField" readonly />
+                                    </div>
+                                </div>
+                                <div id="collapseSeven" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <!-- Panel Indexer -->
+                                            <div class="col-sm-12" id="panelFour" data-id="6">
+                                                <!-- Row Counter -->
+                                                <div class="row" id="panelSeveninnerRow1" data-id="1">
+                                                    <div class="col-sm-3">
+                                                        <input type="hidden" name="CPCVaultConsolidatedBundle[6].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 5000).FirstOrDefault().Id)" />
+                                                        <input id="inptenOrderbookingId" type="hidden" name="CPCVaultConsolidatedBundle[6].OrderBookingId" />
+
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-3 text-left horizontal-label">Sorter</label>
+                                                            <div class="col-sm-9">
+                                                                <select id="inpfiveThousandSorter0" name="CPCVaultConsolidatedBundle[6].CPCVaultConsolidatedBundlesDetails[0].SorterId" class="form-control input-sm select2 clearField">
+                                                                    <option> - Select - </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-6 text-left horizontal-label">Volume in Bundles</label>
+                                                            <div class="col-sm-6">
+                                                                <input data-denom="5000" id="inpfiveThousandDenomBundle0" type="number" class="form-control input-sm inp totalfinalNumber clearField" name="CPCVaultConsolidatedBundle[6].CPCVaultConsolidatedBundlesDetails[0].NumberOfBundles" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-6 text-left horizontal-label">Assigned Amount</label>
+                                                            <div class="col-sm-6">
+                                                                <input id="inpfiveThousandDenomAmount0" type="number" class="form-control input-sm" name="CPCVaultConsolidatedBundle[6].CPCVaultConsolidatedBundlesDetails[0].Amount" readonly="readonly" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-2">
+                                                        <button class="btn btn-primary btn-sm btn-custom" data-denom="5000" data-id="panelSeveninnerRow" type="button" id="AddNewRow" title="Add Sorter"><i class="fa fa-plus"></i> Add Sorter</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="btn-group" role="group">
+                <a href="javascript://" onclick="window.history.back()" class="btn btn-default"><i class="fa fa-close"></i> Cancel / Back</a>
+                <button type="submit" id="submit" class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
+            </div>
+        </div>
+    </div>
+    <select id="listEmployee" style="display:none;"></select>
+</form>
+<div class="modal fade" id="addNewCompany-Modal" tabindex="-1" role="dialog" aria-labelledby="addNewCompany-Modal" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+    </div>
+</div>
+
+
+@section scripts{
+
+
+    <script type="text/javascript">
+        (function ($) {
+            'use strict';
+            $('#collapseOne, #collapseTwo, #collapseThree, #collapseFour, #collapseFive, #collapseSix, #collapseSeven').on({
+                'show.bs.collapse': function () {
+                    $('a[href="#' + this.id + '"] span.glyphicons-chevron-down')
+                        .removeClass('glyphicons-chevron-down')
+                        .addClass('glyphicons-chevron-up');
+                },
+                'hide.bs.collapse': function () {
+                    $('a[href="#' + this.id + '"] span.glyphicon-chevron-up')
+                        .removeClass('glyphicons-chevron-up')
+                        .addClass('glyphicons-chevron-down');
+                }
+            });
+        })(jQuery);
+
+        function loadEmployees(selecter) {
+            var options = $("#listEmployee > option").clone();
+            $('#' + selecter + '').append(options);
+        }
+
+        var orderId;
+        function getOrderId(Id) {
+            $('#OrderId').val(Id);
+            loadOrderData(Id);
+            $('#addNewCompany-Modal').modal('toggle');
+        }
+        function hidePanels() {
+            $("#10").hide();
+            $("#20").hide();
+            $("#50").hide();
+            $("#100").hide();
+            $("#500").hide();
+            $("#1000").hide();
+            $("#5000").hide();
+        }
+        function loadOrderData(Id) {
+            if (Id) {
+                $.get('/CPC/VaultCustodian/GetVaultCustodian/' + Id, function (response) {
+                    if (response) {
+                        hidePanels();
+                        $('#ProjectBranch').val(response.BranchName);
+                        $('#ProjectBranchId').val(response.ProjectBranchId);
+                        $('#CityId').val(response.CityId);
+                        $('#CityName').val(response.CityName);
+                        $('#OrderNumber').val(response.OrderNumber);
+                        $('#OrderBookingId').val(response.OrderBookingId);
+
+                        //console.log(response.Details);
+                        $.each(response.Details, function (index, item) {
+                            //debugger;
+                            if (item.DenominationTitle == '10') {
+                                $("#numberOfPacketsThree").val(item.NumberOfBundles);
+                                $("#totalValueThree").val(item.TotalValue);
+                                $("#SealNoThree").val(item.SealNo);
+
+                                $("#tenDenomBundle").text(item.NumberOfBundles);
+                                $("#tenDenomAmount").text(item.TotalValue);
+                                $("#tenDenomSeal").text(item.SealNo);
+                                $("#inptenDenomBundle0").val(item.NumberOfBundles);
+                                $("#inptenDenomAmount0").val(item.TotalValue);
+                                loadEmployees('inptenSorter0');
+
+                                $("#10").show();
+                            }
+                            else if (item.DenominationTitle == '20') {
+                                $("#numberOfPacketsFour").val(item.NumberOfBundles);
+                                $("#totalValueFour").val(item.TotalValue);
+                                $("#SealNoFour").val(item.SealNo);
+
+                                $("#twentyDenomBundle").text(item.NumberOfBundles);
+                                $("#twentyDenomAmount").text(item.TotalValue);
+                                $("#twentyDenomSeal").text(item.SealNo);
+
+                                $("#inptwentyDenomBundle0").val(item.NumberOfBundles);
+                                $("#inptwentyDenomAmount0").val(item.TotalValue);
+                                loadEmployees('inptwentySorter0');
+                                $("#20").show();
+
+                            }
+                            else if (item.DenominationTitle == '50') {
+                                $("#numberOfPacketsFive").val(item.NumberOfBundles);
+                                $("#totalValueFive").val(item.TotalValue);
+                                $("#SealNoFive").val(item.SealNo);
+
+
+                                $("#fiftyDenomBundle").text(item.NumberOfBundles);
+                                $("#fiftyDenomAmount").text(item.TotalValue);
+                                $("#fiftyDenomSeal").text(item.SealNo);
+
+                                $("#inpfiftyDenomBundle0").val(item.NumberOfBundles);
+                                $("#inpfiftyDenomAmount0").val(item.TotalValue);
+                                loadEmployees('inpfiftySorter0');
+                                $("#50").show();
+
+                            }
+                            else if (item.DenominationTitle == '100') {
+                                $("#numberOfPacketsSix").val(item.NumberOfBundles);
+                                $("#totalValueSix").val(item.TotalValue);
+                                $("#SealNoSix").val(item.SealNo);
+
+                                $("#hundredDenomBundle").text(item.NumberOfBundles);
+                                $("#hundredDenomAmount").text(item.TotalValue);
+                                $("#hundredDenomSeal").text(item.SealNo);
+
+                                $("#inphundredDenomBundle0").val(item.NumberOfBundles);
+                                $("#inphundredDenomAmount0").val(item.TotalValue);
+                                loadEmployees('inphundredSorter0');
+                                $("#100").show();
+                            }
+                            else if (item.DenominationTitle == '500') {
+                                $("#numberOfPacketsSeven").val(item.NumberOfBundles);
+                                $("#totalValueSeven").val(item.TotalValue);
+                                $("#SealNoSeven").val(item.SealNo);
+
+                                $("#fiveHundredDenomBundle").text(item.NumberOfBundles);
+                                $("#fiveHundredDenomAmount").text(item.TotalValue);
+                                $("#fiveHundredDenomSeal").text(item.SealNo);
+
+                                $("#inpfiveHundredDenomBundle0").val(item.NumberOfBundles);
+                                $("#inpfiveHundredDenomAmount0").val(item.TotalValue);
+                                loadEmployees('inpfiveHundredSorter0');
+
+                                $("#500").show();
+                            }
+                            else if (item.DenominationTitle == '1000') {
+                                $("#numberOfPacketsEight").val(item.NumberOfBundles);
+                                $("#totalValueEight").val(item.TotalValue);
+                                $("#SealNoEight").val(item.SealNo);
+
+                                $("#thousandDenomBundle").text(item.NumberOfBundles);
+                                $("#thousandDenomAmount").text(item.TotalValue);
+                                $("#thousandDenomSeal").text(item.SealNo);
+
+                                $("#inpthousandDenomBundle0").val(item.NumberOfBundles);
+                                $("#inpthousandDenomAmount0").val(item.TotalValue);
+                                loadEmployees('inpthousandSorter0');
+                                $("#1000").show();
+                            }
+                            else if (item.DenominationTitle == '5000') {
+                                $("#numberOfPacketsNine").val(item.NumberOfBundles);
+                                $("#totalValueNine").val(item.TotalValue);
+                                $("#SealNoNine").val(item.SealNo);
+
+                                $("#fiveThousandDenomBundle").text(item.NumberOfBundles);
+                                $("#fiveThousandDenomAmount").text(item.TotalValue);
+                                $("#fiveThousandDenomSeal").text(item.SealNo);
+
+                                $("#inpfiveThousandDenomBundle0").val(item.NumberOfBundles);
+                                $("#inpfiveThousandDenomAmount0").val(item.TotalValue);
+                                loadEmployees('inpfiveThousandSorter0');
+                                $("#5000").show();
+                            }
+                        });
+                    }
+                    else {
+                        //$('.duplicate').html('');
+                        //isSubmit = true;
+                    }
+                });
+            }
+        }
+
+        function AddNewRow(panelId, rowCounter, panelIndexer, rowName, denom) {
+            debugger
+            var denomTitle = denomNumberToTitle(denom);
+            rowCounter = parseInt(rowCounter) + 1;
+            if (rowCounter > 1)
+                $('#' + panelId).parent().children().last().after(generateNewRowHtml(rowCounter, panelIndexer, rowName, denom, denomTitle));
+            else
+                $('#' + panelId).after(generateNewRowHtml(rowCounter, panelIndexer, rowName, denom, denomTitle));
+
+            var counterTemp = parseInt(rowCounter) - parseInt(1);
+            loadEmployees('inp' + denomTitle +'Sorter' + counterTemp);
+            $(".select2").select2();
+        }
+
+        function generateNewRowHtml(rowCounter, panelIndexer, rowName, denom, denomTitle) {
+            //debugger
+            var counterTemp = parseInt(rowCounter) - parseInt(1);
+            //alert(counterTemp);
+            var _html = '<div class="row" id="' + rowName+'' + rowCounter + '" data-id="' + rowCounter + '"><div class="col-sm-3"><div class="row form-group">'
+            _html += '<label class="col-sm-3 text-left horizontal-label">Sorter</label><div class="col-sm-9">'
+            _html += '<select id="inp' + denomTitle +'Sorter' + counterTemp + '" name="CPCVaultConsolidatedBundle[' + panelIndexer + '].CPCVaultConsolidatedBundlesDetails[' + counterTemp + '].SorterId" class="form-control input-sm select2 clearField"><option> - Select - </option></select></div></div></div >'
+            _html += '<div class="col-sm-3"><div class="row form-group"><label class="col-sm-6 text-left horizontal-label">Volume in Bundles</label><div class="col-sm-6">'
+            _html += '<input id="inp' + denomTitle +'DenomBundle' + rowCounter + '" data-denom="' + denom +'" type="number" class="form-control input-sm inp totalfinalNumber" name="CPCVaultConsolidatedBundle[' + panelIndexer + '].CPCVaultConsolidatedBundlesDetails[' + counterTemp + '].NumberOfBundles" required="required" /></div></div></div><div class="col-sm-4">'
+            _html += '<div class="row form-group"><label class="col-sm-6 text-left horizontal-label">Assigned Amount</label><div class="col-sm-6">'
+            _html += '<input id="inp' + denomTitle +'DenomAmount' + rowCounter + '" type="number" class="form-control input-sm" name="CPCVaultConsolidatedBundle[' + panelIndexer + '].CPCVaultConsolidatedBundlesDetails[' + counterTemp + '].Amount" readonly="readonly" /></div></div></div>'
+            _html += '<div class="col-sm-2"><a href="javascript://" class="btn btn-xs btn-danger btn-removeRow" data-original-title="Delete"><i class="fa fa-trash"></i> Delete</a></div></div>'
+            return _html;
+        }
+
+        function denomNumberToTitle(denomNumber) {
+            var denomTitle = '';
+            switch (parseInt(denomNumber)) {
+                case 10:
+                    denomTitle = "ten";
+                    break;
+                case 20:
+                    denomTitle = "twnety";
+                    break;
+                case 50:
+                    denomTitle = "fifty";
+                    break;
+                case 100:
+                    denomTitle = "hundred";
+                    break;
+                case 500:
+                    denomTitle = "fiveHundred";
+                    break;
+                case 1000:
+                    denomTitle = "thousand";
+                    break;
+                case 5000:
+                    denomTitle = "fiveThousand";
+            }
+            return denomTitle;
+        }
+
+        $(document).ready(function () {
+
+
+
+            $('.btn-custom').click(function (e) {
+                debugger
+                var denom = $(this).attr("data-denom");
+                var rowName = $(this).attr("data-id");
+                var divId = $(this).parent().parent().attr("id");
+                var rowCounter = $(this).parent().parent().parent().children().last().attr("data-id"); //Row Counter
+                var panelIndexer = $(this).parent().parent().parent().attr("data-id"); //Row Counter
+                AddNewRow(divId, rowCounter, panelIndexer, rowName, denom);
+            });
+
+
+            var employeeArray = @Html.Raw(Json.Encode(ViewBag.EmployeeList));
+            generateEmployeeDDL(employeeArray);
+
+            function generateEmployeeDDL(array) {
+                //debugger
+                for (var i = 0; i < array.length; i++) {
+                    $("#listEmployee").append($("<option /> ").val(array[i].Value).text(array[i].Text));
+                }
+            }
+
+            //Add Shipping Company
+            $('.addNewCompany').on('click', function () {
+                $('#loading-mask').show();
+                var target = "";
+                target = "/CPC/VaultCustodian/_VaultCustodianList";
+                // load the url and show modal on success
+                $("#addNewCompany-Modal .modal-dialog").load(target, function () {
+                    $("#addNewCompany-Modal").modal("show");
+                    filterDataTable("#VaultCustodian-dataTable", [0, 1, 2, 3, 4], [5]);
+                    $('#loading-mask').hide();
+                });
+            });
+            //"#DateOfCashReturn"
+            $("#Date").data("DateTimePicker").date(moment('@Model.Date.ToShortDateString()'));
+
+            $(".select2").select2();
+
+            //input fields leave event
+            $(document).on('focusout', '.inp', function (e) {
+                e.preventDefault();
+                //debugger;
+                if ($(this).val()) {
+
+                    var inpId = $(this).attr("id");
+                    denomTitle = $(this).attr("data-denom");
+                    const totalValue = GetTotalVal($(this).val(), denomTitle);
+                    $(this).parent().parent().parent().next('div').find('input').val(totalValue);
+
+                    var divMasterId = $(this).parent().parent().parent().parent().parent().attr("id");
+                    var checktotal = CheckDenomTotal(denomTitle, divMasterId);
+                    if (!checktotal) {
+                        //alert("Assigned Bundles should be less than or equal to total bundles");
+                        //bootbox.confirm("Assigned Bundles should be less than or equal to total bundles");
+                        bootbox.dialog({
+                            message: "Assigned Bundles should be less than or equal to total bundles",
+                            title: "Value Exceeded",
+                            buttons: {
+                                main: {
+                                    label: "Ok",
+                                    className: "btn-danger",
+                                    callback: function () {
+                                        show: false;
+                                        $('#' + inpId).val('');
+                                        //alert($('#' + inpId).val(''));
+                                        //console.log($('#' + inpId))
+                                    }
+                                },
+                            }
+
+                        });
+                    }
+                    ///console.log($('#numberOfPacketsThree').val());
+                }
+                //$('#' + inpId).focus();
+            });
+        });
+
+        function CheckDenomTotal(denomTitle, divMasterId) {
+            var totalBundles = 0;
+            var assignedBundles = 0;
+            //debugger;
+            if (denomTitle == '10') {
+                totalBundles = $('#numberOfPacketsThree').val();
+                return compareTotalDemonNo(divMasterId, assignedBundles, totalBundles);
+            }
+            else if (denomTitle == '20') {
+                totalBundles = $('#numberOfPacketsFour').val();
+                return compareTotalDemonNo(divMasterId, assignedBundles, totalBundles);
+            }
+            else if (denomTitle == '50') {
+                totalBundles = $('#numberOfPacketsFive').val();
+                return compareTotalDemonNo(divMasterId, assignedBundles, totalBundles);
+            }
+            else if (denomTitle == '100') {
+                totalBundles = $('#numberOfPacketsSix').val();
+                return compareTotalDemonNo(divMasterId, assignedBundles, totalBundles);
+            }
+            else if (denomTitle == '500') {
+                totalBundles = $('#numberOfPacketsSeven').val();
+                return compareTotalDemonNo(divMasterId, assignedBundles, totalBundles);
+            }
+            else if (denomTitle == '1000') {
+                totalBundles = $('#numberOfPacketsEight').val();
+                return compareTotalDemonNo(divMasterId, assignedBundles, totalBundles);
+            }
+            else if (denomTitle == '5000') {
+                totalBundles = $('#numberOfPacketsNine').val();
+                return compareTotalDemonNo(divMasterId, assignedBundles, totalBundles);
+            }
+        }
+
+        function compareTotalDemonNo(divMasterId, assignedBundles, totalBundles) {
+            $('#' + divMasterId + ' :input.totalfinalNumber').each(function () {
+                assignedBundles += parseInt($(this).val());
+            });
+            if (assignedBundles > totalBundles)
+                return false;
+            else
+                return true;
+        }
+
+        function GetTotalVal(unsortedValue, denomVal) {
+            const totalVal = parseInt(unsortedValue) * parseInt(denomVal) * 1000;
+            return isNaN(totalVal) ? '0' : totalVal;
+        }
+
+    </script>
+}
+

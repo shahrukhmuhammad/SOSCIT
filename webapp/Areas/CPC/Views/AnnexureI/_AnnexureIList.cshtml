@@ -1,0 +1,73 @@
+﻿@model List<CPCAnnexureI>
+@{
+    var detailsList = ViewBag.DetailsList as List<Vew_CPCAnnexureI>;
+}
+
+<form id="frm" class="form-Modal" method="post" action="~/" enctype="multipart/form-data">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Approved Cash Received</h4>
+        </div>
+        <div class="modal-body">
+            <div class="table-responsive">
+                <table id="AnnexureIBooking-dataTable" class="table table-hover table-striped table-condensed">
+                    <thead>
+                        <tr>
+                            <th><input class="form-control input-sm input-tbl" type="text" placeholder="Order No" id="AnnexureIBooking-dataTable_0" /></th>
+                            <th><input class="form-control input-sm input-tbl" type="text" placeholder="Sr No" id="AnnexureIBooking-dataTable_1" /></th>
+                            <th><input class="form-control input-sm input-tbl" type="text" placeholder="Date" id="AnnexureIBooking-dataTable_2" /></th>
+                            <th><input class="form-control input-sm input-tbl" type="text" placeholder="No Of Bundles" id="AnnexureIBooking-dataTable_3" /></th>
+                            <th><input class="form-control input-sm input-tbl" type="text" placeholder="Total Amount" id="AnnexureIBooking-dataTable_4" /></th>
+                            <th><input class="form-control input-sm input-tbl" type="text" placeholder="Status" id="AnnexureIBooking-dataTable_5" /></th>
+                            <th class="text-center" width="100px">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var x in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @x.OrderNumber
+                                </td>
+                                <td>
+                                    @x.SrNo
+                                </td>
+                                <td>
+                                    @x.DateOfCollection.ToString(Constants.DATE_FORMAT_CLIENT_SIDE)
+                                </td>
+
+                                <td>@(detailsList.Where(ab => ab.Id == x.Id).ToList() != null ? detailsList.Where(ab => ab.Id == x.Id).Sum(y => y.NoOfBundles) : 0)</td>
+                                <td>@(detailsList.Where(ab => ab.Id == x.Id).ToList() != null ? detailsList.Where(ab => ab.Id == x.Id).Sum(y => y.TotalAmount) : 0)</td>
+                                <td>
+                                    @if (x.Status == (int)AnnexureStatus.Inprocess)
+                                    {
+                                        <label class="label label-info">Inprocess</label>
+                                    }
+                                    else if (x.Status == (int)AnnexureStatus.Proceeded)
+                                    {
+                                        <label class="label label-primary">Proceeded</label>
+                                    }
+                                    else
+                                    {
+                                        <label class="label label-success">Completed</label>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-xs" role="group">
+                                        <a onclick="getOrderId('@(x.Id)')" href="javascript://" class="btn btn-primary mg-r" title="Details"><i class="fa fa-check fa-2x"></i> </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer text-right">
+            <div class="btn-group btn-group-sm" role="group">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i> Cancel</button>
+            </div>
+        </div>
+    </div>
+</form>

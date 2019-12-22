@@ -1,0 +1,341 @@
+﻿@model CPCSortedCash
+@{
+    var queryId = ViewContext.RouteData.Values["Id"];
+    ViewBag.Title = (queryId == null ? "Add New Sorted Cash" : "Edit Sorted Cash");
+    //var denomList = ViewBag.DenominationList as List<CPCDenomination>;
+}
+
+<form id="lead-frm" class="user-Profile" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(x => x.Id)
+
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="btn-group" role="group">
+                <a href="javascript://" onclick="window.history.back()" class="btn btn-default"><i class="fa fa-close"></i> Cancel / Back</a>
+                <button type="submit" id="submit" class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4> Sorted Cash </h4>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Order Number</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.OrderNumber, new { @class = "form-control input-sm", @readonly = "readonly", @required = "required" })
+                                            @Html.ValidationMessageFor(m => m.OrderNumber)
+                                            <a href="javascript://" class="btn btn-sm btn-primary addNewCompany"><i class="fa fa-plus"></i> Select Order</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4" style="display:none">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">OrderId</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.OrderBookingId, new { @class = "form-control input-sm", @required = "required", @autofocus = "true", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Serial Number</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.ConsignmentNumber, new { @class = "form-control input-sm", @type = "number", @required = "required", @autofocus = "true", @readonly = "readonly" })
+                                            <span class="duplicate text-danger"></span>
+                                            @Html.ValidationMessageFor(m => m.ConsignmentNumber)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-3 horizontal-label">Date</label>
+                                        <div class="col-sm-9">
+                                            <input name="Date" id="Date" class="form-control input-sm datePicker" type="text" value="@Model.Date.ToShortDateString()" readonly="readonly" required autocomplete="off">
+                                            @Html.ValidationMessageFor(m => m.Date)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Denomination</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.DenominationTitle, new { @class = "form-control input-sm", @type = "number", @required = "required", @autofocus = "true", @readonly = "readonly" })
+                                            <span class="duplicate text-danger"></span>
+                                            @Html.ValidationMessageFor(m => m.DenominationTitle)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4" style="display:none">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Denomination Id</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.DenominationId, new { @class = "form-control input-sm", @required = "required", @autofocus = "true", @readonly = "readonly" })
+                                            <span class="duplicate text-danger"></span>
+                                            @Html.ValidationMessageFor(m => m.DenominationId)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4" style="display:none">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Client/Branch</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.ProjectBranchId, new { @class = "form-control input-sm", @required = "required", @autofocus = "true", @readonly = "readonly" })
+                                            <span class="duplicate text-danger"></span>
+                                            @Html.ValidationMessageFor(m => m.ProjectBranchId)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Client/Branch</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.BranchName, new { @class = "form-control input-sm", @required = "required", @autofocus = "true", @readonly = "readonly" })
+                                            <span class="duplicate text-danger"></span>
+                                            @Html.ValidationMessageFor(m => m.BranchName)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">SealNumber</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.SealNumber, new { @class = "form-control input-sm", @required = "required", @autofocus = "true", @readonly = "readonly" })
+                                            <span class="duplicate text-danger"></span>
+                                            @Html.ValidationMessageFor(m => m.SealNumber)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">City</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.CityName, new { @class = "form-control input-sm", @required = "required", @autofocus = "true", @readonly = "readonly" })
+                                            <span class="duplicate text-danger"></span>
+                                            @Html.ValidationMessageFor(m => m.DenominationTitle)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4" style="display:none">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">City Id</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.CityId, new { @class = "form-control input-sm", @required = "required", @autofocus = "true", @readonly = "readonly" })
+                                            <span class="duplicate text-danger"></span>
+                                            @Html.ValidationMessageFor(m => m.DenominationId)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Total Bundles</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.TotalNumberBundles, new { @class = "form-control input-sm", @type = "number", @required = "required", @autofocus = "true", @readonly = "readonly" })
+                                            <span class="duplicate text-danger"></span>
+                                            @Html.ValidationMessageFor(m => m.TotalNumberBundles)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Total Balance</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.TotalBalance, new { @class = "form-control input-sm", @type = "number", @required = "required", @autofocus = "true", @readonly = "readonly" })
+                                            <span class="duplicate text-danger"></span>
+                                            @Html.ValidationMessageFor(m => m.TotalBalance)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row tb-padding">
+                        <table id="mytableUnsorted" class="table table-striped table-bordered table-hover">
+                            <thead>
+
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="btn-group" role="group">
+                <a href="javascript://" onclick="window.history.back()" class="btn btn-default"><i class="fa fa-close"></i> Cancel / Back</a>
+                <button type="submit" id="submit" class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="modal fade" id="addNewCompany-Modal" tabindex="-1" role="dialog" aria-labelledby="addNewCompany-Modal" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+    </div>
+</div>
+
+@section scripts{
+
+
+
+    <script type="text/javascript">
+
+        var orderId
+        function getOrderId(Id, DenomId) {
+            loadOrderData(Id, DenomId);
+            $('#addNewCompany-Modal').modal('toggle');
+        }
+        function loadOrderData(Id, DenomId) {
+            if (Id) {
+                $.get('/CPC/VaultConsolidated/GetVaultConsolidatedData?Id=' + Id + '&denomId=' + DenomId, function (response) {
+                    if (response) {
+                        $('#OrderNumber').val(response.OrderNumber);
+                        $('#OrderBookingId').val(response.OrderBookingId);
+                        $('#ConsignmentNumber').val(response.SerialNumber);
+                        //$('#Date').val(response.Date);
+                        $('#DenominationTitle').val(response.DenominationTitle);
+                        $('#DenominationId').val(response.DenominationId);
+                        $('#ProjectBranchId').val(response.ProjectBranchId);
+                        $('#BranchName').val(response.BranchName);
+                        $('#SealNumber').val(response.SealNo);
+                        $('#CityName').val(response.CityName);
+                        $('#CityId').val(response.CityId);
+                        $('#TotalBalance').val(response.TotalValue);
+                        var totalNumberBundle = 0;
+
+                        $.each(response.Details, function (index, item) {
+                            debugger;
+                            totalNumberBundle += item.NumberOfBundles;
+                            var branch = generateHtml(index, item, response.DenominationTitle);
+                            $('#mytableUnsorted').append(branch);
+                        });
+                        $('#TotalNumberBundles').val(totalNumberBundle);
+
+                    }
+                });
+            }
+        }
+
+        function generateHtml(index, item, denom) {
+            debugger;
+            var _html = '<thead><tr><td><b> Cash Distribution: Sorter ' + parseInt(parseInt(index) + parseInt(1)) + '</b></td></tr></thead><tbody data-id="' + index + '">'
+            _html += '<tr><td style="display:none"><input type="text" name="CPCSortedCashDetails[' + index + '].SorterId" value="' + item.SorterId + '"  "></td>'
+            _html += '<td><label class="text-left horizontal-label">Sorter Name</label></td>'
+            _html += '<td><input type="text" class="form-control input-sm" value="' + item.Name + '" readonly></td>'
+            _html += '<td><label class="text-left horizontal-label">Assigned Bundles</label></td>'
+            _html += '<td><input type="number" class="form-control input-sm" name="CPCSortedCashDetails[' + index + '].AssignedBundles" value="' + item.NumberOfBundles +'" readonly></td>'
+            var assignedAmount = parseInt(item.NumberOfBundles) * parseInt(denom) * parseInt(1000);
+            _html += '<td><label class="text-left horizontal-label">Assigned Amount</label></td>'
+            _html += '<td><input type="number" class="form-control input-sm" name="CPCSortedCashDetails[' + index + '].AssignedAmount" value="' + assignedAmount + '" readonly></td></tr>'
+
+            _html += '<tr data-id="' + index + '"><td><label class="text-left horizontal-label">Re-issuable</label></td>'
+            _html += '<td><input type="number" id="NumberOfPiecesReIssuable' + index +'" class="form-control input-sm inp" name="CPCSortedCashDetails[' + index + '].NumberOfPiecesReIssuable"></td>'
+            _html += '<td><label class="text-left horizontal-label">Soiled</label></td>'
+            _html += '<td><input type="number" id="NumberOfPiecesSoiled' + index +'" class="form-control input-sm inp" name="CPCSortedCashDetails[' + index + '].NumberOfPiecesSoiled"></td>'
+            _html += '<td><label class="text-left horizontal-label">Machine Rejected</label></td>'
+            _html += '<td><input type="number" id="NumberOfPiecesMachineRejected' + index +'" class="form-control input-sm inp" name="CPCSortedCashDetails[' + index + '].NumberOfPiecesMachineRejected"></td></tr>'
+
+            _html += '<tr data-id="' + index + '"><td><label class="text-left horizontal-label">CounterFeit</label></td>'
+            _html += '<td><input type="number" id="NumberOfPiecesCounterFeit' + index +'" class="form-control input-sm inp" name="CPCSortedCashDetails[' + index + '].NumberOfPiecesCounterFeit"></td>'
+            _html += '<td><label class="text-left horizontal-label">Mismatch</label></td>'
+            _html += '<td><input type="number" id="NumberOfPiecesMismatch' + index +'" class="form-control input-sm inp" name="CPCSortedCashDetails[' + index + '].NumberOfPiecesMismatch"></td>'
+            _html += '<td><label class="text-left horizontal-label">Claim</label></td>'
+            _html += '<td><input type="number" id="NumberOfPiecesClaim' + index +'" class="form-control input-sm inp" name="CPCSortedCashDetails[' + index + '].NumberOfPiecesClaim"></td></tr>'
+
+            _html += '<tr data-id="' + index + '"><td><label class="text-left horizontal-label">Desecrated</label></td>'
+            _html += '<td><input type="number" id="NumberOfPiecesDesecrated' + index +'" class="form-control input-sm inp" name="CPCSortedCashDetails[' + index + '].NumberOfPiecesDesecrated"></td>'
+            _html += '<td><label class="text-left horizontal-label">Short</label></td>'
+            _html += '<td><input type="number" id="NumberOfPiecesShort' + index +'" class="form-control input-sm inp" name="CPCSortedCashDetails[' + index + '].NumberOfPiecesShort"></td>'
+            _html += '<td><label class="text-left horizontal-label">Excess</label></td>'
+            _html += '<td><input type="number" id="NumberOfPiecesExcess' + index +'" class="form-control input-sm inp" name="CPCSortedCashDetails[' + index + '].NumberOfPiecesExcess"></td></tr>'
+
+            _html += '<tr data-id="' + index + '"><td><label class="text-left horizontal-label">Unprocessed/others</label></td>'
+            _html += '<td><input type="number" id="NumberOfPiecesUnprocess' + index +'" class="form-control input-sm inp" name="CPCSortedCashDetails[' + index + '].NumberOfPiecesUnprocess"></td>'
+
+            _html += '<td><label class="text-left horizontal-label">Amount</label></td>'
+            _html += '<td><input type="number" id="TotalValue' + index +'" class="form-control input-sm" name="CPCSortedCashDetails[' + index + '].TotalValue"></td>'
+            _html += '</tbody>'
+            return _html;
+        }
+
+        $(document).ready(function () {
+
+            //Add Shipping Company
+            $('.addNewCompany').on('click', function () {
+                $('#loading-mask').show();
+                var target = "";
+                target = "/CPC/VaultConsolidated/_VaultConsolidatedList";
+                // load the url and show modal on success
+                $("#addNewCompany-Modal .modal-dialog").load(target, function () {
+                    $("#addNewCompany-Modal").modal("show");
+                    filterDataTable("#VaultConsolidated-dataTable", [0, 1, 2, 3, 4, 5, 6, 7], [8]);
+                    $('#loading-mask').hide();
+                });
+            });
+
+            //"#DateOfCashReturn"
+            $("#Date").data("DateTimePicker").date(moment('@Model.Date.ToShortDateString()'));
+
+            $(".select2").select2();
+
+            //input fields leave event
+            $(document).on('focusout', '.inp', function (e) {
+                debugger;
+                e.preventDefault();
+                var accountGridRowIndex = $(this).closest('tbody').attr("data-id");
+                var totalAmount = 0;
+                var numberOfPiecesReIssuable = 0;
+                if ($('#NumberOfPiecesReIssuable' + accountGridRowIndex).val()) { numberOfPiecesReIssuable = $('#NumberOfPiecesReIssuable' + accountGridRowIndex).val(); }
+                var numberOfPiecesSoiled = 0;
+                if ($('#NumberOfPiecesSoiled' + accountGridRowIndex).val()) { numberOfPiecesSoiled = $('#NumberOfPiecesSoiled' + accountGridRowIndex).val(); }
+                var numberOfPiecesMachineRejected = 0;
+                if ($('#NumberOfPiecesMachineRejected' + accountGridRowIndex).val()) { numberOfPiecesMachineRejected = $('#NumberOfPiecesMachineRejected' + accountGridRowIndex).val(); }
+                var numberOfPiecesCounterFeit = 0;
+                if ($('#NumberOfPiecesCounterFeit' + accountGridRowIndex).val()) { numberOfPiecesCounterFeit = $('#NumberOfPiecesCounterFeit' + accountGridRowIndex).val(); }
+                var numberOfPiecesMismatch = 0;
+                if ($('#NumberOfPiecesMismatch' + accountGridRowIndex).val()) { numberOfPiecesMismatch = $('#NumberOfPiecesMismatch' + accountGridRowIndex).val(); }
+                var numberOfPiecesClaim = 0;
+                if ($('#NumberOfPiecesClaim' + accountGridRowIndex).val()) { numberOfPiecesClaim = $('#NumberOfPiecesClaim' + accountGridRowIndex).val(); }
+                var numberOfPiecesDesecrated = 0;
+                if ($('#NumberOfPiecesDesecrated' + accountGridRowIndex).val()) { numberOfPiecesDesecrated = $('#NumberOfPiecesDesecrated' + accountGridRowIndex).val(); }
+                var numberOfPiecesShort = 0;
+                if ($('#NumberOfPiecesShort' + accountGridRowIndex).val()) { numberOfPiecesShort = $('#NumberOfPiecesShort' + accountGridRowIndex).val(); }
+                var numberOfPiecesExcess = 0;
+                if ($('#NumberOfPiecesExcess' + accountGridRowIndex).val()) { numberOfPiecesExcess = $('#NumberOfPiecesExcess' + accountGridRowIndex).val(); }
+                var numberOfPiecesUnprocess = 0;
+                if ($('#NumberOfPiecesUnprocess' + accountGridRowIndex).val()) { numberOfPiecesUnprocess = $('#NumberOfPiecesUnprocess' + accountGridRowIndex).val(); }
+
+                totalAmount = parseInt(numberOfPiecesReIssuable) + parseInt(numberOfPiecesSoiled) + parseInt(numberOfPiecesMachineRejected)
+                    + parseInt(numberOfPiecesCounterFeit) + parseInt(numberOfPiecesMismatch) + parseInt(numberOfPiecesClaim) + parseInt(numberOfPiecesDesecrated)
+                    + parseInt(numberOfPiecesShort) + parseInt(numberOfPiecesExcess) + parseInt(numberOfPiecesUnprocess);
+
+                var denomVal = parseInt($('#DenominationTitle').val());
+                totalAmount = parseInt(totalAmount) * denomVal;
+                $('#TotalValue' + accountGridRowIndex).val(totalAmount);
+            });
+        });
+
+        function GetTotalVal(sortedValue, denomVal) {
+            const totalVal = parseInt(sortedValue) * parseInt(denomVal);
+            return isNaN(totalVal) ? '0' : totalVal;
+        }
+
+    </script>
+}
+

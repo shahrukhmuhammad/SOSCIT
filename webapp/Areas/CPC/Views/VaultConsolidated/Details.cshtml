@@ -1,0 +1,659 @@
+﻿
+
+@model CPCVaultConsolidated
+@{
+    /**/
+
+    ViewBag.Title = "Details";
+    var VaultConsolidatedDetails = Model.CPCVaultConsolidatedDetails;
+    var denomList = ViewBag.DenominationList as List<CPCDenomination>;
+    var LsConsolidatedBundle = ViewBag.ConsolidatedBundleList as List<CPCVaultConsolidatedBundle>;
+    var detailsObj = new CPCVaultConsolidatedDetail();
+
+    //var listofDenomBundles = new List<CPCVaultConsolidatedBundle>();
+}
+
+<form id="lead-frm" class="user-Profile" method="post" enctype="multipart/form-data">
+
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="btn-group" role="group">
+                <a href="javascript://" onclick="window.history.back()" class="btn btn-default"><i class="fa fa-close"></i> Cancel / Back</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h4> Sorted Cash Details</h4>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="row form-group">
+                                    <label class="col-sm-4 text-left horizontal-label">Order Number</label>
+                                    <div class="col-sm-8">
+                                        <label class="label label-primary">@Model.OrderNumber</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row form-group">
+                                    <label class="col-sm-6 text-left horizontal-label">Serial Number</label>
+                                    <div class="col-sm-6">
+                                        <label class="label label-primary">@Model.SerialNumber</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row form-group">
+                                    <label class="col-sm-3 horizontal-label">Date</label>
+                                    <div class="col-sm-9">
+                                        <label class="label label-primary">@Model.Date.ToString(Constants.DATE_FORMAT_CLIENT_SIDE)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="row form-group">
+                                    <label class="col-sm-4 text-left horizontal-label">Client/Branch</label>
+                                    <div class="col-sm-8">
+                                        <label class="label label-primary">@ViewData["BranchName"]</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row form-group">
+                                    <label class="col-sm-6 text-left horizontal-label">City</label>
+                                    <div class="col-sm-6">
+                                        <label class="label label-primary">@Model.CPCCity.CityName</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row form-group">
+                                    <label class="col-sm-3 horizontal-label">Supervisor</label>
+                                    <div class="col-sm-9">
+                                        <label class="label label-primary">@ViewData["BranchName"]</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="row tb-padding">
+                            <table id="mytable" class="table table-striped table-bordered table-hover">
+                                <thead>
+                                </thead>
+                                @{
+                                    var finalNumberOfPackets = 0;
+                                    var finalTotalValue = 0;
+                                }
+                                <tbody>
+                                    <tr>
+                                        <td><b>Denomination</b></td>
+                                        <td><b>Total Bundles</b></td>
+                                        <td><b>Total Amount</b></td>
+                                        <td><b>Seal No</b></td>
+                                    </tr>
+
+
+
+                                    @if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 10).FirstOrDefault() != null)
+                                    {
+                                        detailsObj = VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 10).FirstOrDefault();
+                                        <tr>
+                                            <td>
+                                                Rs.10/-
+                                            </td>
+                                            <td>
+                                                @detailsObj.NumberOfBundles
+                                            </td>
+                                            <td>
+                                                @detailsObj.TotalValue
+
+                                            </td>
+                                            <td>
+                                                @detailsObj.SealNo
+                                                <span style="display:none">
+                                                    @{
+                                                        finalNumberOfPackets += detailsObj.NumberOfBundles;
+                                                        finalTotalValue += detailsObj.TotalValue;
+                                                    }
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        var listofDenomBundles = LsConsolidatedBundle.Where(x => x.DenominationId == detailsObj.DenominationId).FirstOrDefault();
+                                        if (listofDenomBundles != null && listofDenomBundles.CPCVaultConsolidatedBundlesDetails.Count > 0)
+                                        {
+                                            foreach (var item in listofDenomBundles.CPCVaultConsolidatedBundlesDetails)
+                                            {
+                                                <tr>
+                                                    <td class="pull-right">Sorter</td>
+                                                    <td>@item.CPCEmployee.Code - @item.CPCEmployee.Name</td>
+                                                    <td>Assigned Bundles <span class="pull-right">@item.NumberOfBundles</span></td>
+                                                    <td>Assigned Amount <span class="pull-right">@item.Amount</span></td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+
+                                    @if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 20).FirstOrDefault() != null)
+                                    {
+                                        detailsObj = VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 20).FirstOrDefault();
+                                        <tr>
+                                            <td>
+                                                Rs.20/-
+                                            </td>
+                                            <td>
+                                                @detailsObj.NumberOfBundles
+                                            </td>
+                                            <td>
+                                                @detailsObj.TotalValue
+
+                                            </td>
+                                            <td>
+                                                @detailsObj.SealNo
+                                                <span style="display:none">
+                                                    @{
+                                                        finalNumberOfPackets += detailsObj.NumberOfBundles;
+                                                        finalTotalValue += detailsObj.TotalValue;
+                                                    }
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        var listofDenomBundles = LsConsolidatedBundle.Where(x => x.DenominationId == detailsObj.DenominationId).FirstOrDefault();
+                                        if (listofDenomBundles != null && listofDenomBundles.CPCVaultConsolidatedBundlesDetails.Count > 0)
+                                        {
+                                            foreach (var item in listofDenomBundles.CPCVaultConsolidatedBundlesDetails)
+                                            {
+                                                <tr>
+                                                    <td class="pull-right">Sorter</td>
+                                                    <td>@item.CPCEmployee.Code - @item.CPCEmployee.Name</td>
+                                                    <td>Assigned Bundles <span class="pull-right">@item.NumberOfBundles</span></td>
+                                                    <td>Assigned Amount <span class="pull-right">@item.Amount</span></td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+
+                                    @if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 50).FirstOrDefault() != null)
+                                    {
+                                        detailsObj = VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 50).FirstOrDefault();
+                                        <tr>
+                                            <td>
+                                                Rs.50/-
+                                            </td>
+                                            <td>
+                                                @detailsObj.NumberOfBundles
+                                            </td>
+                                            <td>
+                                                @detailsObj.TotalValue
+
+                                            </td>
+                                            <td>
+                                                @detailsObj.SealNo
+                                                <span style="display:none">
+                                                    @{
+                                                        finalNumberOfPackets += detailsObj.NumberOfBundles;
+                                                        finalTotalValue += detailsObj.TotalValue;
+                                                    }
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        var listofDenomBundles = LsConsolidatedBundle.Where(x => x.DenominationId == detailsObj.DenominationId).FirstOrDefault();
+                                        if (listofDenomBundles != null && listofDenomBundles.CPCVaultConsolidatedBundlesDetails.Count > 0)
+                                        {
+                                            foreach (var item in listofDenomBundles.CPCVaultConsolidatedBundlesDetails)
+                                            {
+                                                <tr>
+                                                    <td class="pull-right">Sorter</td>
+                                                    <td>@item.CPCEmployee.Code - @item.CPCEmployee.Name</td>
+                                                    <td>Assigned Bundles <span class="pull-right">@item.NumberOfBundles</span></td>
+                                                    <td>Assigned Amount <span class="pull-right">@item.Amount</span></td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+
+                                    @if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 100).FirstOrDefault() != null)
+                                    {
+                                        detailsObj = VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 100).FirstOrDefault();
+                                        <tr>
+                                            <td>
+                                                Rs.100/-
+                                            </td>
+                                            <td>
+                                                @detailsObj.NumberOfBundles
+                                            </td>
+                                            <td>
+                                                @detailsObj.TotalValue
+
+                                            </td>
+                                            <td>
+                                                @detailsObj.SealNo
+                                                <span style="display:none">
+                                                    @{
+                                                        finalNumberOfPackets += detailsObj.NumberOfBundles;
+                                                        finalTotalValue += detailsObj.TotalValue;
+                                                    }
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        var listofDenomBundles = LsConsolidatedBundle.Where(x => x.DenominationId == detailsObj.DenominationId).FirstOrDefault();
+                                        if (listofDenomBundles != null && listofDenomBundles.CPCVaultConsolidatedBundlesDetails.Count > 0)
+                                        {
+                                            foreach (var item in listofDenomBundles.CPCVaultConsolidatedBundlesDetails)
+                                            {
+                                                <tr>
+                                                    <td class="pull-right">Sorter</td>
+                                                    <td>@item.CPCEmployee.Code - @item.CPCEmployee.Name</td>
+                                                    <td>Assigned Bundles <span class="pull-right">@item.NumberOfBundles</span></td>
+                                                    <td>Assigned Amount <span class="pull-right">@item.Amount</span></td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+
+                                    @if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 500).FirstOrDefault() != null)
+                                    {
+                                        detailsObj = VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 500).FirstOrDefault();
+                                        <tr>
+                                            <td>
+                                                Rs.500/-
+                                            </td>
+                                            <td>
+                                                @detailsObj.NumberOfBundles
+                                            </td>
+                                            <td>
+                                                @detailsObj.TotalValue
+
+                                            </td>
+                                            <td>
+                                                @detailsObj.SealNo
+                                                <span style="display:none">
+                                                    @{
+                                                        finalNumberOfPackets += detailsObj.NumberOfBundles;
+                                                        finalTotalValue += detailsObj.TotalValue;
+                                                    }
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        var listofDenomBundles = LsConsolidatedBundle.Where(x => x.DenominationId == detailsObj.DenominationId).FirstOrDefault();
+                                        if (listofDenomBundles != null && listofDenomBundles.CPCVaultConsolidatedBundlesDetails.Count > 0)
+                                        {
+                                            foreach (var item in listofDenomBundles.CPCVaultConsolidatedBundlesDetails)
+                                            {
+                                                <tr>
+                                                    <td class="pull-right">Sorter</td>
+                                                    <td>@item.CPCEmployee.Code - @item.CPCEmployee.Name</td>
+                                                    <td>Assigned Bundles <span class="pull-right">@item.NumberOfBundles</span></td>
+                                                    <td>Assigned Amount <span class="pull-right">@item.Amount</span></td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+
+                                    @if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 1000).FirstOrDefault() != null)
+                                    {
+                                        detailsObj = VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 1000).FirstOrDefault();
+                                        <tr>
+                                            <td>
+                                                Rs.1000/-
+                                            </td>
+                                            <td>
+                                                @detailsObj.NumberOfBundles
+                                            </td>
+                                            <td>
+                                                @detailsObj.TotalValue
+
+                                            </td>
+                                            <td>
+                                                @detailsObj.SealNo
+                                                <span style="display:none">
+                                                    @{
+                                                        finalNumberOfPackets += detailsObj.NumberOfBundles;
+                                                        finalTotalValue += detailsObj.TotalValue;
+                                                    }
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        var listofDenomBundles = LsConsolidatedBundle.Where(x => x.DenominationId == detailsObj.DenominationId).FirstOrDefault();
+                                        if (listofDenomBundles != null && listofDenomBundles.CPCVaultConsolidatedBundlesDetails.Count > 0)
+                                        {
+                                            foreach (var item in listofDenomBundles.CPCVaultConsolidatedBundlesDetails)
+                                            {
+                                                <tr>
+                                                    <td class="pull-right">Sorter</td>
+                                                    <td>@item.CPCEmployee.Code - @item.CPCEmployee.Name</td>
+                                                    <td>Assigned Bundles <span class="pull-right">@item.NumberOfBundles</span></td>
+                                                    <td>Assigned Amount <span class="pull-right">@item.Amount</span></td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+
+                                    @if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 5000).FirstOrDefault() != null)
+                                    {
+                                        detailsObj = VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 5000).FirstOrDefault();
+                                        <tr>
+                                            <td>
+                                                Rs.5000/-
+                                            </td>
+                                            <td>
+                                                @detailsObj.NumberOfBundles
+                                            </td>
+                                            <td>
+                                                @detailsObj.TotalValue
+
+                                            </td>
+                                            <td>
+                                                @detailsObj.SealNo
+                                                <span style="display:none">
+                                                    @{
+                                                        finalNumberOfPackets += detailsObj.NumberOfBundles;
+                                                        finalTotalValue += detailsObj.TotalValue;
+                                                    }
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        var listofDenomBundles = LsConsolidatedBundle.Where(x => x.DenominationId == detailsObj.DenominationId).FirstOrDefault();
+                                        if (listofDenomBundles != null && listofDenomBundles.CPCVaultConsolidatedBundlesDetails.Count > 0)
+                                        {
+                                            foreach (var item in listofDenomBundles.CPCVaultConsolidatedBundlesDetails)
+                                            {
+                                                <tr>
+                                                    <td class="pull-right">Sorter</td>
+                                                    <td>@item.CPCEmployee.Code - @item.CPCEmployee.Name</td>
+                                                    <td>Assigned Bundles <span class="pull-right">@item.NumberOfBundles</span></td>
+                                                    <td>Assigned Amount <span class="pull-right">@item.Amount</span></td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Total</b></td>
+                                        <td><b>@finalNumberOfPackets</b></td>
+                                        <td><b>@finalTotalValue</b></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="btn-group" role="group">
+                <a href="javascript://" onclick="window.history.back()" class="btn btn-default"><i class="fa fa-close"></i> Cancel / Back</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    @*<div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4> Sorted Cash </h4>
+                        <div class="row tb-padding">
+                            <table id="mytable" class="table table-striped table-bordered table-hover">
+                                <thead>
+                                </thead>
+                                @{
+                                    var finalNumberOfPackets = 0;
+                                    var finalTotalValue = 0;
+                                }
+                                <tbody>
+                                    <tr>
+                                        <td><b>Date:</b></td>
+                                        <td>
+                                            <div class="input-group input-group-sm">
+                                                <input name="Date" id="Date" class="form-control input-sm datePicker" type="text" value="@Model.Date.ToString(Constants.DATE_FORMAT_CLIENT_SIDE)" required autocomplete="off">
+                                                <span class="input-group-addon">
+                                                    <span class="fa fa-calendar"></span>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td><b>Consignment Number</b></td>
+                                        <td>
+                                            <label>@Model.SerialNumber</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Station/City:</b></td>
+                                        <td>
+                                            <label>@Model.CPCCity.CityName</label>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Client/Branch:</b></td>
+                                        <td>
+                                            <label>@ViewData["BranchName"]</label>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr><td></td><td></td><td></td></tr>
+                                    <tr>
+                                        <td><b>Denomination</b></td>
+                                        <td><b>Volume in Bundles</b></td>
+                                        <td><b>Amount</b></td>
+                                        <td><b>Seal No</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Rs.10/-
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 10).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 10).FirstOrDefault().NumberOfBundles : 0)
+                                            @{ if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 10).FirstOrDefault() != null)
+                                                {
+                                                    finalNumberOfPackets += Convert.ToInt32(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 10).FirstOrDefault().NumberOfBundles);
+                                                }
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 10).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 10).FirstOrDefault().TotalValue : 0)
+                                            @{ if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 10).FirstOrDefault() != null)
+                                                {
+                                                    finalTotalValue += Convert.ToInt32(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 10).FirstOrDefault().TotalValue);
+                                                }
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 10).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 10).FirstOrDefault().SealNo : "0")
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Rs.20/-
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 20).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 20).FirstOrDefault().NumberOfBundles : 0)
+                                            @{ if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 20).FirstOrDefault() != null)
+                                                {
+                                                    finalNumberOfPackets += Convert.ToInt32(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 20).FirstOrDefault().NumberOfBundles);
+                                                }
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 20).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 20).FirstOrDefault().TotalValue : 0)
+                                            @{ if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 20).FirstOrDefault() != null)
+                                                {
+                                                    finalTotalValue += Convert.ToInt32(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 20).FirstOrDefault().TotalValue);
+                                                }
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 20).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 20).FirstOrDefault().SealNo : "0")
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Rs.50/-
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 50).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 50).FirstOrDefault().NumberOfBundles : 0)
+                                            @{ if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 50).FirstOrDefault() != null)
+                                                {
+                                                    finalNumberOfPackets += Convert.ToInt32(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 50).FirstOrDefault().NumberOfBundles);
+                                                }
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 50).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 50).FirstOrDefault().TotalValue : 0)
+                                            @{ if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 50).FirstOrDefault() != null)
+                                                {
+                                                    finalTotalValue += Convert.ToInt32(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 50).FirstOrDefault().TotalValue);
+                                                }
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 50).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 50).FirstOrDefault().SealNo : "0")
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Rs.100/-
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 100).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 100).FirstOrDefault().NumberOfBundles : 0)
+                                            @{ if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 100).FirstOrDefault() != null)
+                                                {
+                                                    finalNumberOfPackets += Convert.ToInt32(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 100).FirstOrDefault().NumberOfBundles);
+                                                }
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 100).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 100).FirstOrDefault().TotalValue : 0)
+                                            @{ if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 100).FirstOrDefault() != null)
+                                                {
+                                                    finalTotalValue += Convert.ToInt32(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 100).FirstOrDefault().TotalValue);
+                                                }
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 100).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 100).FirstOrDefault().SealNo : "0")
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Rs.500/-
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 500).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 500).FirstOrDefault().NumberOfBundles : 0)
+                                            @{ if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 500).FirstOrDefault() != null)
+                                                {
+                                                    finalNumberOfPackets += Convert.ToInt32(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 500).FirstOrDefault().NumberOfBundles);
+                                                }
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 500).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 500).FirstOrDefault().TotalValue : 0)
+                                            @{ if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 500).FirstOrDefault() != null)
+                                                {
+                                                    finalTotalValue += Convert.ToInt32(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 500).FirstOrDefault().TotalValue);
+                                                }
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 500).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 500).FirstOrDefault().SealNo : "0")
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Rs.1000/-
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 1000).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 1000).FirstOrDefault().NumberOfBundles : 0)
+                                            @{ if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 1000).FirstOrDefault() != null)
+                                                {
+                                                    finalNumberOfPackets += Convert.ToInt32(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 1000).FirstOrDefault().NumberOfBundles);
+                                                }
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 1000).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 1000).FirstOrDefault().TotalValue : 0)
+                                            @{ if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 1000).FirstOrDefault() != null)
+                                                {
+                                                    finalTotalValue += Convert.ToInt32(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 1000).FirstOrDefault().TotalValue);
+                                                }
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 1000).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 1000).FirstOrDefault().SealNo : "0")
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Rs.5000/-</td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 5000).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 5000).FirstOrDefault().NumberOfBundles : 0)
+                                            @{ if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 5000).FirstOrDefault() != null)
+                                                {
+                                                    finalNumberOfPackets += Convert.ToInt32(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 5000).FirstOrDefault().NumberOfBundles);
+                                                }
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 5000).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 5000).FirstOrDefault().TotalValue : 0)
+                                            @{ if (VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 5000).FirstOrDefault() != null)
+                                                {
+                                                    finalTotalValue += Convert.ToInt32(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 5000).FirstOrDefault().TotalValue);
+                                                }
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @(VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 5000).FirstOrDefault() != null ? VaultConsolidatedDetails.Where(x => x.CPCDenomination.DenominationTitle == 5000).FirstOrDefault().SealNo : "0")
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Total</b></td>
+                                        <td>@finalNumberOfPackets</td>
+                                        <td>@finalTotalValue</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+</div>

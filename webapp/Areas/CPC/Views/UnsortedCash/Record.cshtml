@@ -1,0 +1,461 @@
+﻿
+@model CPCUnsortedCash
+@{
+    var queryId = ViewContext.RouteData.Values["Id"];
+    ViewBag.Title = (queryId == null ? "Add New Unsorted Cash" : "Edit Unsorted Cash");
+    var denomList = ViewBag.DenominationList as List<CPCDenomination>;
+}
+
+<form id="lead-frm" class="user-Profile" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(x => x.Id)
+
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="btn-group" role="group">
+                <a href="javascript://" onclick="window.history.back()" class="btn btn-default"><i class="fa fa-close"></i> Cancel / Back</a>
+                <button type="submit" id="submit" class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4> Unsorted Cash </h4>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Order Number</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.OrderNumber, new { @class = "form-control input-sm", @readonly = "readyonly", @required = "required" })
+                                            @Html.ValidationMessageFor(m => m.OrderNumber)
+                                            <a href="javascript://" class="btn btn-sm btn-primary addNewCompany"><i class="fa fa-plus"></i> Select Order</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Consignment Number</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.SerialNumber, new { @class = "form-control input-sm", @type = "number", @required = "required", @autofocus = "true" })
+                                            <span class="duplicate text-danger"></span>
+                                            @Html.ValidationMessageFor(m => m.SerialNumber)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-3 horizontal-label">Date</label>
+                                        <div class="col-sm-9">
+                                            <input name="Date" id="Date" class="form-control input-sm datePicker" type="text" value="@Model.Date.ToShortDateString()" readonly="readonly" required autocomplete="off">
+                                            @Html.ValidationMessageFor(m => m.Date)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row tb-padding">
+                        <table id="mytableUnsorted" class="table table-striped table-bordered table-hover">
+                            <thead>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Client/Branch:</td>
+                                    <td>
+                                        @*@Html.DropDownListFor(x => x.ProjectBranchId, (SelectList)ViewBag.BrachList, " Select Branch ", new { @class = "form-control input-sm select2" })*@
+                                        <select id="ProjectBranchId" name="ProjectBranchId" class="form-control input-sm select2 ProjectBranchId" required>
+                                            @*<option value="-1"> - Select - </option>*@
+                                        </select>
+                                        @Html.ValidationMessageFor(m => m.ProjectBranchId)
+
+                                    </td>
+                                    <td></td>
+                                    <td>Station/City:</td>
+                                    <td>
+                                        <input type="text" class="form-control input-sm clearField" id="CityName" readonly required />
+                                        @Html.HiddenFor(x => x.CityId)
+
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr><td></td><td></td><td></td></tr>
+                                <tr>
+                                    <td>Denomination</td>
+                                    <td>Volume in Bundles</td>
+                                    <td>Amount</td>
+                                    <td>Seal No.</td>
+                                </tr>
+                                @*<tr>
+                                    <td>
+                                        Rs.1/-
+                                        <input type="hidden" name="CPCUnsortedCashDetail[0].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 1).FirstOrDefault().Id)" />
+                                    </td>
+                                    <td data-id="1">
+                                        <input id="numberOfPacketsZero" type="number" value="0" name="CPCUnsortedCashDetail[0].NumberOfBundles" class="form-control input-sm inp totalfinalNumber clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="totalValueZero" value="0" name="CPCUnsortedCashDetail[0].TotalValue" class="form-control input-sm clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="SealNoZero" type="text" value="0" name="CPCUnsortedCashDetail[0].SealNo" class="form-control input-sm clearField" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Rs.2/-
+                                        <input type="hidden" name="CPCUnsortedCashDetail[1].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 2).FirstOrDefault().Id)" />
+                                    </td>
+                                    <td data-id="2">
+                                        <input id="numberOfPacketsOne" type="number" value="0" name="CPCUnsortedCashDetail[1].NumberOfBundles" class="form-control input-sm inp totalfinalNumber clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="totalValueOne" type="number" value="0" name="CPCUnsortedCashDetail[1].TotalValue" class="form-control input-sm clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="SealNoOne" type="text" value="0" name="CPCUnsortedCashDetail[1].SealNo" class="form-control input-sm clearField" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Rs.5/-
+                                        <input type="hidden" name="CPCUnsortedCashDetail[2].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 5).FirstOrDefault().Id)" />
+                                    </td>
+                                    <td data-id="5">
+                                        <input id="numberOfPacketsTwo" type="number" value="0" name="CPCUnsortedCashDetail[2].NumberOfBundles" class="form-control input-sm inp totalfinalNumber clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="totalValueTwo" type="number" value="0" name="CPCUnsortedCashDetail[2].TotalValue" class="form-control input-sm clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="SealNoTwo" type="text" value="0" name="CPCUnsortedCashDetail[2].SealNo" class="form-control input-sm clearField" />
+                                    </td>
+                                </tr>*@
+                                <tr>
+                                    <td>
+                                        Rs.10/-
+                                        <input type="hidden" name="CPCUnsortedCashDetail[0].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 10).FirstOrDefault().Id)" />
+                                    </td>
+                                    <td data-id="10">
+                                        <input id="numberOfPacketsThree" type="number" value="0" name="CPCUnsortedCashDetail[0].NumberOfBundles" class="form-control input-sm inp totalfinalNumber clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="totalValueThree" type="number" value="0" name="CPCUnsortedCashDetail[0].TotalValue" class="form-control input-sm clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="SealNoThree" type="text" value="0" name="CPCUnsortedCashDetail[0].SealNo" class="form-control input-sm clearField" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Rs.20/-
+                                        <input type="hidden" name="CPCUnsortedCashDetail[1].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 20).FirstOrDefault().Id)" />
+                                    </td>
+                                    <td data-id="20">
+                                        <input id="numberOfPacketsFour" type="number" value="0" name="CPCUnsortedCashDetail[1].NumberOfBundles" class="form-control input-sm inp totalfinalNumber clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="totalValueFour" type="number" value="0" name="CPCUnsortedCashDetail[1].TotalValue" class="form-control input-sm clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="SealNoFour" type="text" value="0" name="CPCUnsortedCashDetail[1].SealNo" class="form-control input-sm clearField" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Rs.50/-
+                                        <input type="hidden" name="CPCUnsortedCashDetail[2].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 50).FirstOrDefault().Id)" />
+                                    </td>
+                                    <td data-id="50">
+                                        <input id="numberOfPacketsFive" type="number" value="0" name="CPCUnsortedCashDetail[2].NumberOfBundles" class="form-control input-sm inp totalfinalNumber clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="totalValueFive" type="number" value="0" name="CPCUnsortedCashDetail[2].TotalValue" class="form-control input-sm clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="SealNoFive" type="text" value="0" name="CPCUnsortedCashDetail[2].SealNo" class="form-control input-sm clearField" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Rs.100/-
+                                        <input type="hidden" name="CPCUnsortedCashDetail[3].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 100).FirstOrDefault().Id)" />
+                                    </td>
+                                    <td data-id="100">
+                                        <input id="numberOfPacketsSix" type="number" value="0" name="CPCUnsortedCashDetail[3].NumberOfBundles" class="form-control input-sm inp totalfinalNumber clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="totalValueSix" type="number" value="0" name="CPCUnsortedCashDetail[3].TotalValue" class="form-control input-sm clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="SealNoSix" type="text" value="0" name="CPCUnsortedCashDetail[3].SealNo" class="form-control input-sm clearField" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Rs.500/-
+                                        <input type="hidden" name="CPCUnsortedCashDetail[4].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 500).FirstOrDefault().Id)" />
+                                    </td>
+                                    <td data-id="500">
+                                        <input id="numberOfPacketsSeven" type="number" value="0" name="CPCUnsortedCashDetail[4].NumberOfBundles" class="form-control input-sm inp totalfinalNumber clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="totalValueSeven" type="number" value="0" name="CPCUnsortedCashDetail[4].TotalValue" class="form-control input-sm clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="SealNoSeven" type="text" value="0" name="CPCUnsortedCashDetail[4].SealNo" class="form-control input-sm clearField" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Rs.1000/-
+                                        <input type="hidden" name="CPCUnsortedCashDetail[5].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 1000).FirstOrDefault().Id)" />
+                                    </td>
+                                    <td data-id="1000">
+                                        <input id="numberOfPacketsEight" type="number" value="0" name="CPCUnsortedCashDetail[5].NumberOfBundles" class="form-control input-sm inp totalfinalNumber clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="totalValueEight" type="number" value="0" name="CPCUnsortedCashDetail[5].TotalValue" class="form-control input-sm clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="SealNoEight" type="text" value="0" name="CPCUnsortedCashDetail[5].SealNo" class="form-control input-sm clearField" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Rs.5000/-
+                                        <input type="hidden" name="CPCUnsortedCashDetail[6].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 5000).FirstOrDefault().Id)" />
+                                    </td>
+                                    <td data-id="5000">
+                                        <input id="numberOfPacketsNine" type="number" value="0" name="CPCUnsortedCashDetail[6].NumberOfBundles" class="form-control input-sm inp totalfinalNumber clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="totalValueNine" type="number" value="0" name="CPCUnsortedCashDetail[6].TotalValue" class="form-control input-sm clearField" />
+                                    </td>
+                                    <td>
+                                        <input id="SealNoNine" type="text" value="0" name="CPCUnsortedCashDetail[6].SealNo" class="form-control input-sm clearField" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td> Total </td>
+                                    <td><input id="finalTotalNumber" type="number" value="" class="form-control input-sm clearField" readonly="readonly" /> </td>
+                                    <td><input id="finalTotalValue" type="number" value="" class="form-control input-sm clearField" readonly="readonly" /> </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="btn-group" role="group">
+                <a href="javascript://" onclick="window.history.back()" class="btn btn-default"><i class="fa fa-close"></i> Cancel / Back</a>
+                <button type="submit" id="submit" class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(x => x.OrderBookingId)
+</form>
+<div class="modal fade" id="addNewCompany-Modal" tabindex="-1" role="dialog" aria-labelledby="addNewCompany-Modal" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+    </div>
+</div>
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        var orderId
+        function getOrderId(Id) {
+            $('#OrderId').val(Id);
+            loadOrderData(Id);
+            $('#addNewCompany-Modal').modal('toggle');
+        }
+        function loadOrderData(Id) {
+            $('#ProjectBranchId').val([]);
+            var branchtoAppend = $('#ProjectBranchId');
+            branchtoAppend.empty();
+            branchtoAppend.html("<option> - Select - </option>"); 
+            if (Id) {
+                $.get('/CPC/AnnexureI/GetAnnxureIBranchData?Id=' + Id, function (response) {
+                    debugger;
+                    if (response) {
+                        $('#OrderNumber').val(response.OrderNumber);
+                        $('#OrderBookingId').val(response.OrderBookingId);
+                        $('#SealNo').val(response.SealNo);
+                        //Details
+                        $.each(response.Details,
+                            function (index, item) {
+                                var branch = new Option(item.BranchCode + " - " + item.BranchName , item.ProjectBranchId);
+                                branchtoAppend.append(branch);
+                            });
+                    }
+                    else {
+                        //$('.duplicate').html('');
+                        //isSubmit = true;
+                    }
+                });
+            }
+        }
+
+        $('.ProjectBranchId').change(function (e) {
+            $(".clearField").val("0");
+            var finalTotalAmount = 0;
+            var finalTotalBundles = 0;
+            var OrderBookingId = $("#OrderBookingId").val();
+            const ProjectBranchId = $('#ProjectBranchId option:selected').attr('value');
+            $.get('/CPC/AnnexureI/GetAnnxureIBookingData?Id=' + OrderBookingId + '&PriojId=' + ProjectBranchId, function (response) {
+                if (response) {
+                    $.each(response.Details,
+                        function (index, item) {
+                            $('#CityName').val(item.CityName);
+                            $('#CityId').val(item.CityId);
+                        //if (item.DenominationTitle == '1') {
+                        //    $("#numberOfPacketsZero").val(item.NoOfBundles);
+                        //    $("#totalValueZero").val(item.TotalAmount);
+                        //    $("#SealNoZero").val(item.SealNo);
+                        //    finalTotalBundles += parseInt(item.NoOfBundles);
+                        //    finalTotalAmount += parseInt(item.TotalAmount);
+                        //}
+                        //else if (item.DenominationTitle == '2') {
+                        //    $("#numberOfPacketsOne").val(item.NoOfBundles);
+                        //    $("#totalValueOne").val(item.TotalAmount);
+                        //    $("#SealNoOne").val(item.SealNo);
+                        //    finalTotalBundles += parseInt(item.NoOfBundles);
+                        //    finalTotalAmount += parseInt(item.TotalAmount);
+                        //}
+                        //else if (item.DenominationTitle == '5') {
+                        //    $("#numberOfPacketsTwo").val(item.NoOfBundles);
+                        //    $("#totalValueTwo").val(item.TotalAmount);
+                        //    $("#SealNoTwo").val(item.SealNo);
+                        //    finalTotalBundles += parseInt(item.NoOfBundles);
+                        //    finalTotalAmount += parseInt(item.TotalAmount);
+                        //}
+                        if (item.DenominationTitle == '10') {
+                            $("#numberOfPacketsThree").val(item.NoOfBundles);
+                            $("#totalValueThree").val(item.TotalAmount);
+                            $("#SealNoThree").val(item.SealNo);
+                            finalTotalBundles += parseInt(item.NoOfBundles);
+                            finalTotalAmount += parseInt(item.TotalAmount);
+                        }
+                        else if (item.DenominationTitle == '20') {
+                            $("#numberOfPacketsFour").val(item.NoOfBundles);
+                            $("#totalValueFour").val(item.TotalAmount);
+                            $("#SealNoFour").val(item.SealNo);
+                            finalTotalBundles += parseInt(item.NoOfBundles);
+                            finalTotalAmount += parseInt(item.TotalAmount);
+                        }
+                        else if (item.DenominationTitle == '50') {
+                            $("#numberOfPacketsFive").val(item.NoOfBundles);
+                            $("#totalValueFive").val(item.TotalAmount);
+                            $("#SealNoFive").val(item.SealNo);
+                            finalTotalBundles += parseInt(item.NoOfBundles);
+                            finalTotalAmount += parseInt(item.TotalAmount);
+                        }
+                        else if (item.DenominationTitle == '100') {
+                            $("#numberOfPacketsSix").val(item.NoOfBundles);
+                            $("#totalValueSix").val(item.TotalAmount);
+                            $("#SealNoSix").val(item.SealNo);
+                            finalTotalBundles += parseInt(item.NoOfBundles);
+                            finalTotalAmount += parseInt(item.TotalAmount);
+                        }
+                        else if (item.DenominationTitle == '500') {
+                            $("#numberOfPacketsSeven").val(item.NoOfBundles);
+                            $("#totalValueSeven").val(item.TotalAmount);
+                            $("#SealNoSeven").val(item.SealNo);
+                            finalTotalBundles += parseInt(item.NoOfBundles);
+                            finalTotalAmount += parseInt(item.TotalAmount);
+                        }
+                        else if (item.DenominationTitle == '1000') {
+                            $("#numberOfPacketsEight").val(item.NoOfBundles);
+                            $("#totalValueEight").val(item.TotalAmount);
+                            $("#SealNoEight").val(item.SealNo);
+                            finalTotalBundles += parseInt(item.NoOfBundles);
+                            finalTotalAmount += parseInt(item.TotalAmount);
+                        }
+                        else if (item.DenominationTitle == '5000') {
+                            $("#numberOfPacketsNine").val(item.NoOfBundles);
+                            $("#totalValueNine").val(item.TotalAmount);
+                            $("#SealNoNine").val(item.SealNo);
+                            finalTotalBundles += parseInt(item.NoOfBundles);
+                            finalTotalAmount += parseInt(item.TotalAmount);
+                        }
+                        $("#finalTotalNumber").val(finalTotalBundles);
+                        $("#finalTotalValue").val(finalTotalAmount);
+                    });
+                }
+            });
+        });
+
+
+        $(document).ready(function () {
+
+            //Add Shipping Company
+            $('.addNewCompany').on('click', function () {
+                $('#loading-mask').show();
+                var target = "";
+                target = "/CPC/AnnexureI/_AnnexureIList";
+                // load the url and show modal on success
+                $("#addNewCompany-Modal .modal-dialog").load(target, function () {
+                    $("#addNewCompany-Modal").modal("show");
+                    filterDataTable("#AnnexureIBooking-dataTable", [0, 1, 2, 3, 4], [5]);
+                    $('#loading-mask').hide();
+                });
+            });
+            //"#DateOfCashReturn"
+            $("#Date").data("DateTimePicker").date(moment('@Model.Date.ToShortDateString()'));
+
+            $(".select2").select2();
+
+            //input fields leave event
+            $(document).on('focusout', '.inp', function (e) {
+                e.preventDefault();
+                accountGridRowIndex = $(this).closest('td').attr("data-id");
+                const totalValue = GetTotalVal($(this).val(), accountGridRowIndex);
+                $(this).closest('td').next('td').find('input').val(totalValue);
+
+
+                var finalTotalValue = parseInt($("#totalValueZero").val()) + parseInt($("#totalValueOne").val()) + parseInt($("#totalValueTwo").val())
+                    + parseInt($("#totalValueThree").val()) + parseInt($("#totalValueFour").val()) + parseInt($("#totalValueFive").val())
+                    + parseInt($("#totalValueSix").val()) + parseInt($("#totalValueSeven").val()) + parseInt($("#totalValueEight").val())
+                    + parseInt($("#totalValueNine").val());
+                $("#finalTotalValue").val(finalTotalValue);
+
+            });
+
+
+
+        });
+
+        function GetTotalVal(unsortedValue, denomVal) {
+            const totalVal = parseInt(unsortedValue) * parseInt(denomVal) * 1000;
+            return isNaN(totalVal) ? '0' : totalVal;
+        }
+
+        $(".totalfinalNumber").focusout(function () {
+            var finalTotalNumber = parseInt($("#numberOfPacketsZero").val()) + parseInt($("#numberOfPacketsOne").val()) + parseInt($("#numberOfPacketsTwo").val())
+                + parseInt($("#numberOfPacketsThree").val()) + parseInt($("#numberOfPacketsFour").val()) + parseInt($("#numberOfPacketsFive").val())
+                + parseInt($("#numberOfPacketsSix").val()) + parseInt($("#numberOfPacketsSeven").val()) + parseInt($("#numberOfPacketsEight").val())
+                + parseInt($("#numberOfPacketsNine").val());
+            $("#finalTotalNumber").val(finalTotalNumber);
+        });
+    </script>
+}
+

@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "Cash Reconciliation";
+}
+
+<div class="user-Profile" style="min-height:430px;">
+    <div id="employees-Container">
+        @{ Html.RenderAction("_AllAnnexureIII", "AnnexureIII"); }
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+            filterDataTable("#AnnexureIII-dataTable", [1, 2, 3, 4, 5, 6, 7, 8], [0, 9], 10);
+        });
+    </script>
+}

@@ -1,0 +1,508 @@
+﻿
+@model CPCCashInTransit
+@{
+    var queryId = ViewContext.RouteData.Values["Id"];
+    ViewBag.Title = (queryId == null ? "Add New CIT Shipment" : "Edit Cash CIT Shipment");
+    var denomList = ViewBag.DenominationList as List<CPCDenomination>;
+}
+
+<form id="lead-frm" class="user-Profile" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(x => x.Id)
+
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="btn-group" role="group">
+                <a href="javascript://" onclick="window.history.back()" class="btn btn-default"><i class="fa fa-close"></i> Cancel / Back</a>
+                <button type="submit" id="submit" class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4> @ViewBag.Title </h4>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-5 text-left horizontal-label">Shipment Receipt No.</label>
+                                        <div class="col-sm-7">
+                                            @Html.TextBoxFor(x => x.ShipmentReceiptNumber, new { @class = "form-control input-sm", @required = "required", @autofocus = "true" })
+                                            @Html.ValidationMessageFor(m => m.ShipmentReceiptNumber)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Vehicle No.</label>
+                                        <div class="col-sm-8">
+                                            @*@Html.TextBox("VehicleNo", Model.VehicleNumber, new { @class = "form-control input-sm" })*@
+                                            @Html.TextBoxFor(x => x.VehicleNumber, new { @class = "form-control input-sm", @required = "required", @autofocus = "true" })
+                                            @Html.ValidationMessageFor(m => m.VehicleNumber)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="row form-group">
+                                        <label class="col-sm-3 text-left horizontal-label">Date</label>
+                                        <div class="col-sm-8">
+                                            <div class="input-group input-group-sm">
+                                                <input name="Date" id="Date" class="form-control input-sm datePicker" type="text" value="@Model.Date.ToString(Constants.DATE_FORMAT_CLIENT_SIDE)" required autocomplete="off">
+                                                <span class="input-group-addon">
+                                                    <span class="fa fa-calendar"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 horizontal-label">Customer To Be Billed</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.CustomerToBeBilled, new { @class = "form-control input-sm", @required = "required", @autofocus = "true" })
+                                            @Html.ValidationMessageFor(m => m.CustomerToBeBilled)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 horizontal-label">A/C Code</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.AcCode, new { @class = "form-control input-sm", @required = "required", @autofocus = "true" })
+                                            @Html.ValidationMessageFor(m => m.AcCode)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 horizontal-label">Collection</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.Collection, new { @class = "form-control input-sm", @required = "required", @autofocus = "true" })
+                                            @Html.ValidationMessageFor(m => m.AcCode)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Collection/Date &#38; Time</label>
+                                        <div class="col-sm-8">
+                                            <div class="input-group input-group-sm">
+                                                <input name="CollectionDateTime" id="CollectionDateTime" class="form-control input-sm datePicker" type="text" value="@Model.CollectionDateTime.ToString(Constants.DATE_FORMAT_CLIENT_SIDE)" required autocomplete="off">
+                                                <span class="input-group-addon">
+                                                    <span class="fa fa-calendar"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 horizontal-label">Delivery</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.Delivery, new { @class = "form-control input-sm", @required = "required", @autofocus = "true" })
+                                            @Html.ValidationMessageFor(m => m.Delivery)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Date &#38; Time</label>
+                                        <div class="col-sm-8">
+                                            <div class="input-group input-group-sm">
+                                                <input name="DeliveryDateTime" id="DeliveryDateTime" class="form-control input-sm datePicker" type="text" value="@Model.DeliveryDateTime.ToString(Constants.DATE_FORMAT_CLIENT_SIDE)" required autocomplete="off">
+                                                <span class="input-group-addon">
+                                                    <span class="fa fa-calendar"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row tb-padding">
+                        <table id="mytable" class="table table-striped table-bordered table-hover">
+                            <thead>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">Seal No</td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[0].SealNumber" /></td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[1].SealNumber" /></td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[2].SealNumber" /></td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[3].SealNumber" /></td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[4].SealNumber" /></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Item</td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[0].Item" /></td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[1].Item" /></td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[2].Item" /></td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[3].Item" /></td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[4].Item" /></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Value</td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[0].Value" /></td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[1].Value" /></td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[2].Value" /></td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[3].Value" /></td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[4].Value" /></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Partial Delivery</td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[0].PartialDelivery" /></td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[1].PartialDelivery" /></td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[2].PartialDelivery" /></td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[3].PartialDelivery" /></td>
+                                    <td><input class="form-control input-sm" name="CPCCashInTransitChild[4].PartialDelivery" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 horizontal-label">Waiting Time</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.WaitingTime, new { @class = "form-control input-sm", @required = "required", @autofocus = "true" })
+                                            @Html.ValidationMessageFor(m => m.WaitingTime)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 horizontal-label">No of Plastic/Lead Seals</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.NumberOfPlasticLeadSeals, new { @class = "form-control input-sm", @type = "number", @required = "required", @autofocus = "true" })
+                                            @Html.ValidationMessageFor(m => m.NumberOfPlasticLeadSeals)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 horizontal-label">No. of Bags</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.NumberOfBags, new { @class = "form-control input-sm", @type = "number", @required = "required", @autofocus = "true" })
+                                            @Html.ValidationMessageFor(m => m.NumberOfBags)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 horizontal-label">Days In Vault</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.DaysInVault, new { @class = "form-control input-sm", @type = "number", @required = "required", @autofocus = "true" })
+                                            @Html.ValidationMessageFor(m => m.DaysInVault)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 horizontal-label">No. of Wage Packets</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.NumberOfWagePackets, new { @class = "form-control input-sm", @type = "number", @required = "required", @autofocus = "true" })
+                                            @Html.ValidationMessageFor(m => m.NumberOfWagePackets)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 horizontal-label">No. of Additional Service</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.NumberOfAdditionalService, new { @class = "form-control input-sm", @type = "number", @required = "required", @autofocus = "true" })
+                                            @Html.ValidationMessageFor(m => m.NumberOfAdditionalService)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 horizontal-label">Consigned By A</label>
+                                        <div class="col-sm-8">
+                                            @Html.DropDownListFor(x => x.ConsignedByNameA, (SelectList)ViewBag.EmployeeList, " Select Employee ", new { @class = "form-control input-sm select2" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 horizontal-label">Consigned By B</label>
+                                        <div class="col-sm-8">
+                                            @Html.DropDownListFor(x => x.ConsignedByNameB, (SelectList)ViewBag.EmployeeList, " Select Employee ", new { @class = "form-control input-sm select2" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 horizontal-label">Accepted By SOS  A</label>
+                                        <div class="col-sm-8">
+                                            @Html.DropDownListFor(x => x.AcceptedByNameA, (SelectList)ViewBag.EmployeeList, " Select Employee ", new { @class = "form-control input-sm select2" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 horizontal-label">Accepted By SOS B</label>
+                                        <div class="col-sm-8">
+                                            @Html.DropDownListFor(x => x.AcceptedByNameB, (SelectList)ViewBag.EmployeeList, " Select Employee ", new { @class = "form-control input-sm select2" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 horizontal-label">Received By A</label>
+                                        <div class="col-sm-8">
+                                            @Html.DropDownListFor(x => x.ReceivedByNameA, (SelectList)ViewBag.EmployeeList, " Select Employee ", new { @class = "form-control input-sm select2" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 horizontal-label">Received By B</label>
+                                        <div class="col-sm-8">
+                                            @Html.DropDownListFor(x => x.ReceivedByNameB, (SelectList)ViewBag.EmployeeList, " Select Employee ", new { @class = "form-control input-sm select2" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <table id="mytable" class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="9" class="text-center">Details of Packets</th>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="9" class="text-center">Denomination No of Packets</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2">
+                                                Rs. 5000 x
+                                                <input type="hidden" name="CPCCashInTransitDenomination[0].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 5000).FirstOrDefault().Id)" />
+                                            </td>
+                                            <td data-id="5000">
+                                                <input id="numberOfPacketsZero" type="number" value="0" name="CPCCashInTransitDenomination[0].NumberOfPackets" class="form-control input-sm inp totalfinalNumber" />
+                                            </td>
+                                            <td>
+                                                <input id="totalValueZero" type="number" value="0" name="CPCCashInTransitDenomination[0].TotalValue" class="form-control input-sm" readonly="readonly" />
+                                            </td>
+                                            <td>Nos.</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                Rs. 1000 x
+                                                <input type="hidden" name="CPCCashInTransitDenomination[1].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 1000).FirstOrDefault().Id)" />
+                                            </td>
+                                            <td data-id="1000">
+                                                <input id="numberOfPacketsOne" type="number" value="0" name="CPCCashInTransitDenomination[1].NumberOfPackets" class="form-control input-sm inp totalfinalNumber" />
+                                            </td>
+                                            <td>
+                                                <input id="totalValueOne" type="number" value="0" name="CPCCashInTransitDenomination[1].TotalValue" class="form-control input-sm" readonly="readonly" />
+                                            </td>
+                                            <td>Nos.</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                Rs. 500 x
+                                                <input type="hidden" name="CPCCashInTransitDenomination[2].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 500).FirstOrDefault().Id)" />
+                                            </td>
+                                            <td data-id="500">
+                                                <input id="numberOfPacketsTwo" type="number" value="0" name="CPCCashInTransitDenomination[2].NumberOfPackets" class="form-control input-sm inp totalfinalNumber" />
+                                            </td>
+                                            <td>
+                                                <input id="totalValueTwo" type="number" value="0" name="CPCCashInTransitDenomination[2].TotalValue" class="form-control input-sm" readonly="readonly" />
+                                            </td>
+                                            <td>Nos.</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                Rs. 100 x
+                                                <input type="hidden" name="CPCCashInTransitDenomination[3].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 100).FirstOrDefault().Id)" />
+                                            </td>
+                                            <td data-id="100">
+                                                <input id="numberOfPacketsThree" type="number" value="0" name="CPCCashInTransitDenomination[3].NumberOfPackets" class="form-control input-sm inp totalfinalNumber" />
+                                            </td>
+                                            <td>
+                                                <input id="totalValueThree" type="number" value="0" name="CPCCashInTransitDenomination[3].TotalValue" class="form-control input-sm" readonly="readonly" />
+                                            </td>
+                                            <td>Nos.</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                Rs. 50 x
+                                                <input class="inp" type="hidden" name="CPCCashInTransitDenomination[4].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 50).FirstOrDefault().Id)" />
+                                            </td>
+                                            <td data-id="50">
+                                                <input id="numberOfPacketsFour" type="number" value="0" name="CPCCashInTransitDenomination[4].NumberOfPackets" class="form-control input-sm inp totalfinalNumber" />
+                                            </td>
+                                            <td>
+                                                <input id="totalValueFour" type="number" value="0" name="CPCCashInTransitDenomination[4].TotalValue" class="form-control input-sm" readonly="readonly" />
+                                            </td>
+                                            <td>Nos.</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                Rs. 20 x
+                                                <input type="hidden" name="CPCCashInTransitDenomination[5].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 20).FirstOrDefault().Id)" />
+                                            </td>
+                                            <td data-id="20">
+                                                <input id="numberOfPacketsFive" type="number" value="0" name="CPCCashInTransitDenomination[5].NumberOfPackets" class="form-control input-sm inp totalfinalNumber" />
+                                            </td>
+                                            <td>
+                                                <input id="totalValueFive" type="number" value="0" name="CPCCashInTransitDenomination[5].TotalValue" class="form-control input-sm" readonly="readonly" />
+                                            </td>
+                                            <td>Nos.</td>
+                                        </tr>
+                                        <tr colspan="2">
+                                            <td colspan="2">
+                                                Rs. 10 x
+                                                <input type="hidden" name="CPCCashInTransitDenomination[6].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 10).FirstOrDefault().Id)" />
+                                            </td>
+                                            <td data-id="10">
+                                                <input id="numberOfPacketsSix" type="number" value="0" name="CPCCashInTransitDenomination[6].NumberOfPackets" class="form-control input-sm inp totalfinalNumber"/>
+                                            </td>
+                                            <td>
+                                                <input id="totalValueSix" type="number" value="0" name="CPCCashInTransitDenomination[6].TotalValue" class="form-control input-sm" readonly="readonly" />
+                                            </td>
+                                            <td>Nos.</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                Rs. 5 x
+                                                <input type="hidden" name="CPCCashInTransitDenomination[7].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 5).FirstOrDefault().Id)" />
+                                            </td>
+                                            <td data-id="5">
+                                                <input id="numberOfPacketsSeven" type="number" value="0" name="CPCCashInTransitDenomination[7].NumberOfPackets" class="form-control input-sm inp totalfinalNumber" />
+                                            </td>
+                                            <td>
+                                                <input id="totalValueSeven" type="number" value="0" name="CPCCashInTransitDenomination[7].TotalValue" class="form-control input-sm" readonly="readonly" />
+                                            </td>
+                                            <td>Nos.</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                Rs. 2 x
+                                                <input type="hidden" name="CPCCashInTransitDenomination[8].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 2).FirstOrDefault().Id)" />
+                                            </td>
+                                            <td data-id="2">
+                                                <input id="numberOfPacketsEight" type="number" value="0" name="CPCCashInTransitDenomination[8].NumberOfPackets" class="form-control input-sm inp totalfinalNumber"/>
+                                            </td>
+                                            <td>
+                                                <input id="totalValueEight" type="number" value="0" name="CPCCashInTransitDenomination[8].TotalValue" class="form-control input-sm" readonly="readonly" />
+                                            </td>
+                                            <td>Nos.</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                Rs. 1 x
+                                                <input type="hidden" name="CPCCashInTransitDenomination[9].DenominationId" value="@(denomList.Where(x=> x.DenominationTitle == 1).FirstOrDefault().Id)" />
+                                            </td>
+                                            <td data-id="1">
+                                                <input id="numberOfPacketsNine" type="number" value="0" name="CPCCashInTransitDenomination[9].NumberOfPackets" class="form-control input-sm inp totalfinalNumber" />
+                                            </td>
+                                            <td>
+                                                <input id="totalValueNine" type="number" value="0" name="CPCCashInTransitDenomination[9].TotalValue" class="form-control input-sm" readonly="readonly" />
+                                            </td>
+                                            <td>Nos.</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="9"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"> Total </td>
+                                            <td><input id="finalTotalNumber" type="number" value="" class="form-control input-sm" readonly="readonly" /> </td>
+                                            <td><input id="finalTotalValue" type="number" value="" class="form-control input-sm" readonly="readonly" /> </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="btn-group" role="group">
+                <a href="javascript://" onclick="window.history.back()" class="btn btn-default"><i class="fa fa-close"></i> Cancel / Back</a>
+                <button type="submit" id="submit" class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@section scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //"#DateOfCashReturn"
+
+            $("#Date").data("DateTimePicker").date(moment('@Model.Date.ToShortDateString()'));
+            $("#CollectionDateTime").data("DateTimePicker").date(moment('@Model.CollectionDateTime.ToShortDateString()'));
+            $("#DeliveryDateTime").data("DateTimePicker").date(moment('@Model.DeliveryDateTime.ToShortDateString()'));
+
+            $(".select2").select2();
+
+            //input fields leave event
+            $(document).on('focusout', '.inp', function (e) {
+                e.preventDefault();
+                accountGridRowIndex = $(this).closest('td').attr("data-id");
+                const totalValue = GetTotalVal($(this).val(), accountGridRowIndex);
+                $(this).closest('td').next('td').find('input').val(totalValue);
+
+                var finalTotalValue = parseInt($("#totalValueZero").val()) + parseInt($("#totalValueOne").val()) + parseInt($("#totalValueTwo").val())
+                    + parseInt($("#totalValueThree").val()) + parseInt($("#totalValueFour").val()) + parseInt($("#totalValueFive").val())
+                    + parseInt($("#totalValueSix").val()) + parseInt($("#totalValueSeven").val()) + parseInt($("#totalValueEight").val())
+                    + parseInt($("#totalValueNine").val());
+                $("#finalTotalValue").val(finalTotalValue);
+            });
+
+
+
+        });
+
+        function GetTotalVal(unsortedValue, denomVal) {
+            const totalVal = parseInt(unsortedValue) * parseInt(denomVal) * 1000;
+            return isNaN(totalVal) ? '0' : totalVal;
+        }
+
+        $(".totalfinalNumber").focusout(function () {
+            var finalTotalNumber = parseInt($("#numberOfPacketsZero").val()) + parseInt($("#numberOfPacketsOne").val()) + parseInt($("#numberOfPacketsTwo").val())
+                + parseInt($("#numberOfPacketsThree").val()) + parseInt($("#numberOfPacketsFour").val()) + parseInt($("#numberOfPacketsFive").val())
+                + parseInt($("#numberOfPacketsSix").val()) + parseInt($("#numberOfPacketsSeven").val()) + parseInt($("#numberOfPacketsEight").val())
+                + parseInt($("#numberOfPacketsNine").val());
+            $("#finalTotalNumber").val(finalTotalNumber);
+        });
+    </script>
+}

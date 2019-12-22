@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "Order  Requests List";
+}
+
+<div class="user-Profile" style="min-height:430px;">
+    <div id="employees-Container">
+        @{ Html.RenderAction("_AllOrders", "OrderApproval"); }
+    </div>
+</div>
+
+<div class="modal fade" id="addNewCompany-Modal" tabindex="-1" role="dialog" aria-labelledby="addNewCompany-Modal" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+            filterDataTable("#Orderbooking-dataTable", [0, 1, 2, 3, 4], [5], 10);
+        });
+
+        $(document).ready(function () {
+            //Add Shipping Company
+            $('.addNewCompany').on('click', function () {
+                //debugger
+                var id = $(this).attr("data-id");
+                $('#loading-mask').show();
+                var target = "";
+                target = "/CPC/OrderApproval/_ViewOrder/" + id;
+                // load the url and show modal on success
+                $("#addNewCompany-Modal .modal-dialog").load(target, function () {
+                    $("#addNewCompany-Modal").modal("show");
+                    //filterDataTable("#Orderbooking-dataTable", [0, 1, 2, 3, 4], [5]);
+                    $('#loading-mask').hide();
+                });
+            });
+        });
+    </script>
+}
+

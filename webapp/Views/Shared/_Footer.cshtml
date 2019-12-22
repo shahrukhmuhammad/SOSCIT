@@ -1,0 +1,59 @@
+﻿@functions{
+    #region Current Location Check
+    bool IsCurrentController(string c)
+    {
+        var controller = ViewContext.RouteData.GetRequiredString("controller");
+        return string.Compare(c, controller, true) == 0;
+    }
+    bool IsCurrentAction(string c, string a)
+    {
+        var action = ViewContext.RouteData.GetRequiredString("controller") + ViewContext.RouteData.GetRequiredString("action");
+        return string.Compare(c + a, action, true) == 0;
+    }
+    #endregion
+
+    #region Set Location
+    string SetActiveController(string controller)
+    {
+        var res = IsCurrentController(controller);
+        return res ? "active-tile active" : null;
+    }
+    string SetTopActiveController(string controller)
+    {
+        var res = IsCurrentController(controller);
+        return res ? "active" : null;
+    }
+    string SetActiveAction(string controller, string action)
+    {
+        var res = IsCurrentAction(controller, action);
+        return res ? "active" : null;
+    }
+    #endregion
+}
+
+<footer id="baseApp-Footer" class="navbar navbar-inverse navbar-fixed-bottom">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div id="Footer-Module-Nav" class="visible-tablet visible-xs bg-primary">
+            <div class="module-nav-wrapper">
+                <a class="btn btn-primary tile @SetActiveController("Dashboard")" href="~/Dashboard">
+                    <div class="tile-Icon"><span class="fa fa-2x fa-dashboard"></span></div>
+                    <div class="tile-Title">Dashboard</div>
+                </a>
+                <a class="btn btn-primary tile @SetActiveController("Orderbooking")" href="~/Dashboard">
+                    <div class="tile-Icon"><span class="fa fa-2x fa-file-pdf-o"></span></div>
+                    <div class="tile-Title">Dashboard</div>
+                </a>
+            </div>
+        </div>
+    }
+
+    <div class="row no-margin hidden-tablet hidden-xs">
+        <div class="col-sm-6">
+            @*@AppSettings.GetVal("app:Title") powered by <a class="navbar-brand" style="float:none; height:auto; width:auto;" href="http://www.webnomicstech.net" target="_blank">Webnomics Technologies LLC</a>*@
+        </div>
+        <div class="col-sm-6 text-right" style="padding:3px;">
+            @Request.UserHostName from @Request.Browser.Type
+        </div>
+    </div>
+</footer>

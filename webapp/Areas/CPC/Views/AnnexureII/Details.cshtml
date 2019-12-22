@@ -1,0 +1,334 @@
+﻿
+@model CPCAnnexureII
+@{
+    ViewBag.Title = "Branch Cash Receipt Details";
+
+    var empList = ViewBag.Employees as List<CPCEmployee>;
+    var detailsArry = Model.CPCAnnexureIIDetails.ToArray();
+}
+<form id="lead-frm" class="user-Profile" method="post" enctype="multipart/form-data">
+
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="btn-group" role="group">
+                <a href="javascript://" onclick="window.history.back()" class="btn btn-default"><i class="fa fa-close"></i> Cancel / Back</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4> @ViewBag.Title </h4>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Sr. Number</label>
+                                        <div class="col-sm-8">
+                                            <label class="label label-default">@Model.SrNo</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="row form-group">
+                                        <label class="col-sm-3 text-left horizontal-label">Date</label>
+                                        <div class="col-sm-9">
+                                            <label class="label label-default">@Model.AnnexureIIDate.ToString(Constants.DATE_FORMAT_CLIENT_SIDE)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Branch Name/Code</label>
+                                        <div class="col-sm-8">
+                                            <label class="label label-default">@ViewData["BranchName"]</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-6 horizontal-label">Shipment Bag Seal Number</label>
+                                        <div class="col-sm-6">
+                                            <label class="label label-default">@Model.SealNo</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-6 horizontal-label">Shipment Receipt Number</label>
+                                        <div class="col-sm-6">
+                                            <label class="label label-default">@Model.ShipmentReceiptNo</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row tb-padding">
+                        <table id="mytable" class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th colspan="2" rowspan="2">Description of Cash</th>
+                                    <th>Denomination</th>
+                                    <td>
+                                        @if (detailsArry.Length >= 1)
+                                        {
+                                            <label class="label label-default">@detailsArry[0].CPCDenomination.DenominationTitle</label>
+                                        }
+                                    </td>
+                                    <th>Denomination</th>
+                                    <td>
+                                        @if (detailsArry.Length >= 2)
+                                        {
+                                            <label class="label label-default">@detailsArry[1].CPCDenomination.DenominationTitle</label>
+                                        }
+                                    </td>
+                                    <th>Denomination</th>
+                                    <td>
+                                        @if (detailsArry.Length == 3)
+                                        {
+                                            <label class="label label-default">@detailsArry[2].CPCDenomination.DenominationTitle</label>
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>No. of Bundles/Pieces</th>
+                                    <th>Value</th>
+                                    <th>No. of Bundles/Pieces</th>
+                                    <th>Value</th>
+                                    <th>No. of Bundles/Pieces</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">Unsorted Cash Collected</td>
+                                    @if (detailsArry.Length >= 1)
+                                    {
+                                        <td data-id="0"><input class="form-control input-sm inp" value="@detailsArry[0].UnsortedCashCollected" /></td>
+                                        <td data-id="0"><input class="form-control input-sm" value="@detailsArry[0].UnsortedCashCollectedValue" /></td>
+                                    }
+                                    @if (detailsArry.Length >= 2)
+                                    {
+                                        <td data-id="1"><input class="form-control input-sm inp" value="@detailsArry[1].UnsortedCashCollected" /></td>
+                                        <td data-id="1"><input class="form-control input-sm" value="@detailsArry[1].UnsortedCashCollectedValue" /></td>
+                                    }
+                                    @if (detailsArry.Length == 3)
+                                    {
+                                        <td data-id="2"><input class="form-control input-sm inp" value="@detailsArry[2].UnsortedCashCollected" /></td>
+                                        <td data-id="2"><input class="form-control input-sm" value="@detailsArry[2].UnsortedCashCollectedValue" /></td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td colspan="2">FIT/Re-Issuable</td>
+                                    @if (detailsArry.Length >= 1)
+                                    {
+                                        <td data-id="0"><input class="form-control input-sm inp" value="@detailsArry[0].FITReIssuable" /></td>
+                                        <td data-id="0"><input class="form-control input-sm" value="@detailsArry[0].FITReIssuableValue" /></td>
+                                    }
+                                    @if (detailsArry.Length >= 2)
+                                    {
+                                        <td data-id="1"><input class="form-control input-sm inp" value="@detailsArry[1].FITReIssuable" /></td>
+                                        <td data-id="1"><input class="form-control input-sm" value="@detailsArry[1].FITReIssuableValue" /></td>
+                                    }
+                                    @if (detailsArry.Length == 3)
+                                    {
+                                        <td data-id="2"><input class="form-control input-sm inp" value="@detailsArry[2].FITReIssuable" /></td>
+                                        <td data-id="2"><input class="form-control input-sm" value="@detailsArry[2].FITReIssuableValue" /></td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Unfit/Soiled</td>
+                                    @if (detailsArry.Length >= 1)
+                                    {
+                                        <td data-id="0"><input class="form-control input-sm inp" value="@detailsArry[0].UnfitSoiled" /></td>
+                                        <td data-id="0"><input class="form-control input-sm" value="@detailsArry[0].UnfitSoiledValue" /></td>
+                                    }
+                                    @if (detailsArry.Length >= 2)
+                                    {
+                                        <td data-id="1"><input class="form-control input-sm inp" value="@detailsArry[1].UnfitSoiled" /></td>
+                                        <td data-id="1"><input class="form-control input-sm" value="@detailsArry[1].UnfitSoiledValue" /></td>
+                                    }
+                                    @if (detailsArry.Length == 3)
+                                    {
+                                        <td data-id="2"><input class="form-control input-sm inp" value="@detailsArry[2].UnfitSoiled" /></td>
+                                        <td data-id="2"><input class="form-control input-sm" value="@detailsArry[2].UnfitSoiledValue" /></td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Mismatch/Defaced Zero Value</td>
+                                    @if (detailsArry.Length >= 1)
+                                    {
+                                        <td data-id="0"><input class="form-control input-sm inp" value="@detailsArry[0].MismatchDefacedZero" /></td>
+                                        <td data-id="0"><input class="form-control input-sm" value="@detailsArry[0].MismatchDefacedZeroValue" /></td>
+                                    }
+                                    @if (detailsArry.Length >= 2)
+                                    {
+                                        <td data-id="1"><input class="form-control input-sm inp" value="@detailsArry[1].MismatchDefacedZero" /></td>
+                                        <td data-id="1"><input class="form-control input-sm" value="@detailsArry[1].MismatchDefacedZeroValue" /></td>
+                                    }
+                                    @if (detailsArry.Length == 3)
+                                    {
+                                        <td data-id="2"><input class="form-control input-sm inp" value="@detailsArry[2].MismatchDefacedZero" /></td>
+                                        <td data-id="2"><input class="form-control input-sm" value="@detailsArry[2].MismatchDefacedZeroValue" /></td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Counterfeit Notes</td>
+                                    @if (detailsArry.Length >= 1)
+                                    {
+                                        <td data-id="0"><input class="form-control input-sm inp" value="@detailsArry[0].CounterfeitNotes" /></td>
+                                        <td data-id="0"><input class="form-control input-sm" value="@detailsArry[0].CounterfeitNotesValue" /></td>
+                                    }
+                                    @if (detailsArry.Length >= 2)
+                                    {
+                                        <td data-id="1"><input class="form-control input-sm inp" value="@detailsArry[1].CounterfeitNotes" /></td>
+                                        <td data-id="1"><input class="form-control input-sm" value="@detailsArry[1].CounterfeitNotesValue" /></td>
+                                    }
+                                    @if (detailsArry.Length == 3)
+                                    {
+                                        <td data-id="2"><input class="form-control input-sm inp" value="@detailsArry[2].CounterfeitNotes" /></td>
+                                        <td data-id="2"><input class="form-control input-sm" value="@detailsArry[2].CounterfeitNotesValue" /></td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Net Exces</td>
+                                    @if (detailsArry.Length >= 1)
+                                    {
+                                        <td data-id="0"><input class="form-control input-sm inp" value="@detailsArry[0].NetExcess" /></td>
+                                        <td data-id="0"><input class="form-control input-sm" value="@detailsArry[0].NetExcessValue" /></td>
+                                    }
+                                    @if (detailsArry.Length >= 2)
+                                    {
+                                        <td data-id="1"><input class="form-control input-sm inp" value="@detailsArry[1].NetExcess" /></td>
+                                        <td data-id="1"><input class="form-control input-sm" value="@detailsArry[1].NetExcessValue" /></td>
+                                    }
+                                    @if (detailsArry.Length == 3)
+                                    {
+                                        <td data-id="2"><input class="form-control input-sm inp" value="@detailsArry[2].NetExcess" /></td>
+                                        <td data-id="2"><input class="form-control input-sm" value="@detailsArry[2].NetExcessValue" /></td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Net Storage</td>
+                                    @if (detailsArry.Length >= 1)
+                                    {
+                                        <td data-id="0"><input class="form-control input-sm inp" value="@detailsArry[0].NetShortage" /></td>
+                                        <td data-id="0"><input class="form-control input-sm" value="@detailsArry[0].NetShortageValue" /></td>
+                                    }
+                                    @if (detailsArry.Length >= 2)
+                                    {
+                                        <td data-id="1"><input class="form-control input-sm inp" value="@detailsArry[1].NetShortage" /></td>
+                                        <td data-id="1"><input class="form-control input-sm" value="@detailsArry[1].NetShortageValue" /></td>
+                                    }
+                                    @if (detailsArry.Length == 3)
+                                    {
+                                        <td data-id="2"><input class="form-control input-sm inp" value="@detailsArry[2].NetShortage" /></td>
+                                        <td data-id="2"><input class="form-control input-sm" value="@detailsArry[2].NetShortageValue" /></td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <td colspan="2">Total Cash Returned</td>
+                                    @if (detailsArry.Length >= 1)
+                                    {
+                                        <td data-id="0"><input class="form-control input-sm inp" value="@detailsArry[0].TotalCashReturned" /></td>
+                                        <td data-id="0"><input class="form-control input-sm" value="@detailsArry[0].TotalCashReturnedValue" /></td>
+                                    }
+                                    @if (detailsArry.Length >= 2)
+                                    {
+                                        <td data-id="1"><input class="form-control input-sm inp" value="@detailsArry[1].TotalCashReturned" /></td>
+                                        <td data-id="1"><input class="form-control input-sm" value="@detailsArry[1].TotalCashReturnedValue" /></td>
+                                    }
+                                    @if (detailsArry.Length == 3)
+                                    {
+                                        <td data-id="2"><input class="form-control input-sm inp" value="@detailsArry[2].TotalCashReturned" /></td>
+                                        <td data-id="2"><input class="form-control input-sm" value="@detailsArry[2].TotalCashReturnedValue" /></td>
+                                    }
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-6 horizontal-label">Cash Received By <b>CPC</b> Staff First Person</label>
+                                        <div class="col-sm-6">
+                                            <label class="label label-default">
+                                                @(Model.CashReceivedByCPCStaffAId != null ? empList.Where(x => x.Id == Model.CashReceivedByCPCStaffAId).FirstOrDefault().Name : "")
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-6 horizontal-label">Cash Received By <b>CPC</b> Staff Second Person</label>
+
+                                        <div class="col-sm-6">
+                                            <label class="label label-default">
+                                                @(Model.CashReceivedByCPCStaffBId != null ? empList.Where(x => x.Id == Model.CashReceivedByCPCStaffBId).FirstOrDefault().Name : "")
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-6 horizontal-label">Cash Handed Over By <b>CIT</b> Staff First Person</label>
+
+                                        <div class="col-sm-6">
+                                            <label class="label label-default">
+                                                @(Model.CashHandedOverByCITStaffAId != null ? empList.Where(x => x.Id == Model.CashHandedOverByCITStaffAId).FirstOrDefault().Name : "")
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-6 horizontal-label">Cash Handed Over By <b>CIT</b> Staff Second Person</label>
+                                        <div class="col-sm-6">
+                                            <label class="label label-default">
+                                                @(Model.CashHandedOverByCITStaffStaffBId != null ? empList.Where(x => x.Id == Model.CashHandedOverByCITStaffStaffBId).FirstOrDefault().Name : "")
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="btn-group" role="group">
+                <a href="javascript://" onclick="window.history.back()" class="btn btn-default"><i class="fa fa-close"></i> Cancel / Back</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@section scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //-- Read Only Mode Trigger -//
+            $("input").attr("readonly", true);
+        });
+    </script>
+}
+

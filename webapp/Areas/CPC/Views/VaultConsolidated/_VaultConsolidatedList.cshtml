@@ -1,0 +1,83 @@
+﻿@model List<Vew_VaultConsolidate>
+@{
+    //var detailsList = ViewBag.DetailsList as List<Vew_VaultConsolidate>;
+}
+<style>
+    .modal-dialog {
+        width: 90%;
+        margin: 30px auto;
+        margin-left: 0 auto !important;
+    }
+</style>
+<form id="frm" class="form-Modal"  method="post" action="~/" enctype="multipart/form-data">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Assigned Cash For Sorting</h4>
+        </div>
+        <div class="modal-body">
+            <div class="table-responsive">
+                <table id="VaultConsolidated-dataTable" class="table table-hover table-striped table-condensed">
+                    <thead>
+                        <tr>
+                            <th><input class="form-control input-tbl" type="text" placeholder="Order No" id="VaultConsolidated-dataTable_0" /></th>
+                            <th><input class="form-control input-tbl" type="text" placeholder="Denomination" id="VaultConsolidated-dataTable_1" /></th>
+                            <th><input class="form-control input-tbl" type="text" placeholder="Branch" id="VaultConsolidated-dataTable_2" /></th>
+                            <th><input class="form-control input-tbl" type="text" placeholder="Sr No" id="VaultConsolidated-dataTable_3" /></th>
+                            <th><input class="form-control input-tbl" type="text" placeholder="Date" id="VaultConsolidated-dataTable_4" /></th>
+                            <th><input class="form-control input-tbl" type="text" placeholder="No Of Bundles" id="VaultConsolidated-dataTable_5" /></th>
+                            <th><input class="form-control input-tbl" type="text" placeholder="Total Amount" id="VaultConsolidated-dataTable_6" /></th>
+                            <th><input class="form-control input-tbl" type="text" placeholder="Status" id="VaultConsolidated-dataTable_7" /></th>
+                            <th class="text-center" width="50px">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var x in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @x.OrderNumber
+                                </td>
+                                <td>
+                                    @x.DenominationTitle
+                                </td>
+                                <td style="width:20%">
+                                    @x.BranchName
+                                </td>
+                                <td>
+                                    @x.SerialNumber
+                                </td>
+                                <td>
+                                    @x.Date.ToString(Constants.DATE_FORMAT_CLIENT_SIDE)
+                                </td>
+
+                                <td>@x.NumberOfBundles</td>
+                                <td>@x.TotalValue</td>
+                                <td>
+                                    @if (x.Status == (int)AnnexureStatus.Approved)
+                                    {
+                                        <label class="label label-success">Approved</label>
+                                    }
+                                    else
+                                    {
+                                        <label class="label label-warning">Inprocess</label>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-xs" role="group">
+                                        <a onclick="getOrderId('@(x.OrderBookingId)', '@(x.DenominationId)')" href="javascript://" class="btn btn-primary mg-r" title="Details"><i class="fa fa-check"></i> </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer text-right">
+            <div class="btn-group btn-group-sm" role="group">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i> Cancel</button>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,146 @@
+﻿@model List<CPCOrderBooking>
+@{
+    var detailsList = ViewBag.DetailsList as List<Vew_Orderbookings>;
+    var empList = ViewBag.EmployeeList as List<CPCEmployee>;
+}
+
+<style>
+    .menu-links a:hover {
+        text-decoration: none;
+    }
+
+    .btn-group a {
+        margin-bottom: 5px;
+    }
+</style>
+
+<div class="form-Modal">
+    <div class="modal-content bg-transparent">
+        <div class="modal-header">
+            <h3 class="modal-title">
+                Order Booking Management
+                <span class="pull-right menu-links">
+                    <a href="javascript://" class="text-muted" title="go to previous" style="margin:0 8px;" onclick="window.history.back()">
+                        <i class="fa fa-angle-left"></i> <span class="grid-buttons"> Go Back</span>
+                    </a>
+                    <a href="javascript://" class="text-danger forceRedirect" title="delete record" style="margin:0 8px;" onclick="deleteMultipleRecords('@Url.Action("DeleteMultiple")', '.checkIt')">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                    <a href="~/OrderBooking/Record" style="margin:0 8px;" title="add new">
+                        <i class="fa fa-plus-circle text-primary"></i> <span class="grid-buttons"> Add New Order Booking</span>
+                    </a>
+                </span>
+            </h3>
+        </div>
+
+        <div class="modal-body">
+            <div class="table-responsive">
+                <table id="Orderbooking-dataTable" class="table table-hover table-striped table-condensed">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" onchange="checkAll(this, 'checkIt');" /></th>
+                            <th><input class="form-control input-sm input-tbl" type="text" placeholder="Order No" id="Orderbooking-dataTable_0" /></th>
+                            <th><input class="form-control input-sm input-tbl" type="text" placeholder="Date" id="Orderbooking-dataTable_1" /></th>
+                            <th><input class="form-control input-sm input-tbl" type="text" placeholder="No Of Bundles" id="Orderbooking-dataTable_2" /></th>
+                            <th><input class="form-control input-sm input-tbl" type="text" placeholder="Total Amount" id="Orderbooking-dataTable_3" /></th>
+                            <th width="90px"><input class="form-control input-sm input-tbl" type="text" placeholder="Status" id="Orderbooking-dataTable_4" /></th>
+                            <th><input class="form-control input-sm input-tbl" type="text" placeholder="Approved By/On" id="Orderbooking-dataTable_5" /></th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var x in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @if (CurrentUser.HasAnyPermission(BaseApp.Entity.AppPermission.All, BaseApp.Entity.AppPermission.Bank))
+                                    {
+                                        <input type="checkbox" class="checkIt" value="@x.Id" />
+                                    }
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("Details","Orderbooking",new { Id = x.Id })">
+                                        @x.OrderNo
+                                    </a>
+                                </td>
+                                <td>
+                                    @x.Date.ToString(Constants.DATE_FORMAT_CLIENT_SIDE)
+                                </td>
+
+                                <td>@(detailsList.Where(ab => ab.Id == x.Id).ToList() != null ? detailsList.Where(ab => ab.Id == x.Id).Sum(y => y.NoOfBundles) : 0)</td>
+                                <td>@(detailsList.Where(ab => ab.Id == x.Id).ToList() != null ? detailsList.Where(ab => ab.Id == x.Id).Sum(y => y.TotalAmount) : 0)</td>
+                                <td>
+                                    @if (x.Status == (int)AnnexureStatus.Sorted)
+                                    {
+                                        <label class="label label-primary">Cash Sorted</label> <br />
+                                    }
+                                    else if (x.Status == (int)AnnexureStatus.Approved)
+                                    {
+                                        <label class="label label-primary">Approved</label>
+                                    }
+                                    else if (x.Status == (int)AnnexureStatus.Completed)
+                                    {
+                                        <label class="label label-success">Completed</label>
+                                    }
+                                    else if (x.Status == (int)AnnexureStatus.PendingDelivery)
+                                    {
+                                        <label class="label label-warning">Pending Delivery</label>
+                                    }
+                                    else if (x.Status == (int)AnnexureStatus.Delivered)
+                                    {
+                                        <label class="label label-success">Delivered</label>
+                                    }
+                                    else
+                                    {
+                                        <label class="label label-info">Inprocess</label>
+                                    }
+                                </td>
+                                <td>
+                                    @if (x.ApprovedById.HasValue)
+                                    {
+                                        var emp = empList.Where(y => y.Id == x.ApprovedById.Value).FirstOrDefault();
+                                        <text> @emp.Code - @emp.Name <br /><b>On</b> @x.ApprovedOn </text>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-xs" role="group">
+                                        <a href="@Url.Action("Details","Orderbooking")/@x.Id" class="btn btn-primary" title="Details"><i class="fa fa-eye"></i> View </a>
+                                        @if (x.Status == (int)AnnexureStatus.Sorted)
+                                        {
+                                            @*<a href="javascript://" data-id="@x.Id" id="btn-Collect" class="btn btn-success btn-xs" title="Collect"><i class="fa fa-inbox"></i> Collect </a>*@
+                                            <a href="javascript://" class="btn btn-success btn-xs" onclick="changeStatus('@Url.Action("RequestCash")', '@x.Id', '', 'Are you sure you want to request Sorted Cash against this Order ?', 'Request For Sorted Cash')" title="Collect"><i class="fa fa-inbox"></i> Collect</a>
+                                        }
+                                        else if (x.Status == (int)AnnexureStatus.Delivered)
+                                        {
+                                            <a href="javascript://" class="btn btn-success btn-xs" onclick="changeStatus('@Url.Action("ConfirmReceived")', '@x.Id', '', 'Are you sure you want to Confirm Received this Order ?', 'Order Received Confirmation')" title="Confirm Received"><i class="fa fa-money"></i> Received</a>
+                                        }
+                                        @if (CurrentUser.HasAnyPermission(BaseApp.Entity.AppPermission.All, BaseApp.Entity.AppPermission.CPC))
+                                        {
+                                            @*<a href="@Url.Action("Record","Orderbooking")/@x.Id" class="btn btn-info" title="Edit"><i class="fa fa-edit"></i></a>*@
+                                            @*<a href="javascript://" onclick="deleteRecord('@Url.Action("Delete")', '@x.Id')" class="btn btn-danger" title="Delete"><i class="fa fa-trash"></i></a>*@
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer text-right">
+            <div class="pull-right menu-links">
+                <a href="javascript://" class="text-muted" title="go to previous" style="margin:0 8px;" onclick="window.history.back()">
+                    <i class="fa fa-angle-left fa-2x"></i> <span class="grid-buttons"> Go Back</span>
+                </a>
+                <a href="javascript://" class="text-danger forceRedirect" title="delete record" style="margin:0 8px;" onclick="deleteMultipleRecords('@Url.Action("DeleteMultiple")', '.checkIt')">
+                    <i class="fa fa-trash fa-2x"></i>
+                </a>
+                <a href="~/OrderBooking/Record" style="margin:0 8px;" title="add new">
+                    <i class="fa fa-plus-circle fa-2x text-primary"></i> <span class="grid-buttons"> Add New Order Booking</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+

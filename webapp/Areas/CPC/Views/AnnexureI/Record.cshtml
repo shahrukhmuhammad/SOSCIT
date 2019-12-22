@@ -1,0 +1,590 @@
+﻿
+@model CPCAnnexureI
+@{
+    var queryId = ViewContext.RouteData.Values["Id"];
+    ViewBag.Title = (queryId == null ? "Add New Cash Receiving" : "Edit Cash Receiving");
+}
+
+<style>
+    /*#annexureI th {
+        text-align: center !important;
+    }*/
+
+    .field-validation-error {
+        color: red;
+    }
+</style>
+<form id="lead-frm" class="user-Profile" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(x => x.Id)
+
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="btn-group" role="group">
+                <a href="javascript://" onclick="window.history.back()" class="btn btn-default"><i class="fa fa-close"></i> Cancel / Back</a>
+                <button type="submit" id="submit" class="btn btn-success hidden"><i class="fa fa-check"></i> Submit</button>
+                <button type="button" onclick="checkValidation()" id="btnValidate" class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4> Cash Receiving </h4>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Order Number</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.OrderNumber, new { @class = "form-control input-sm", @readonly = "readyonly", @required = "required" })
+                                            @Html.ValidationMessageFor(m => m.OrderNumber)
+                                            <a href="javascript://" class="btn btn-sm btn-primary addNewCompany"><i class="fa fa-plus"></i> Select Order</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Sr. Number</label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.SrNo, new { @class = "form-control input-sm", @type = "number", @required = "required", @autofocus = "true" })
+                                            <span class="duplicate text-danger"></span>
+                                            @Html.ValidationMessageFor(m => m.SrNo)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row form-group">
+                                        <label class="col-sm-3 horizontal-label">Collection Date</label>
+                                        <div class="col-sm-9">
+                                            <input name="DateOfCollection" id="DateOfCollection" class="form-control input-sm datePicker" type="text" value="@Model.DateOfCollection.ToShortDateString()" required autocomplete="off">
+                                            @Html.ValidationMessageFor(m => m.DateOfCollection)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row tb-padding">
+                        <table id="annexureI" class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Project</th>
+                                    <th>Cash Processing Cell</th>
+                                    <th>Branch</th>
+                                    <th>Denomination</th>
+                                    <th style="width:10% !important">No. Of Bundles</th>
+                                    <th>Total Amount</th>
+                                    <th style="width:10% !important">Seal No.</th>
+                                    <th style="width:15% !important">Shipment Receipt</th>
+                                    @*<th>Actions</th>*@
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+
+                        @*<div class="col-sm-1">
+                                <label>&nbsp; &nbsp;</label> <br />
+                                <button class="btn btn-primary btn-sm btn-custom" type="button" id="AddNewRow" title="Add New Row"><i class="fa fa-plus"></i> Add New Row</button>
+                            </div>*@
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-6 horizontal-label">Cash Handed Over By <b>CPC</b> Staff First Person</label>
+                                        <div class="col-sm-6">
+                                            @Html.DropDownListFor(x => x.CashHandedOverCPCStaffAId, (SelectList)ViewBag.EmployeeList, " Select Employee ", new { @class = "form-control input-sm select2 cpc", @dataName = "CashHandedOverCPCStaffACNIC", @required= "required" })
+                                            @Html.ValidationMessageFor(m => m.CashHandedOverCPCStaffAId)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-6 horizontal-label">CPC Staff First Person CNIC</label>
+                                        <div class="col-sm-6">
+                                            @Html.DropDownListFor(x => x.CashHandedOverCPCStaffACNIC, (SelectList)ViewBag.EmployeeCNICList, " Select Employee ", new { @class = "form-control input-sm select2" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-6 horizontal-label">Cash Handed Over By <b>CPC</b> Staff Second Person</label>
+                                        <div class="col-sm-6">
+                                            @Html.DropDownListFor(x => x.CashHandedOverCPCStaffBId, (SelectList)ViewBag.EmployeeList, " Select Employee ", new { @class = "form-control input-sm select2 cpc", @dataName = "CashHandedOverCPCStaffBCNIC", @required = "required" })
+                                            @Html.ValidationMessageFor(m => m.CashHandedOverCPCStaffBId)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-6 horizontal-label">CPC Staff Second Person CNIC</label>
+                                        <div class="col-sm-6">
+                                            @Html.DropDownListFor(x => x.CashHandedOverCPCStaffBCNIC, (SelectList)ViewBag.EmployeeCNICList, " Select Employee ", new { @class = "form-control input-sm select2" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-6 horizontal-label">Cash Handed Over By <b>CIT</b> First Person</label>
+                                        <div class="col-sm-6">
+                                            @Html.DropDownListFor(x => x.CashHandedOverCITStaffAId, (SelectList)ViewBag.EmployeeList, " Select Employee ", new { @class = "form-control input-sm select2 cpc", @dataName = "CashHandedOverCITStaffACNIC", @required = "required" })
+                                            @Html.ValidationMessageFor(m => m.CashHandedOverCITStaffAId)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-6 horizontal-label">CIT First Person CNIC</label>
+                                        <div class="col-sm-6">
+                                            @Html.DropDownListFor(x => x.CashHandedOverCITStaffACNIC, (SelectList)ViewBag.EmployeeCNICList, " Select Employee ", new { @class = "form-control input-sm select2" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-6 horizontal-label">Cash Handed Over By <b>CIT</b> Staff Second Person</label>
+                                        <div class="col-sm-6">
+                                            @Html.DropDownListFor(x => x.CashHandedOverCITStaffBId, (SelectList)ViewBag.EmployeeList, " Select Employee ", new { @class = "form-control input-sm select2 cpc", @dataName = "CashHandedOverCITStaffBCNIC", @required = "required" })
+                                            @Html.ValidationMessageFor(m => m.CashHandedOverCITStaffBId)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-6 horizontal-label">CIT Second Person CNIC</label>
+                                        <div class="col-sm-6">
+                                            @Html.DropDownListFor(x => x.CashHandedOverCITStaffBCNIC, (SelectList)ViewBag.EmployeeCNICList, " Select Employee ", new { @class = "form-control input-sm select2" })                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-6 horizontal-label"> <b>CPC</b> Staff Handing Over Cash and Verifying First Person</label>
+                                        <div class="col-sm-6">
+                                            @Html.DropDownListFor(x => x.SignatureCPCHandingOverCashAId, (SelectList)ViewBag.EmployeeList, " Select Employee ", new { @class = "form-control input-sm select2 cpc", @dataName = "SignatureCPCHandingOverCashACNIC", @required = "required" })
+                                            @Html.ValidationMessageFor(m => m.SignatureCPCHandingOverCashAId)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-6 horizontal-label">CPC Verifying First Person CNIC</label>
+                                        <div class="col-sm-6">
+                                            @Html.DropDownListFor(x => x.SignatureCPCHandingOverCashACNIC, (SelectList)ViewBag.EmployeeCNICList, " Select Employee ", new { @class = "form-control input-sm select2" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-6 horizontal-label"><b>CPC</b> Staff Handing Over Cash and Verifying Second Person</label>
+                                        <div class="col-sm-6">
+                                            @Html.DropDownListFor(x => x.SignatureCPCHandingOverCashBId, (SelectList)ViewBag.EmployeeList, " Select Employee ", new { @class = "form-control input-sm select2 cpc", @dataName = "SignatureCPCHandingOverCashBCNIC", @required = "required" })
+                                            @Html.ValidationMessageFor(m => m.SignatureCPCHandingOverCashBId)
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-6 horizontal-label">CPC Verifying Second Person CNIC</label>
+                                        <div class="col-sm-6">
+                                            @Html.DropDownListFor(x => x.SignatureCPCHandingOverCashBCNIC, (SelectList)ViewBag.EmployeeCNICList, " Select Employee ", new { @class = "form-control input-sm select2" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="btn-group" role="group">
+                <a href="javascript://" onclick="window.history.back()" class="btn btn-default"><i class="fa fa-close"></i> Cancel / Back</a>
+                <button type="submit" id="submit" class="btn btn-success hidden"><i class="fa fa-check"></i> Submit</button>
+                <button type="button" onclick="checkValidation()" id="btnValidate" class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
+            </div>
+        </div>
+    </div>
+
+    @*<select id="listBranches" style="display:none;"></select>*@
+    <select id="listProjects" style="display:none;">
+        <option> - Select - </option>
+    </select>
+    <select id="listDenomination" style="display:none;"></select>
+    <select id="listCPH" style="display:none;">
+        <option> - Select - </option>
+    </select>
+    @Html.HiddenFor(x => x.OrderBookingId)
+</form>
+<div class="modal fade" id="addNewCompany-Modal" tabindex="-1" role="dialog" aria-labelledby="addNewCompany-Modal" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+    </div>
+</div>
+
+@section scripts{
+
+    <script type="text/javascript">
+        var orderId;
+        var isSubmit = true;
+        function getOrderId(Id) {
+            $('#OrderId').val(Id);
+            loadOrderData(Id);
+            $('#addNewCompany-Modal').modal('toggle');
+        }
+        function loadOrderData(Id) {
+            //debugger;
+            if (Id) {
+                $.get('/Orderbooking/GetOrderBookingData?Id=' + Id, function (response) {
+                    if (response) {
+                        //console.log(response);
+                        $('#annexureI tbody').html('');
+                        $('#OrderNumber').val(response.OrderNo);
+                        $('#OrderBookingId').val(response.Id);
+                        //Details
+                        $.each(response.Details,
+                            function (index, item) {
+                                //console.log(item);
+                                $('#annexureI tbody').append(generateHtmlWithData(index + 1, item));
+                            });
+
+                    }
+                    else {
+                        //$('.duplicate').html('');
+                        //isSubmit = true;
+                    }
+                });
+            }
+        }
+
+        function generateHtmlWithData(row, item) {
+            debugger
+            var _html = '<tr class="rows" data-id="' + row + '">'
+            //_html += '<td class="text-center" > ' + row + '</td>'
+            _html += '<td><input type="hidden" id="ddlProject' + (row - 1) + '" name="CPCAnnexureIDetail[' + (row - 1) + '].ProjectId" value="' + item.ProjectId + '"/>' + item.CPCProjectName + '</td>'
+
+            _html += '<td><input type="hidden" id="ddlCph' + (row - 1) + '" name="CPCAnnexureIDetail[' + (row - 1) + '].CashProcessingCellId" value="' + item.CashProcessingCellId + '"> ' + item.CashProcessingCellTitle + ' </td>'
+
+            _html += '<td><input type="hidden" id="ddlCph' + (row - 1) + '" name="CPCAnnexureIDetail[' + (row - 1) + '].ProjectBranchId" value="' + item.ProjectBranchId + '">  ' + item.BranchCode + ' - ' + item.BranchName + '</td>'
+
+            _html += '<td><input type="hidden" id="ddlDenomination' + (row - 1) + '" name="CPCAnnexureIDetail[' + (row - 1) + '].DenominationId" value="' + item.DenominationId + '"/> ' + item.DenominationTitle + ' </td>'
+
+            _html += '<td><input type="hidden" class="form-control input-sm inp" name="CPCAnnexureIDetail[' + (row - 1) + '].NoOfBundles" value="' + item.NoOfBundles + '" /> ' + item.NoOfBundles + '</td>'
+
+            _html += '<td><input type="hidden" class="form-control input-sm" name="CPCAnnexureIDetail[' + (row - 1) + '].TotalAmount" value="' + item.TotalAmount + '" /> ' + item.TotalAmount + '</td>'
+
+            _html += '<td><input type="text" class="form-control input-sm" name="CPCAnnexureIDetail[' + (row - 1) + '].SealNo" required></td>'
+
+            _html += '<td><input type="number" class="form-control input-sm" name="CPCAnnexureIDetail[' + (row - 1) + '].ShipmentReciptNo" pattern="[0-9]" required></td></tr>'
+
+            //_html += '<td> <a href="javascript://" class="btn btn-xs btn-danger btn-removeRow" data-original-title="Delete"><i class="fa fa-trash"></i> Delete</a> </td></tr>';
+
+            return _html;
+        }
+
+        function filterBranches(Id, EmployeeListNumber) {
+            debugger;
+
+            //var branchtoAppend = $('#CashHandedOverCPCStaffACNIC');
+            var branchtoAppend = $('#'+EmployeeListNumber);
+            var url = '@Url.Action("FetchHirerachyCNIC", "AnnexureI")';
+
+            $.getJSON(url,
+                { Id: Id },
+                function (response) {
+                    branchtoAppend.empty();
+                    //console.log(response);
+                    //roads.append(new Option(" - Select - ", "0"));
+                    $.each(response,
+                        function (index, item) {
+                            var branch = new Option(item.Text, item.Value);
+                            branchtoAppend.append(branch);
+                        });
+                });
+        }
+
+        $(document).ready(function () {
+            //Add Shipping Company
+            $('.addNewCompany').on('click', function () {
+                $('#loading-mask').show();
+                var target = "";
+                target = "/Orderbooking/_OrdersList";
+                // load the url and show modal on success
+                $("#addNewCompany-Modal .modal-dialog").load(target, function () {
+                    $("#addNewCompany-Modal").modal("show");
+                    filterDataTable("#Orderbooking-dataTable", [0, 1, 2, 3, 4 ], [5]);
+                    $('#loading-mask').hide();
+                });
+            });
+
+            $("#DateOfCollection").data("DateTimePicker").date(moment('@Model.DateOfCollection.ToShortDateString()'));
+
+
+            $(document).on('change', '.cpc', function (e) {
+                debugger;
+                e.preventDefault();
+                var dataa = $(this).select2('data');
+                var EmployeeListNumber = $(this).attr("dataName");
+                filterBranches(dataa[0].id, EmployeeListNumber);
+            });
+
+
+
+            $('#btn_Select1').on('click', function () {
+                debugger;
+                alert($(this).attr('data-id'));
+            });
+
+            //Project ddl change event
+            $(document).on('change', '.project', function (e) {
+                e.preventDefault();
+                var dataa = $(this).select2('data');
+                filterCpcHouses(dataa[0].id, $(this).closest('tr').attr("data-id"));
+            });
+
+            //generateBranchDDL(branchArray);
+            generateProjectDDL(projectArray);
+            generateDenomDDL(denomArray);
+            generateCPHDDL(cphArray);
+
+            //$("#txtVoucherDate").mask("99-99-9999");
+            var accountGridRowIndex;
+
+            //Page Load
+            //var rowCount = $('#annexureI tbody tr').length;
+            //if (rowCount == 0) {
+            //    AddFirstRow(1);
+            //    //bindBranchDDL(0);
+            //    bindDenomDDL(0);
+            //    bindCphDDL(0);
+            //    bindProjectDDL(0);
+            //    for (var i = 2; i <= 5; i++) {
+            //        AddNewRow(i);
+            //        //bindBranchDDL(i - 1);
+            //        bindDenomDDL(i - 1);
+            //        bindCphDDL(i - 1);
+            //        bindProjectDDL(i - 1);
+            //    }
+            //}
+
+            //btn-remove Click
+            $(document).on('click', '.btn-removeRow', function (e) {
+                e.preventDefault();
+                if ($('#annexureI tbody tr').length > 1) {
+                    $(this).closest('tr').remove();
+                }
+                else {
+                    bootbox.dialog({
+                        message: "You Can't Delete this Row",
+                        title: "Delete Row",
+                        buttons: {
+                            main: {
+                                label: "Ok",
+                                className: "btn-default",
+                                callback: function () {
+                                    show: false;
+                                }
+                            },
+                        }
+                    });
+                }
+                //GetTotal();
+            });
+
+            $('#AddNewRow').click(function () {
+                //debugger
+                var rownum = $("#annexureI tr:last").attr("data-id");
+                rownum = parseInt(rownum) + 1;
+                AddNewRow(rownum);
+                //bindBranchDDL(rownum - 1);
+                bindDenomDDL(rownum - 1);
+                bindCphDDL(rownum - 1);
+                bindProjectDDL(rownum - 1);
+                $(".select2").select2();
+            });
+
+            $(".select2").select2();
+
+            //input fields leave event
+            $(document).on('focusout', '.inp', function (e) {
+                e.preventDefault();
+                accountGridRowIndex = $(this).closest('tr').attr("data-id");
+                var data = $('#ddlDenomination' + accountGridRowIndex).select2('data');
+                const totalValue = GetTotalVal($(this).val(), data[0].text);
+                $(this).closest('td').next('td').find('input').val(totalValue);
+            });
+
+            //$('#SrNo').on('focusout', function () {
+            //    checkSrDuplication($(this).val());
+            //});
+        });
+
+        function filterCpcHouses(Id, counter) {
+            var cphtoAppend = $('#ddlCph' + (parseInt(counter) - 1));
+            var url = '@Url.Action("FetchCashProcessingHouses", "AnnexureI")';
+            $.getJSON(url,
+                { Id: Id },
+                function (response) {
+                    cphtoAppend.empty();
+                    cphtoAppend.append(new Option(" - Select - ", "0"));
+                    $.each(response,
+                        function (index, item) {
+                            var newItem = new Option(item.Text, item.Value);
+                            cphtoAppend.append(newItem);
+                        });
+                });
+        }
+
+        //Functions
+        function generateHtml(row) {
+            var _html = '<tr class="rows" data-id="' + row + '">'
+            //_html += '<td class="text-center" > ' + row + '</td>'
+            _html += '<td><select class="form-control input-sm select2 project" id="ddlProject' + (row - 1) + '" name="CPCAnnexureIDetail[' + (row - 1) + '].ProjectId">   </select></td>'
+
+            //_html += '<td><input type="text" class="form-control input-sm" name="CPCAnnexureIDetail[' + (row - 1) + '].CashProcessingCell"></td>'
+            _html += '<td><select class="form-control input-sm select2 cpc" id="ddlCph' + (row - 1) + '" name="CPCAnnexureIDetail[' + (row - 1) + '].CashProcessingCellId">   </select></td>'
+
+            _html += '<td><select class="form-control input-sm select2" id="ddlBranch' + (row - 1) + '" name="CPCAnnexureIDetail[' + (row - 1) + '].ProjectBranchId">   </select></td>'
+            _html += '<td><select class="form-control input-sm select2" id="ddlDenomination' + (row - 1) + '" name="CPCAnnexureIDetail[' + (row - 1) + '].DenominationId"></select></td>'
+
+            _html += '<td><input type="number" class="form-control input-sm inp" name="CPCAnnexureIDetail[' + (row - 1) + '].NoOfBundles" pattern="[0-9]"></td>'
+            _html += '<td><input type="number" class="form-control input-sm" name="CPCAnnexureIDetail[' + (row - 1) + '].TotalAmount" pattern="[0-9]" readonly></td>'
+            _html += '<td><input type="text" class="form-control input-sm" name="CPCAnnexureIDetail[' + (row - 1) + '].SealNo"></td>'
+            _html += '<td><input type="number" class="form-control input-sm" name="CPCAnnexureIDetail[' + (row - 1) + '].ShipmentReciptNo" pattern="[0-9]"></td>'
+
+            _html += '<td> <a href="javascript://" class="btn btn-xs btn-danger btn-removeRow" data-original-title="Delete"><i class="fa fa-trash"></i> Delete</a> </td></tr>';
+
+            return _html;
+        }
+
+        @*var branchArray = @Html.Raw(Json.Encode(ViewBag.BrachList));*@
+
+        var projectArray = @Html.Raw(Json.Encode(ViewBag.ProjectList));
+        var denomArray = @Html.Raw(Json.Encode(ViewBag.DenominationList));
+        var cphArray = ''; @*@Html.Raw(Json.Encode(ViewBag.CPHList));*@
+        //console.log(array);
+
+
+        //function bindBranchDDL(row) {
+        //    //debugger
+        //    var options = $("#listBranches > option").clone();
+        //    $("#annexureI > tbody > tr #ddlBranch" + row + "").append(options);
+        //}
+
+        function bindProjectDDL(row) {
+            //debugger
+            var options = $("#listProjects > option").clone();
+            $("#annexureI > tbody > tr #ddlProject" + row + "").append(options);
+        }
+        function bindDenomDDL(row) {
+            //debugger
+            var options = $("#listDenomination > option").clone();
+            $("#annexureI > tbody > tr #ddlDenomination" + row + "").append(options);
+        }
+        function bindCphDDL(row) {
+            //debugger
+            var options = $("#listCPH > option").clone();
+            $("#annexureI > tbody > tr #ddlCph" + row + "").append(options);
+        }
+
+        //function generateBranchDDL(array) {
+        //    //debugger
+        //    for (var i = 0; i < array.length; i++) {
+        //        $("#listBranches").append($("<option /> ").val(array[i].Value).text(array[i].Text));
+        //    }
+        //}
+        function generateProjectDDL(array) {
+            //debugger
+            for (var i = 0; i < array.length; i++) {
+                $("#listProjects").append($("<option /> ").val(array[i].Value).text(array[i].Text));
+            }
+        }
+        function generateDenomDDL(array) {
+            //debugger
+            for (var i = 0; i < array.length; i++) {
+                $("#listDenomination").append($("<option /> ").val(array[i].Value).text(array[i].Text));
+            }
+        }
+        function generateCPHDDL(array) {
+            //debugger
+            for (var i = 0; i < array.length; i++) {
+                $("#listCPH").append($("<option /> ").val(array[i].Value).text(array[i].Text));
+            }
+        }
+
+        function AddFirstRow(row) {
+            if (isEmptyLastRow()) {
+                $('#annexureI tbody').append(generateHtml(row));
+            }
+        }
+
+        function AddNewRow(row) {
+            $('#annexureI tr:last').after(generateHtml(row));
+        }
+
+        function isEmptyLastRow() {
+            var test = $("#annexureI tr:last td:eq(1)").find("input");
+            return "" !== $("#annexureI tr:last td:eq(1)").find("input").val() && "" !== $("#annexureI tr:last td:eq(2)").find("input").val();
+        }
+
+        function GetTotalVal(unsortedValue, denomVal) {
+            const totalVal = 1000 * parseInt(unsortedValue) * parseInt(denomVal);
+            return isNaN(totalVal) ? '0' : totalVal;
+        }
+
+        function checkValidation() {
+            //debugger
+            checkSrDuplication($('#SrNo').val())
+            if (isSubmit) {
+                //$('#lead-frm').submit();
+                $('#submit').click();
+                //console.log('submitted');
+            }
+
+            //if ($('#SrNo').val()) {
+            //    //duplication check
+            //    checkSrDuplication($('#SrNo').val());
+            //}
+        }
+
+        function checkSrDuplication(srNumber) {
+            //debugger
+            if (srNumber) {
+                $.get('/CPC/AnnexureI/DuplicationCheck?SrNo=' + srNumber, function (response) {
+                    if (response) {
+                        //console.log(response);
+                        $('.duplicate').html('Sr No. ' + srNumber + ' already exists.');
+                        isSubmit = true;
+                        $('#SrNo').focus();
+                    }
+                    else {
+                        $('.duplicate').html('');
+                        isSubmit = true;
+                    }
+                });
+            }
+        }
+    </script>
+}
+

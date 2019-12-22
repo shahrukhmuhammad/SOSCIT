@@ -1,0 +1,107 @@
+﻿@model List<CPCAnnexureIII>
+@{var empList = ViewBag.Employees as List<CPCEmployee>; }
+
+    <style>
+        .menu-links a:hover {
+            text-decoration: none;
+        }
+    </style>
+
+    <div class="form-Modal">
+        <div class="modal-content bg-transparent">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Cash Reconciliation Management
+                    <span class="pull-right menu-links">
+                        <a href="javascript://" class="text-muted" title="go to previous" style="margin:0 8px;" onclick="window.history.back()">
+                            <i class="fa fa-angle-left"></i> <span class="grid-buttons"> Go Back</span>
+                        </a>
+                        @*<a href="javascript://" class="text-danger forceRedirect" title="delete record" style="margin:0 8px;" onclick="deleteMultipleRecords('@Url.Action("DeleteMultiple")', '.checkIt')">
+                <i class="fa fa-trash"></i>
+            </a>*@
+                        <a href="@Url.Action("Record","AnnexureIII")" style="margin:0 8px;" title="add new">
+                            <i class="fa fa-plus-circle text-primary"></i> <span class="grid-buttons"> Add New Cash Reconciliation</span>
+                        </a>
+                    </span>
+                </h3>
+            </div>
+            @*<div class="row" style="margin:15px 0">
+                <div class="col-md-12">
+                    <ul class="nav nav-pills">
+                        <li><a href="#" class="btn btn-default" style="padding:6px 20px;"> <i style="font-size:16px;" class="fa fa-hdd-o"></i> &nbsp; All</a></li>
+                        <li><a href="#" class="btn btn-default" style="padding:6px 20px;"> <i style="font-size:16px;" class="fa fa-user"></i> &nbsp; Active</a></li>
+                        <li><a href="#" class="btn btn-default" style="padding:6px 20px;"> <i style="font-size:16px;" class="fa fa-adjust"></i> &nbsp; Invited</a></li>
+                        <li><a href="#" class="btn btn-default" style="padding:6px 20px;"> <i style="font-size:16px;" class="fa fa-user-times"></i> &nbsp; Suspended</a></li>
+                    </ul>
+                </div>
+            </div>*@
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table id="AnnexureIII-dataTable" class="table table-hover table-striped table-condensed">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" onchange="checkAll(this, 'checkIt');" /></th>
+                                <th><input class="form-control input-sm input-tbl" type="text" placeholder="Sr No" id="AnnexureIII-dataTable_0" /></th>
+                                <th><input class="form-control input-sm input-tbl" type="text" placeholder="Date" id="AnnexureIII-dataTable_1" /></th>
+                                <th><input class="form-control input-sm input-tbl" type="text" placeholder="Branch" id="AnnexureIII-dataTable_2" /></th>
+                                <th><input class="form-control input-sm input-tbl" type="text" placeholder="Bundles Collected" id="AnnexureIII-dataTable_3" /></th>
+                                <th><input class="form-control input-sm input-tbl" type="text" placeholder="Cash Collected" id="AnnexureIII-dataTable_4" /></th>
+                                <th><input class="form-control input-sm input-tbl" type="text" placeholder="Cash Reconciliation Date" id="AnnexureIII-dataTable_5" /></th>
+                                <th><input class="form-control input-sm input-tbl" type="text" placeholder="Tota Cash Reconciliation" id="AnnexureIII-dataTable_6" /></th>
+                                <th><input class="form-control input-sm input-tbl" type="text" placeholder="Status" id="AnnexureIII-dataTable_7" /></th>
+                                <th class="text-center" width="100px">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var x in Model)
+                            {
+                            <tr>
+                                <td>
+                                    @if (CurrentUser.HasAnyPermission(BaseApp.Entity.AppPermission.All, BaseApp.Entity.AppPermission.CPC))
+                                    {
+                                        <input type="checkbox" class="checkIt" value="@x.Id" />
+                                    }
+                                </td>
+                                <td><a href="@Url.Action("Details","AnnexureIII",new { Id = x.Id })">@x.SrNo</a></td>
+                                <td>@x.AnnexureIIIDate.ToString(Constants.DATE_FORMAT_CLIENT_SIDE)</td>
+                                <td>@($"{x.CPCProjectBranch.BranchCode} - {x.CPCProjectBranch.BranchName}")</td>
+                                <td>@x.TotalBundlesCollected</td>
+                                <td>@x.TotalCashCollected</td>
+                                <td>@x.DateOfCashReturn.ToString(Constants.DATE_FORMAT_CLIENT_SIDE)</td>
+                                <td>@x.TotalCashReturned</td>
+                                <td>
+                                    <label class="label label-warning">Inprocess</label>
+                                    @*<label class="label label-success">@x.Status.ToSpacedTitleCase()</label>*@
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-xs" role="group">
+                                        <a href="@Url.Action("Details","AnnexureIII")/@x.Id" class="btn btn-primary" title="Details"><i class="fa fa-eye"></i></a>
+                                        @if (CurrentUser.HasAnyPermission(BaseApp.Entity.AppPermission.All, BaseApp.Entity.AppPermission.CPC))
+                                        {
+                                            @*<a href="@Url.Action("Record","AnnexureIII")/@x.Id" class="btn btn-info" title="Edit"><i class="fa fa-edit"></i></a>*@
+                                            <a href="javascript://" onclick="deleteRecord('@Url.Action("Delete")', '@x.Id')" class="btn btn-danger" title="Delete"><i class="fa fa-trash"></i></a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer text-right">
+                <div class="pull-right menu-links">
+                    <a href="javascript://" class="text-muted" title="go to previous" style="margin:0 8px;" onclick="window.history.back()">
+                        <i class="fa fa-angle-left fa-2x"></i> <span class="grid-buttons"> Go Back</span>
+                    </a>
+                    @*<a href="javascript://" class="text-danger forceRedirect" title="delete record" style="margin:0 8px;" onclick="deleteMultipleRecords('@Url.Action("DeleteMultiple")', '.checkIt')">
+                        <i class="fa fa-trash fa-2x"></i>
+                    </a>*@
+                    <a href="@Url.Action("Record","AnnexureIII")" style="margin:0 8px;" title="add new">
+                        <i class="fa fa-plus-circle fa-2x text-primary"></i> <span class="grid-buttons"> Add New Cash Reconciliation</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+

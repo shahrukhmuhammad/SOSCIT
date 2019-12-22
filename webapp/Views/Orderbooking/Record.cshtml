@@ -1,0 +1,417 @@
+﻿
+@model CPCOrderBooking
+@{
+    var queryId = ViewContext.RouteData.Values["Id"];
+    ViewBag.Title = (queryId == null ? "Add New Order Booking" : "Edit Order Booking");
+}
+
+<style>
+    #orderbooking-datatable th {
+        text-align: center !important;
+    }
+
+    .field-validation-error {
+        color: red;
+    }
+
+    #orderbooking-datatable {
+        width: 70%;
+    }
+</style>
+<form id="lead-frm" class="user-Profile" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="btn-group" role="group">
+                <a href="javascript://" onclick="window.history.back()" class="btn btn-default"><i class="fa fa-close"></i> Cancel / Back</a>
+                <button type="submit" id="submit" class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4> Order Booking </h4>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 horizontal-label">
+                                            <label class="label label-primary">Order Number</label>
+                                        </label>
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(x => x.OrderNo, new { @class = "form-control input-sm", @autofocus = "true", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-3 horizontal-label">
+                                            <label class="label label-primary">Order Date</label>
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <input name="Date" id="Date" class="form-control input-sm datePicker" type="text" value="@Model.Date.ToShortDateString()" required autocomplete="off" readonly />
+                                            @Html.ValidationMessageFor(m => m.Date)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">
+                                            <label class="label label-primary">Collection Branch</label>
+                                        </label>
+                                        <div class="col-sm-8">
+                                            @Html.DropDownListFor(x => x.CollectionBranchId, (SelectList)ViewBag.BrachList, new { @class = "form-control input-sm select2", @required = "required" })
+                                            @Html.ValidationMessageFor(m => m.CollectionBranchId)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-3 horizontal-label">
+                                            <label class="label label-primary">Delivery Branch</label>
+                                        </label>
+                                        <div class="col-sm-9">
+                                            @Html.DropDownListFor(x => x.DeliveryBranchId, (SelectList)ViewBag.BrachList, new { @class = "form-control input-sm select2", @required = "required" })
+                                            @Html.ValidationMessageFor(m => m.DeliveryBranchId)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">
+                                            <label class="label label-primary">To be Billed Branch</label>
+                                        </label>
+                                        <div class="col-sm-8">
+                                            @Html.DropDownListFor(x => x.BilledBranchId, (SelectList)ViewBag.BrachList, new { @class = "form-control input-sm select2", @required = "required" })
+                                            @Html.ValidationMessageFor(m => m.BilledBranchId)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row tb-padding">
+                        <table id="orderbooking-datatable" class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Sr No</th>
+                                    @*<th>Cash Processing Cell</th>
+                                        <th style="width:15% !important">Branch</th>*@
+                                    <th>Denomination</th>
+                                    <th>No. Of Bundles</th>
+                                    <th>Total Amount</th>
+                                    @*<th>Pickup Point</th>*@
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div class="col-sm-1">
+                            <label>&nbsp; &nbsp;</label> <br />
+                            <button class="btn btn-primary btn-sm btn-custom" type="button" id="AddNewRow" title="Add New Row"><i class="fa fa-plus"></i> Add New Row</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="btn-group" role="group">
+                <a href="javascript://" onclick="window.history.back()" class="btn btn-default"><i class="fa fa-close"></i> Cancel / Back</a>
+                <button type="submit" id="submit" class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <select id="listBranches" style="display:none;"></select>
+    @*<select id="listProjects" style="display:none;">
+            <option> - Select - </option>
+        </select>*@
+    <select id="listDenomination" style="display:none;"></select>
+    <select id="listCPH" style="display:none;">
+        <option> - Select - </option>
+    </select>
+
+    <select id="listCashPoint" style="display:none;"></select>
+</form>
+
+
+@section scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#Date").data("DateTimePicker").date(moment('@Model.Date.ToShortDateString()'));
+
+            //Project ddl change event
+            //$(document).on('change', '.project', function (e) {
+            //    e.preventDefault();
+            //    var dataa = $(this).select2('data');
+            //    filterCpcHouses(dataa[0].id, $(this).closest('tr').attr("data-id"));
+            //});
+
+            //cph ddl change event
+            $(document).on('change', '.cpc', function (e) {
+                e.preventDefault();
+                //console.log($(this));
+                //const id = $('#ProjectBranchId option:selected').attr('value');
+                var dataa = $(this).select2('data');
+                //console.log(dataa[0].id);
+                //accountGridRowIndex = $(this).closest('tr').attr("data-id");
+
+                filterBranches(dataa[0].id, $(this).closest('tr').attr("data-id"));
+                //console.log(accountGridRowIndex);
+                //const totalValue = GetTotalVal($(this).val(), data[0].text);
+                //$(this).closest('td').next('td').find('input').val(totalValue);
+            });
+
+            //generateProjectDDL(projectArray);
+            generateDenomDDL(denomArray);
+            //generateCPHDDL(cphArray);
+            //generateCPointDDL(cashPointArray);
+            //generateBranchDDL(branchArray);
+
+            //$("#txtVoucherDate").mask("99-99-9999");
+            var accountGridRowIndex;
+
+            //Page Load
+            var rowCount = $('#orderbooking-datatable tbody tr').length;
+            if (rowCount == 0) {
+                AddFirstRow(1);
+                //bindBranchDDL(0);
+                bindDenomDDL(0);
+                bindCphDDL(0);
+                bindCashPointDDL(0);
+                //bindProjectDDL(0);
+                //for (var i = 2; i <= 5; i++) {
+                //    AddNewRow(i);
+                //    //bindBranchDDL(i - 1);
+                //    bindDenomDDL(i - 1);
+                //    bindCphDDL(i - 1);
+                //    //bindProjectDDL(i - 1);
+                //    bindCashPointDDL(i - 1);
+                //}
+            }
+
+            //btn-remove Click
+            $(document).on('click', '.btn-removeRow', function (e) {
+                e.preventDefault();
+                if ($('#orderbooking-datatable tbody tr').length > 1) {
+                    $(this).closest('tr').remove();
+                }
+                else {
+                    bootbox.dialog({
+                        message: "You Can't Delete this Row",
+                        title: "Delete Row",
+                        buttons: {
+                            main: {
+                                label: "Ok",
+                                className: "btn-default",
+                                callback: function () {
+                                    show: false;
+                                }
+                            },
+                        }
+                    });
+                }
+                //GetTotal();
+            });
+
+            $('#AddNewRow').click(function () {
+                //debugger
+                var rownum = $("#orderbooking-datatable tr:last").attr("data-id");
+                rownum = parseInt(rownum) + 1;
+                AddNewRow(rownum);
+                //bindBranchDDL(rownum - 1);
+                bindDenomDDL(rownum - 1);
+                bindCphDDL(rownum - 1);
+                bindCashPointDDL(rownum - 1);
+                //bindProjectDDL(rownum - 1);
+                $(".select2").select2();
+            });
+
+            $(".select2").select2();
+
+            //input fields leave event
+            $(document).on('focusout', '.inp', function (e) {
+                e.preventDefault();
+                accountGridRowIndex = $(this).closest('tr').attr("data-id");
+                accountGridRowIndex = parseInt(accountGridRowIndex) - parseInt(1);
+                var data = $('#ddlDenomination' + accountGridRowIndex).select2('data');
+                const totalValue = GetTotalVal($(this).val(), data[0].text);
+                $(this).closest('td').next('td').find('input').val(totalValue);
+            });
+
+            //$('#SrNo').on('focusout', function () {
+            //    checkSrDuplication($(this).val());
+            //});
+        });
+
+        @*function filterCpcHouses(Id, counter) {
+            var cphtoAppend = $('#ddlCph' + (parseInt(counter) - 1));
+            var url = '@Url.Action("FetchCashProcessingHouses", "Orderbooking")';
+            $.getJSON(url,
+                { Id: Id },
+                function (response) {
+                    cphtoAppend.empty();
+                    cphtoAppend.append(new Option(" - Select - ", "0"));
+                    $.each(response,
+                        function (index, item) {
+                            var newItem = new Option(item.Text, item.Value);
+                            cphtoAppend.append(newItem);
+                        });
+                });
+        }*@
+
+        function filterBranches(Id, counter) {
+            var branchtoAppend = $('#ddlBranch' + (parseInt(counter) - 1));
+            var url = '@Url.Action("FetchHirerachy", "Orderbooking")';
+
+            $.getJSON(url,
+                { Id: Id },
+                function (response) {
+                    branchtoAppend.empty();
+                    //console.log(response);
+                    //roads.append(new Option(" - Select - ", "0"));
+                    $.each(response,
+                        function (index, item) {
+                            var branch = new Option(item.Text, item.Value);
+                            branchtoAppend.append(branch);
+                        });
+                });
+        }
+        //Functions
+        function generateHtml(row) {
+            var _html = '<tr class="rows" data-id="' + row + '">'
+            _html += '<td class="text-center" > ' + row + '</td>'
+           // _html += '<td><select class="form-control input-sm select2 cpc" id="ddlCph' + (row - 1) + '" name="CPCOrderBookingDetail[' + (row - 1) + '].CashProcessingCellId">   </select></td>'
+            //_html += '<td><select class="form-control input-sm select2" id="ddlBranch' + (row - 1) + '" name="CPCOrderBookingDetail[' + (row - 1) + '].ProjectBranchId">   </select></td>'
+            _html += '<td><select class="form-control input-sm select2" id="ddlDenomination' + (row - 1) + '" name="CPCOrderBookingDetail[' + (row - 1) + '].DenominationId"></select></td>'
+            _html += '<td><input type="number" class="form-control input-sm inp" name="CPCOrderBookingDetail[' + (row - 1) + '].NoOfBundles" pattern="[0-9]"></td>'
+            _html += '<td><input type="number" class="form-control input-sm" name="CPCOrderBookingDetail[' + (row - 1) + '].TotalAmount" pattern="[0-9]" readonly></td>'
+            //_html += '<td><select class="form-control input-sm" id="ddlCpoint' + (row - 1) + '" name="CPCOrderBookingDetail[' + (row - 1) + '].CashCollectionPoint">   </select></td>'
+            _html += '<td> <a href="javascript://" class="btn btn-xs btn-danger btn-removeRow" data-original-title="Delete"><i class="fa fa-trash"></i> Delete</a> </td></tr>';
+            return _html;
+        }
+
+        @*var branchArray = @Html.Raw(Json.Encode(ViewBag.BrachList));*@
+
+        //var projectArray = @*@Html.Raw(Json.Encode(ViewBag.ProjectList));*@
+        var denomArray = @Html.Raw(Json.Encode(ViewBag.DenominationList));
+        var cphArray = @Html.Raw(Json.Encode(ViewBag.CPHList));
+        var cashPointArray = @Html.Raw(Json.Encode(ViewBag.CashPointList));
+        //console.log(array);
+
+
+        //function bindBranchDDL(row) {
+        //    //debugger
+        //    var options = $("#listBranches > option").clone();
+        //    $("#Orderbooking > tbody > tr #ddlBranch" + row + "").append(options);
+        //}
+
+        //function bindProjectDDL(row) {
+        //    //debugger
+        //    var options = $("#listProjects > option").clone();
+        //    $("#orderbooking-datatable > tbody > tr #ddlProject" + row + "").append(options);
+        //}
+        function bindDenomDDL(row) {
+            //debugger
+            var options = $("#listDenomination > option").clone();
+            $("#orderbooking-datatable > tbody > tr #ddlDenomination" + row + "").append(options);
+        }
+        function bindCphDDL(row) {
+            //debugger
+            var options = $("#listCPH > option").clone();
+            $("#orderbooking-datatable > tbody > tr #ddlCph" + row + "").append(options);
+        }
+
+        function bindCashPointDDL(row) {
+            //debugger
+            var options = $("#listCashPoint > option").clone();
+            $("#orderbooking-datatable > tbody > tr #ddlCpoint" + row + "").append(options);
+        }
+
+        //function generateBranchDDL(array) {
+        //    //debugger
+        //    for (var i = 0; i < array.length; i++) {
+        //        $("#listBranches").append($("<option /> ").val(array[i].Value).text(array[i].Text));
+        //    }
+        //}
+        //function generateProjectDDL(array) {
+        //    //debugger
+        //    for (var i = 0; i < array.length; i++) {
+        //        $("#listProjects").append($("<option /> ").val(array[i].Value).text(array[i].Text));
+        //    }
+        //}
+        function generateDenomDDL(array) {
+            //debugger
+            for (var i = 0; i < array.length; i++) {
+                $("#listDenomination").append($("<option /> ").val(array[i].Value).text(array[i].Text));
+            }
+        }
+        function generateCPHDDL(array) {
+            //debugger
+            for (var i = 0; i < array.length; i++) {
+                $("#listCPH").append($("<option /> ").val(array[i].Value).text(array[i].Text));
+            }
+        }
+        function generateCPointDDL(array) {
+            //debugger
+            for (var i = 0; i < array.length; i++) {
+                $("#listCashPoint").append($("<option /> ").val(array[i].Value).text(array[i].Text));
+            }
+        }
+
+        function AddFirstRow(row) {
+            if (isEmptyLastRow()) {
+                $('#orderbooking-datatable tbody').append(generateHtml(row));
+            }
+        }
+
+        function AddNewRow(row) {
+            $('#orderbooking-datatable tr:last').after(generateHtml(row));
+        }
+
+        function isEmptyLastRow() {
+            var test = $("#orderbooking-datatable tr:last td:eq(1)").find("input");
+            return "" !== $("#orderbooking-datatable tr:last td:eq(1)").find("input").val() && "" !== $("#orderbooking-datatable tr:last td:eq(2)").find("input").val();
+        }
+
+        function GetTotalVal(unsortedValue, denomVal) {
+            const totalVal = 1000 * parseInt(unsortedValue) * parseInt(denomVal);
+            return isNaN(totalVal) ? '0' : totalVal;
+        }
+
+
+        function checkSrDuplication(srNumber) {
+            //debugger
+            if (srNumber) {
+                $.get('/CPC/Orderbooking/DuplicationCheck?SrNo=' + srNumber, function (response) {
+                    if (response) {
+                        //console.log(response);
+                        $('.duplicate').html('Sr No. ' + srNumber + ' already exists.');
+                        isSubmit = true;
+                        $('#SrNo').focus();
+                    }
+                    else {
+                        $('.duplicate').html('');
+                        isSubmit = true;
+                    }
+                });
+            }
+        }
+    </script>
+}
+
