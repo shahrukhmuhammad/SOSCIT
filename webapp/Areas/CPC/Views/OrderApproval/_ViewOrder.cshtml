@@ -2,6 +2,7 @@
 @model CPCOrderBooking
 @{
     var details = ViewBag.Details as List<Vew_Orderbookings>;
+    var crewList = ViewBag.CrewList != null ? ViewBag.CrewList as List<SP_CPC_GetCrewByVehicleId_Result> : null;
 }
 
 <div class="form-Modal">
@@ -12,7 +13,7 @@
             </h3>
         </div>
 
-        <div class="modal-body">
+        <div class="modal-body modal-lg">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="row">
@@ -32,7 +33,6 @@
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
@@ -93,14 +93,40 @@
                             </div>
                         </div>
                     </div>
+                    @if (Model.VehicleId != null && crewList != null)
+                    {
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row form-group">
+                                    <label class="col-sm-4 text-left horizontal-label"> Vehicle</label>
+                                    <div class="col-sm-8">
+                                        <label class="label label-primary"> @(details.FirstOrDefault().VehicleNumber) </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row form-group">
+                                    <label class="col-sm-2 text-left horizontal-label"> Crew</label>
+                                    <div class="col-sm-10">
+                                        @foreach (var item in crewList)
+                                        {
+                                            <span class="label label-success">@(item.CrewName)</span> 
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
-                </div>
+            </div>
             <div class="row tb-padding">
                 <table id="Orderbooking" class="table table-striped table-bordered table-hover">
                     <thead>
                         <tr>
                             <th>Sr No</th>
-                            @*<th>Branch</th>*@
                             <th>Denomination</th>
                             <th>No. Of Bundles</th>
                             <th>Total Amount</th>
@@ -115,7 +141,6 @@
                                 {
                                     <tr>
                                         <td>@i</td>
-                                        @*<td>@($"{item.BrahCode} - {item.BranchName}")</td>*@
                                         <td>@item.DenominationTitle</td>
                                         <td>@item.NoOfBundles</td>
                                         <td>@item.TotalAmount</td>

@@ -1910,6 +1910,9 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
           <Parameter Name="Id" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="ParentId" Type="uniqueidentifier" Mode="In" />
         </Function>
+        <Function Name="SP_CPC_GetCrewByVehicleId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Id" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="TaxTypes_Delete" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Id" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -3111,6 +3114,9 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
             <End Role="CPCOrderBooking" EntitySet="CPCOrderBookings" />
             <End Role="CPCVaultCustodian" EntitySet="CPCVaultCustodians" />
           </AssociationSet>
+          <FunctionImport Name="SP_CPC_GetCrewByVehicleId" ReturnType="Collection(SOSTechCPCModel.SP_CPC_GetCrewByVehicleId_Result)">
+            <Parameter Name="Id" Mode="In" Type="Guid" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="AppLogs_GetAll_Result">
           <Property Type="Guid" Name="Id" Nullable="false" />
@@ -5571,6 +5577,12 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="SP_CPC_GetCrewByVehicleId_Result">
+          <Property Type="Guid" Name="VehicleId" Nullable="true" />
+          <Property Type="String" Name="VehicleNumber" Nullable="false" MaxLength="15" />
+          <Property Type="Guid" Name="EmployeeId" Nullable="true" />
+          <Property Type="String" Name="CrewName" Nullable="true" MaxLength="223" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -7715,6 +7727,16 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_CPC_GetCrewByVehicleId" FunctionName="SOSTechCPCModel.Store.SP_CPC_GetCrewByVehicleId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SOSTechCPCModel.SP_CPC_GetCrewByVehicleId_Result">
+                <ScalarProperty Name="VehicleId" ColumnName="VehicleId" />
+                <ScalarProperty Name="VehicleNumber" ColumnName="VehicleNumber" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="CrewName" ColumnName="CrewName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

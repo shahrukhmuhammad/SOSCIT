@@ -2323,3 +2323,8 @@ asd {
 .mg-r {
     margin-right: 10px;
 }
+
+.label.label-info, .label.label-primary,
+.label.label-success, .label.label-warning {
+    font-size: 1em !important;
+}

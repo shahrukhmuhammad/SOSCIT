@@ -1,0 +1,237 @@
+﻿
+@model CPCOrderBooking
+@{
+    var details = ViewBag.Details as List<Vew_Orderbookings>;
+}
+
+<style>
+    .m-0 {
+        margin: 0px !important;
+    }
+
+    .p-p-0 {
+        padding: 10px !important;
+    }
+
+    
+</style>
+<form action="/" method="post">
+    <input type="hidden" name="OrderBookingId" id="OrderBookingId" value="@Model.Id" />
+    <div class="form-Modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Order Approval And Vehicle Assignment
+                </h3>
+            </div>
+
+            <div class="modal-body modal-lg">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        @*<div class="row">
+                                <div class="col-sm-6">
+                                    <div class="row form-group">
+                                        <label class="col-sm-4 text-left horizontal-label">Vehicle Assignment</label>
+                                        <div class="col-sm-8">
+                                            @Html.DropDownListFor(x => x.VehicleId, (SelectList)ViewBag.VehicleList, "- Select Vehicle -", new { @class = "form-control input-sm select2", @required = "required" })
+                                            @Html.ValidationMessageFor(m => m.VehicleId)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row form-group">
+                                    <label class="col-sm-4 text-left horizontal-label">Order Number</label>
+                                    <div class="col-sm-8">
+                                        <label class="label label-primary">@Model.OrderNo</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row form-group">
+                                    <label class="col-sm-4 horizontal-label"> Date</label>
+                                    <div class="col-sm-8">
+                                        <label class="label label-primary">@Model.Date.ToString(Constants.DATE_FORMAT_CLIENT_SIDE)</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row form-group">
+                                    <label class="col-sm-4 text-left horizontal-label"> Collection</label>
+                                    <div class="col-sm-8">
+                                        <label class="label label-primary">@(details != null ? details.FirstOrDefault().CollectionBranchName : "" )</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row form-group">
+                                    <label class="col-sm-4 horizontal-label"> Delivery</label>
+                                    <div class="col-sm-8">
+                                        <label class="label label-primary">@(details != null ? details.FirstOrDefault().DeliveryBranchName : "")</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="row form-group">
+                                    <label class="col-sm-4 text-left horizontal-label"> Billed</label>
+                                    <div class="col-sm-8">
+                                        <label class="label label-primary">@(details != null ? details.FirstOrDefault().BilledBranchName : "")</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row form-group">
+                                    <label class="col-sm-4 text-left horizontal-label">Order Status</label>
+                                    <div class="col-sm-8">
+                                        @if (Model.Status == (int)AnnexureStatus.Sorted)
+                                        {
+                                            <label class="label label-primary">Cash Sorted</label> <br />
+                                        }
+                                        else if (Model.Status == (int)AnnexureStatus.Approved)
+                                        {
+                                            <label class="label label-primary">Approved</label>
+                                        }
+                                        else if (Model.Status == (int)AnnexureStatus.Completed)
+                                        {
+                                            <label class="label label-success">Completed</label>
+                                        }
+                                        else if (Model.Status == (int)AnnexureStatus.PendingDelivery)
+                                        {
+                                            <label class="label label-warning">Pending Delivery</label>
+                                        }
+                                        else if (Model.Status == (int)AnnexureStatus.Delivered)
+                                        {
+                                            <label class="label label-success"> Delivered</label>
+                                        }
+                                        else
+                                        {
+                                            <label class="label label-info">Inprocess</label>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="panel panel-info m-0">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title"> Order Summery </h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <ul class="list-group">
+                                            <li class="list-group-item list-group-item-success">
+                                                Total Denominations
+                                                <span class="badge"> @(details != null ? details.Select(x => x.DenominationId).Count() : 0) </span>
+                                            </li>
+                                            <li class="list-group-item list-group-item-info">
+                                                Number Of Bundles
+                                                <span class="badge"> @(details != null ? details.Select(x => x.NoOfBundles).Sum() : 0) </span>
+                                            </li>
+                                            <li class="list-group-item list-group-item-warning">
+                                                Total Amount
+                                                <span class="badge"> @(details != null ? details.Select(x => x.TotalAmount).Sum() : 0) </span>
+                                            </li>
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="panel panel-info p-p-0">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title"> Vehicle Assignment </h3>
+                                    </div>
+                                    <div class="panel-body p-p-0">
+                                        <div class="row form-group">
+                                            <label class="col-sm-4 text-left horizontal-label">Vehicle Assignment</label>
+                                            <div class="col-sm-8">
+                                                @Html.DropDownListFor(x => x.VehicleId, (SelectList)ViewBag.VehicleList, "- Select Vehicle -", new { @class = "form-control input-sm select2", @required = "required" })
+                                                @Html.ValidationMessageFor(m => m.VehicleId)
+                                            </div>
+                                        </div>
+                                        <div class="row form-group m-0">
+                                            <ul class="list-group m-0" id="empList">
+                                                @*<li class="list-group-item"><label class="label label-primary">Employee One</label></li>*@
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer text-right">
+                <div class="btn-group btn-group-sm" role="group">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close"></i> Cancel</button>
+                    <button type="button" id="btnSave" class="btn btn-success" data-dismiss="modal"><i class="fa fa-file"></i> Save </button>
+
+                    @*<a href="javascript://" class="btn btn-primary mg-r" title="Details"><i class="fa fa-eye"></i> </a>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(document).ready(function () {
+        $(".select2").select2();
+
+        $('#VehicleId').change(function (e) {
+            //debugger
+            $("#empList").html('');
+            var _html = '';
+            const vehicleId = $('#VehicleId option:selected').attr('value');
+            $.get('/CPC/OrderApproval/GetVehicleCrew/' + vehicleId, function (response) {
+                if (response) {
+                    $.each(response.Details,
+                        function (index, item) {
+                            _html += '<li class="list-group-item"><label class="label label-primary">' + item.CrewName + '</label></li>';
+                        });
+                    $('#empList').append(_html);
+                }
+            });
+        });
+
+        $('#btnSave').on('click', function () {
+            debugger;
+
+            const vehicleId = $('#VehicleId option:selected').attr('value');
+            const orderbookingId = $('#OrderBookingId').val();
+            //var dataVal = { "OrderBookingId": orderbookingId, "VehicleId": vehicleId };
+            //console.log(dataVal);
+
+            $.ajax({
+                url: '/CPC/OrderApproval/_AssignVehicle/?OrderBookingId=' + orderbookingId + '&VehicleId=' + vehicleId,
+                cache: false,
+                type: 'POST',
+               // data: JSON.stringify(dataVal),
+                success: function (data) {
+                    if (data.error == 'false') {
+                        $('#notifyMe').notify({ message: { text: data.messageText }, transition: 'fade', type: 'success' }).show();
+                        window.location.replace('@Url.Action("Index","OrderApproval")');
+                    }
+                    else
+                        $('#notifyMe').notify({ message: { text: data.messageText }, transition: 'fade', type: 'danger' }).show();
+                },
+                error: function (reponse) {
+                    alert("error : " + reponse);
+                }
+            });
+        });
+
+    });
+</script>

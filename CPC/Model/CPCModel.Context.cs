@@ -1999,5 +1999,14 @@ namespace CPC.Model
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<TaxTypes_SelectAll_Result>("TaxTypes_SelectAll");
         }
+    
+        public virtual ObjectResult<SP_CPC_GetCrewByVehicleId_Result> SP_CPC_GetCrewByVehicleId(Nullable<System.Guid> id)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("Id", id) :
+                new ObjectParameter("Id", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_CPC_GetCrewByVehicleId_Result>("SP_CPC_GetCrewByVehicleId", idParameter);
+        }
     }
 }

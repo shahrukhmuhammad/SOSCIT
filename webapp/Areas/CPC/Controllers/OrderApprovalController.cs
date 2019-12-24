@@ -22,6 +22,7 @@ namespace WebApp.Areas.CPC.Controllers
         private Common commonRepo;
         private CPHEntity cashpPocessinHousegRepo;
         private EmployeeEntity employeeRepo;
+        private VehicleEntity vehicleRepo;
 
         public OrderApprovalController()
         {
@@ -30,6 +31,7 @@ namespace WebApp.Areas.CPC.Controllers
             commonRepo = new Common();
             cashpPocessinHousegRepo = new CPHEntity();
             employeeRepo = new EmployeeEntity();
+            vehicleRepo = new VehicleEntity();
         }
 
         public ActionResult Index()
@@ -56,7 +58,100 @@ namespace WebApp.Areas.CPC.Controllers
         {
             var model = orderbookingRepo.GetById(Id);
             ViewBag.Details = orderbookingRepo.GetAllDetailsById(Id);
+            if (model.VehicleId.HasValue)
+                ViewBag.CrewList = employeeRepo.GetListByVehicleId(model.VehicleId.Value);
             return PartialView(model);
+        }
+
+        public ActionResult _AssignVehicle(Guid Id)
+        {
+            var model = orderbookingRepo.GetById(Id);
+            ViewBag.Details = orderbookingRepo.GetAllDetailsById(Id);
+            ViewBag.VehicleList = new SelectList(vehicleRepo.GetDropdownAvailable(), "Value", "Text");
+            return PartialView(model);
+        }
+
+        [HttpPost]
+        public JsonResult _AssignVehicle(Guid OrderBookingId, Guid VehicleId)
+        {
+            try
+            {
+                if (!OrderBookingId.IsEmpty())
+                {
+
+                    #region Update Details
+                    bool res = false;
+                    Guid? empId = employeeRepo.GetByUserId(CurrentUser.Id);
+                    if (empId.HasValue)
+                    {
+                        var model = new CPCOrderBooking();
+                        model.UpdatedBy = CurrentUser.Id;
+                        model.UpdatedOn = DateTime.Now;
+                        model.Status = (int)AnnexureStatus.Approved;
+                        model.VehicleId = VehicleId;
+                        model.Id = OrderBookingId;
+                        model.ApprovedById = empId.Value;
+                        model.ApprovedOn = DateTime.Now;
+
+                        res = orderbookingRepo.UpdateBookingVehicle(model);
+                        if (res)
+                            vehicleRepo.UpdateStatus(VehicleId, true);
+                    }
+                    else
+                        return Json(new { error = "true", messageText = "You are not allowed to approve this Order." });
+
+                    #endregion
+
+
+                    #region Activity Log
+                    //appLog.Create(CurrentUser.OfficeId, model.Id, CurrentUser.Id, AppLogType.Activity, "CRM - Lead", model.FullName + " lead created", "~/CRM/Contact/LeadRecord > HttpPost", "<table class='table table-hover table-striped table-condensed' style='margin-bottom:15px;'><tr><th class='text-center'>Description</th></tr><tr><td><strong>" + model.FullName + "</strong> lead created by <strong>" + CurrentUser.FullName + "</strong>.</td></tr></table>");
+                    #endregion
+
+                    #region EmailSending
+
+                    //Emailer.Send(model.Email, EmailTemplateType.ContactSignup, model);
+
+                    //var appMessageModel = new AppMessage();
+                    //appMessageModel.Email = model.Email;
+                    //appMessageModel.Status = AppMessageStatus.Outbox;
+                    //appMessageModel.Subject = EmailTemplateType.ContactSignup;
+                    //appMessageModel.Message = EmailTemplateType.ContactSignup;
+                    //TempData["SuccessMsg"] = "Message has been sent successfully.";
+                    //realtime.UpdateMessages(null);
+                    //appMessageModel.CreatorId = appMessageModel.ContactId = CurrentUser.Id;
+                    //appMessageModel.Id = appMsg.Create(appMessageModel);
+
+                    ////var cntact = appUser.GetUserById(new Guid(x));
+                    //appMsg.Create(null, appMessageModel.Id, appMessageModel.CreatorId, null, AppMessageStatus.Inbox, EmailTemplateType.ContactSignup, model.Id, null);
+
+                    //realtime.UpdateMessages(null);
+                    #endregion
+
+                    if (res)
+                    {
+                        return Json(new { error = "false", messageText = "Order has been Approved Successfully." });
+
+                    }
+                    else
+                        return Json(new { error = "true", messageText = "We have encountered an error while processing your request, Please see log for details." });
+                }
+                else
+                {
+                    #region Activity Log
+                    //appLog.Create(CurrentUser.OfficeId, model.Id, CurrentUser.Id, AppLogType.Activity, "CRM - Lead", model.FullName + " lead updated", "~/CRM/Contact/LeadRecord > HttpPost", "<table class='table table-hover table-striped table-condensed' style='margin-bottom:15px;'><tr><th class='text-center'>Description</th></tr><tr><td><strong>" + model.FullName + "</strong> lead updated by <strong>" + CurrentUser.FullName + "</strong>.</td></tr></table>");
+                    #endregion
+                    return Json(new { error = "true", messageText = "We have encountered an error while processing your request, Please see log for details." });
+                }
+            }
+            catch (Exception ex)
+            {
+                #region Error Log
+                //appLog.Create(CurrentUser.OfficeId, null, CurrentUser.Id, AppLogType.Error, "CRM - Lead", ex.GetType().Name.ToSpacedTitleCase(), "~/CMS/FileManager/Index > HttpPost", "<table class='table table-hover table-striped'><tr><th class='text-right'>Source</th><td>" + ex.Source + "</td></tr><tr><th class='text-right'>URL</th><td>" + Request.Url.ToString() + "</td></tr><tr><th class='text-right'>Message</th><td>" + ex.Message + "</td></tr></table><table class='table table-hover table-striped table-condensed'><tr><th class='text-center'>Inner Exception</th></tr><tr><td>" + ex.InnerException + "</td></tr><tr><th class='text-center'>Stack Trace</th></tr><tr><td>" + ex.StackTrace.ToString() + "</td></tr></table>");
+                #endregion
+
+                return Json(new { error = "true", messageText = "We have encountered an error while processing your request, Please see log for details." });
+            }
+            //return Json(new { error = "true", messageText = "We have encountered an error while processing your request, Please see log for details." });
         }
         #endregion
 
@@ -209,6 +304,29 @@ namespace WebApp.Areas.CPC.Controllers
                 TempData["ErrorMsg"] = "We have encountered an error while processing your request, Please see log for details.";
             }
             return Json(true);
+        }
+        #endregion
+
+        #region Remote Function
+        [HttpGet]
+        public JsonResult GetVehicleCrew(Guid id)
+        {
+            try
+            {
+                var List = employeeRepo.GetListByVehicleId(id);
+                return Json(new
+                {
+                    Details = List.Select(x => new {
+                        x.EmployeeId,
+                        x.CrewName
+                    }).ToList(),
+
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         #endregion
     }

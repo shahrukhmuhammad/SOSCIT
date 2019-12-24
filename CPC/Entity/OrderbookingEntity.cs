@@ -212,6 +212,35 @@ namespace CPC
             }
         }
 
+        public bool UpdateBookingVehicle(CPCOrderBooking model)
+        {
+            try
+            {
+                using (context = new SOSTechCPCEntities())
+                {
+                    #region Save
+                    var dbMaster = context.CPCOrderBookings.Where(x => x.Id == model.Id).FirstOrDefault();
+                    if (dbMaster != null)
+                    {
+                        dbMaster.UpdatedBy = model.UpdatedBy;
+                        dbMaster.UpdatedOn = model.UpdatedOn;
+                        dbMaster.Status = model.Status;
+                        dbMaster.VehicleId = model.VehicleId;
+                        dbMaster.ApprovedById = model.ApprovedById;
+                        dbMaster.ApprovedOn = model.ApprovedOn;
+                        context.SaveChanges();
+                    }
+                    #endregion
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                //throw ex;
+                return false;
+            }
+        }
+
         public bool Create(List<CPCOrderBookingDetail> modelList)
         {
             try

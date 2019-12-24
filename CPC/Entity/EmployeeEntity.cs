@@ -46,6 +46,22 @@ namespace CPC
                 return null;
             }
         }
+
+        public List<SP_CPC_GetCrewByVehicleId_Result> GetListByVehicleId(Guid Id)
+        {
+            try
+            {
+                using (context = new SOSTechCPCEntities())
+                {
+                    return context.SP_CPC_GetCrewByVehicleId(Id).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public CPCEmployee GetById(Guid Id)
         {
             try

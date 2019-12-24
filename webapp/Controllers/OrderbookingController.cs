@@ -67,9 +67,6 @@ namespace WebApp.Controllers
             }
             ViewBag.BrachList = new SelectList(branchRepo.GetDropdown(), "Value", "Text");
             ViewBag.DenominationList = new SelectList(commonRepo.GetAllDenominationDropdown().Where(x => x.Text != Convert.ToString(1) && x.Text != Convert.ToString(2) && x.Text != Convert.ToString(5)), "Value", "Text");
-            //ViewBag.CPHList = new SelectList(cashpPocessinHousegRepo.GetDropdown(), "Value", "Text");
-            //ViewBag.CashPointList = new SelectList(GetCashPointDropdown(), "Value", "Text");
-            //ViewBag.ProjectList = new SelectList(commonRepo.GetAllProjectsDropdown(), "Value", "Text");
             return View(model);
         }
         public static List<CustomSelectList> GetCashPointDropdown()

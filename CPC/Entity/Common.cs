@@ -111,6 +111,45 @@ namespace CPC
             }
         }
 
+        public List<CustomSelectList> GetAllRegionsDropdown()
+        {
+            try
+            {
+                using (var context = new SOSTechCPCEntities())
+                {
+                    var ls = new List<CPCCity>();
+                    ls = context.CPCCities.OrderBy(x => x.CityName).ToList();
+
+                    return ls.Select(x => new CustomSelectList { Value = x.Id.ToString(), Text = x.CityName.ToString() }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public List<CustomSelectList> GetAllCitiesDropdown(Guid? RegionId = null)
+        {
+            try
+            {
+                using (var context = new SOSTechCPCEntities())
+                {
+                    var ls = new List<CPCCity>();
+                    if (RegionId.HasValue)
+                        ls = context.CPCCities.Where(x=> x.RegionId == RegionId).OrderBy(x => x.CityName).ToList();
+                    else
+                        ls = context.CPCCities.OrderBy(x => x.CityName).ToList();
+
+                    return ls.Select(x => new CustomSelectList { Value = x.Id.ToString(), Text = x.CityName.ToString() }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
     }
 
 

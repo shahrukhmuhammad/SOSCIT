@@ -16,7 +16,7 @@
     <div class="modal-content bg-transparent">
         <div class="modal-header">
             <h3 class="modal-title">
-                Order Booking Requests
+                Order Requests - Controll Room
                 <span class="pull-right menu-links">
                     <a href="javascript://" class="text-muted" title="go to previous" style="margin:0 8px;" onclick="window.history.back()">
                         <i class="fa fa-angle-left"></i> <span class="grid-buttons"> Go Back</span>
@@ -68,7 +68,7 @@
                                 }
                                 else if (x.Status == (int)AnnexureStatus.Approved)
                                 {
-                                    <label class="label label-primary">Approved</label>
+                                    <label class="label label-success">Approved</label>
                                 }
                                 else if (x.Status == (int)AnnexureStatus.Completed)
                                 {
@@ -94,7 +94,8 @@
                                     {
                                         if (x.Status == (int)AnnexureStatus.Inprocess)
                                         {
-                                            <a href="javascript://" onclick="changeStatus('@Url.Action("Approve")', '@x.Id','','Are you sure you want to Approve this record ?','Approve Order Request')" class="btn btn-success mg-r" title="Approve"><i class="fa fa-check"></i> </a>
+                                            @*<a href="javascript://" onclick="changeStatus('@Url.Action("Approve")', '@x.Id','','Are you sure you want to Approve this record ?','Approve Order Request')" class="btn btn-success mg-r" title="Approve"><i class="fa fa-check"></i> </a>*@
+                                            <a href="javascript://" class="btn btn-primary mg-r approveOrder" data-id="@x.Id" title="Approve Order"><i class="fa fa-check"></i> </a>
                                             <a href="javascript://" onclick="changeStatus('@Url.Action("Decline")', '@x.Id','', 'Are you sure you want to Reject this record ?','Reject Order Request')" class="btn btn-danger mg-r" title="Decline"><i class="fa fa-trash"></i> </a>
                                         }
                                         else if (x.Status == (int)AnnexureStatus.PendingDelivery)

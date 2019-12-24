@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Order  Requests List";
+    ViewBag.Title = "Control Room";
 }
 
 <div class="user-Profile" style="min-height:430px;">
@@ -10,7 +10,12 @@
 </div>
 
 <div class="modal fade" id="addNewCompany-Modal" tabindex="-1" role="dialog" aria-labelledby="addNewCompany-Modal" data-backdrop="static">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
+    </div>
+</div>
+
+<div class="modal fade" id="approveOrder-Modal" tabindex="-1" role="dialog" aria-labelledby="approveOrder-Modal" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
     </div>
 </div>
 
@@ -21,6 +26,8 @@
         });
 
         $(document).ready(function () {
+            $(".select2").select2();
+
             //Add Shipping Company
             $('.addNewCompany').on('click', function () {
                 //debugger
@@ -31,10 +38,24 @@
                 // load the url and show modal on success
                 $("#addNewCompany-Modal .modal-dialog").load(target, function () {
                     $("#addNewCompany-Modal").modal("show");
-                    //filterDataTable("#Orderbooking-dataTable", [0, 1, 2, 3, 4], [5]);
                     $('#loading-mask').hide();
                 });
             });
+
+            //Assign Vehicle
+            $('.approveOrder').on('click', function () {
+                //debugger
+                var id = $(this).attr("data-id");
+                $('#loading-mask').show();
+                var target = "";
+                target = "/CPC/OrderApproval/_AssignVehicle/" + id;
+                // load the url and show modal on success
+                $("#approveOrder-Modal .modal-dialog").load(target, function () {
+                    $("#approveOrder-Modal").modal("show");
+                    $('#loading-mask').hide();
+                });
+            });
+
         });
     </script>
 }
