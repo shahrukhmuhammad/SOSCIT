@@ -1,13 +1,14 @@
 ﻿
 @{
-    ViewBag.Title = "Order Booking List";
+    ViewBag.Title = "Order Delivery List";
 }
 
 <div class="user-Profile" style="min-height:430px;">
     <div id="employees-Container">
-        @{ Html.RenderAction("_AllOrderbookings", "Orderbooking"); }
+        @{ Html.RenderAction("_AllOrderDeliverys", "Orderbooking"); }
     </div>
 </div>
+
 
 <div class="modal fade" id="addNewCompany-Modal" tabindex="-1" role="dialog" aria-labelledby="addNewCompany-Modal" data-backdrop="static">
     <div class="modal-dialog modal-lg" role="document">

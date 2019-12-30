@@ -48,6 +48,7 @@ namespace BaseApp.Entity
         public DateTime UpdatedOn { get; set; }
         public DateTime CreatedOn { get; set; }
         public Guid? EmployeeId { get; set; }
+        public Guid? BranchId { get; set; }
 
 
         public virtual Office Office { get; set; }

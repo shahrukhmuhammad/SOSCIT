@@ -95,14 +95,14 @@
                         <td class="text-right">Work Phone</td>
                         <th>@Model.WorkPhone</th>
                     </tr>
-                    <tr>
+                    @*<tr>
                         <td class="text-right">Updated By</td>
                         <th>@updatedUser.FullName on @Model.UpdatedOn</th>
                     </tr>
                     <tr>
                         <td class="text-right">Created By</td>
                         <th>@createdUser.FullName on @Model.CreatedOn</th>
-                    </tr>
+                    </tr>*@
                 </table>
             </div>
         </div>
@@ -177,10 +177,10 @@
                         <td class="text-right">State</td>
                         <th>@Model.State</th>
                     </tr>
-                    <tr>
+                    @*<tr>
                         <td class="text-right">Country</td>
                         <th>@Html.CountriesListWithCode().Where(x => x.Value == Model.Country).FirstOrDefault().Text</th>
-                    </tr>
+                    </tr>*@
                 </table>
             </div>
         </div>

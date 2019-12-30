@@ -47,7 +47,7 @@ namespace CPC
             {
                 using (var context = new SOSTechCPCEntities())
                 {
-                    var ls = context.CPCDenominations.OrderBy(x=> x.DenominationTitle).ToList();
+                    var ls = context.CPCDenominations.OrderBy(x => x.DenominationTitle).ToList();
                     return ls.Select(x => new CustomSelectList { Value = x.Id.ToString(), Text = x.DenominationTitle.ToString() }).ToList();
                 }
             }
@@ -56,6 +56,22 @@ namespace CPC
                 return null;
             }
         }
+
+        //public List<CustomSelectList> GetAllTransportationMoodDropdown()
+        //{
+        //    try
+        //    {
+        //        using (var context = new SOSTechCPCEntities())
+        //        {
+        //            var ls = context.CPCDenominations.OrderBy(x=> x.DenominationTitle).ToList();
+        //            return ls.Select(x => new CustomSelectList { Value = x.Id.ToString(), Text = x.DenominationTitle.ToString() }).ToList();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return null;
+        //    }
+        //}
 
         public Guid? GetDinomIdByName(int denomName)
         {
@@ -69,7 +85,6 @@ namespace CPC
                         return obj.Id;
                     }
                 }
-
                 return null;
             }
             catch (Exception ex)
@@ -177,6 +192,27 @@ namespace CPC
     {
         CPH = 1, //Cash Processing House
         Branch = 2,
+    }
+
+    public enum TransportationMood
+    {
+        ByAir = 1,
+        ByArmouredVehicle = 2,
+        ByCharteredPlane = 3
+    }
+
+    public enum OrderType
+    {
+        Cash = 1,
+        Valueables = 2,
+        SecurityDocuments = 3,
+        PrizeBonds = 4,
+        ForeignCurrency = 5,
+        EducationalCertificates = 6,
+        PassportImmigrationDocuments = 7,
+        Gold = 8,
+        Diamonds = 9,
+        Ornaments = 10,
     }
 
     //public enum BankStatus

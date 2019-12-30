@@ -54,6 +54,7 @@ namespace WebApp.Areas.CPC.Controllers
             ViewBag.Details = orderbookingRepo.GetAllDetailsById(Id);
             return View(model);
         }
+        [AllowAnonymous]
         public ActionResult _ViewOrder(Guid Id)
         {
             var model = orderbookingRepo.GetById(Id);

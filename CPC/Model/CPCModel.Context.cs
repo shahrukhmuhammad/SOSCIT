@@ -28,7 +28,6 @@ namespace CPC.Model
         }
     
         public virtual DbSet<AppRole> AppRoles { get; set; }
-        public virtual DbSet<AppUser> AppUsers { get; set; }
         public virtual DbSet<CPCAnnexureIDetail> CPCAnnexureIDetails { get; set; }
         public virtual DbSet<CPCAnnexureII> CPCAnnexureIIs { get; set; }
         public virtual DbSet<CPCAnnexureIIDetail> CPCAnnexureIIDetails { get; set; }
@@ -66,6 +65,7 @@ namespace CPC.Model
         public virtual DbSet<CPCEmployee> CPCEmployees { get; set; }
         public virtual DbSet<CPCOrderBooking> CPCOrderBookings { get; set; }
         public virtual DbSet<Vew_Orderbookings> Vew_Orderbookings { get; set; }
+        public virtual DbSet<AppUser> AppUsers { get; set; }
     
         public virtual int f_TestMaxCode()
         {

@@ -216,6 +216,14 @@ namespace System.Security.Claims
             }
         }
 
+        public Guid? BranchId
+        {
+            get
+            {
+                return appUser.BranchId;
+            }
+        }
+
         public bool IsSuperAdmin()
         {
             return appUser.Role.IsSystem;

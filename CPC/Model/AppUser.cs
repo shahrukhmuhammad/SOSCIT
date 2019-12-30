@@ -49,5 +49,6 @@ namespace CPC.Model
         public Nullable<byte> EmploymentStatus { get; set; }
         public string PageLength { get; set; }
         public Nullable<System.Guid> EmployeeId { get; set; }
+        public Nullable<System.Guid> BranchId { get; set; }
     }
 }

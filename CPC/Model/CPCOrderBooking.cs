@@ -39,6 +39,8 @@ namespace CPC.Model
         public Nullable<System.Guid> DeliveryBranchId { get; set; }
         public Nullable<System.Guid> BilledBranchId { get; set; }
         public Nullable<System.Guid> VehicleId { get; set; }
+        public Nullable<byte> TransportationMood { get; set; }
+        public Nullable<byte> OrderType { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CPCAnnexureI> CPCAnnexureIs { get; set; }

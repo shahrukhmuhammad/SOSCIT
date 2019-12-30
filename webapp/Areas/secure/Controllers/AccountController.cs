@@ -100,6 +100,7 @@ namespace WebApp.Areas.Secure.Controllers
                 }
                 model.Id = CurrentUser.Id;
                 model.UpdatedByUserId = CurrentUser.Id;
+                model.UpdatedOn = DateTime.Now;
                 appUser.Update(model);
                 #endregion
 

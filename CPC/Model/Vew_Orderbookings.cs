@@ -21,7 +21,7 @@ namespace CPC.Model
         public System.Guid CreatedBy { get; set; }
         public Nullable<System.DateTime> UpdatedOn { get; set; }
         public Nullable<System.Guid> UpdatedBy { get; set; }
-        public System.Guid CPCOrderBookingDetailsId { get; set; }
+        public Nullable<System.Guid> CPCOrderBookingDetailsId { get; set; }
         public Nullable<System.Guid> ProjectBranchId { get; set; }
         public string BranchCode { get; set; }
         public string BranchName { get; set; }
@@ -48,5 +48,7 @@ namespace CPC.Model
         public string BilledBranchName { get; set; }
         public Nullable<System.Guid> VehicleId { get; set; }
         public string VehicleNumber { get; set; }
+        public Nullable<byte> OrderType { get; set; }
+        public Nullable<byte> TransportationMood { get; set; }
     }
 }

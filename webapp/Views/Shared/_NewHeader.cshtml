@@ -103,6 +103,10 @@ else
                     <a href="~/" class="navbar-brand" style="float:none; padding:0;">@AppSettings.GetVal("app:BrowserTitle")</a>
                 </div>
                 <div class="col-xs-3">
+                    @*<a href="~/Secure/Account" id="user-Mobile-Menu" class="navbar-brand navbar-toggle" data-toggle="sidebar" data-target="#mobile-User-Menu" data-canvas="body" style="margin-right:0;">
+                        <img class="media-object img-centre img-circle" src="~/Content/Uploads/Dp/@(CurrentUser.Id).jpg" style="width: 80px; height: 80px;" onerror="this.onerror = null; this.src = '/Content/Images/user.png';">
+                    </a>*@
+
                     <button id="user-Mobile-Menu" type="button" class="navbar-brand navbar-toggle" data-toggle="sidebar" data-target="#mobile-User-Menu" data-canvas="body" style="margin-right:0;">
                         <span class="fa fa-user" style="font-size:16px;"></span>
                     </button>
@@ -128,7 +132,9 @@ else
 
                     <li class="@SetTopActiveController("Account") dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-user"></i> @CurrentUser.FullName <i class="fa fa-angle-down"></i>
+                            <i class="fa fa-user"></i>
+                            @*<img class="media-object img-centre img-circle" src="~/Content/Uploads/Dp/@(CurrentUser.Id).jpg" style="width: 80px; height: 80px;" onerror="this.onerror = null; this.src = '/Content/Images/user.png';">*@
+                            @CurrentUser.FullName <i class="fa fa-angle-down"></i>
                         </a>
                         <div class="dropdown-menu no-padding" style="width:270px;">
                             <div class="row well well-sm no-margin no-padding" style="padding-top:10px;">

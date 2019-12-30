@@ -12,7 +12,7 @@ using System.Web.Mvc.Html;
 namespace WebApp.Controllers
 {
     [AppAuthorize(AppPermission.All, AppPermission.Bank, AppPermission.ViewBank, AppPermission.OrderCollection, AppPermission.ViewOrderCollection)] //AppPermission.ViewCPC, AppPermission.CPC
-    
+
     public class OrderbookingController : AppController
     {
         private AnnexureIEntity annexureIRepo;
@@ -37,8 +37,14 @@ namespace WebApp.Controllers
         }
         public PartialViewResult _AllOrderbookings()
         {
+            //var model = orderbookingRepo.GetAll();
+            var branchId = CurrentUser.BranchId;
             var model = orderbookingRepo.GetAll();
-            ViewBag.DetailsList = orderbookingRepo.GetAllDetails();
+            if (branchId.HasValue)
+            {
+                model = model.Where(x => x.CollectionBranchId == branchId.Value).ToList();
+            }
+            //ViewBag.DetailsList = orderbookingRepo.GetAllDetails();
             ViewBag.EmployeeList = employeeRepo.GetAll();
             return PartialView(model);
         }
@@ -66,20 +72,51 @@ namespace WebApp.Controllers
                 model.OrderNo = orderbookingRepo.GetNextSrNo();
             }
             ViewBag.BrachList = new SelectList(branchRepo.GetDropdown(), "Value", "Text");
+            ViewBag.TransportaionMoodList = new SelectList(GetMoodofTransportationDropdown(), "Value", "Text");
+            ViewBag.OrderTypeList = new SelectList(GetOrderTypeDropdown(), "Value", "Text");
             ViewBag.DenominationList = new SelectList(commonRepo.GetAllDenominationDropdown().Where(x => x.Text != Convert.ToString(1) && x.Text != Convert.ToString(2) && x.Text != Convert.ToString(5)), "Value", "Text");
             return View(model);
         }
-        public static List<CustomSelectList> GetCashPointDropdown()
+        public List<CustomSelectList> GetCashPointDropdown()
         {
             try
             {
-                var ls = EnumHelper.GetSelectList(typeof(CashPoint));
+                //var ls = EnumHelper.GetSelectList(typeof(CashPoint)).Spl;
+                var ls = Enum.GetValues(typeof(CashPoint)).Cast<CashPoint>().Select(e => new
+                {
+                    Value = e,
+                    Text = e.ToString().ToSpacedTitleCase()
+                });
                 return ls.Select(x => new CustomSelectList { Value = x.Value.ToString(), Text = x.Text.ToString() }).ToList();
             }
             catch (Exception)
             {
-
                 throw;
+            }
+        }
+
+        public List<CustomSelectList> GetMoodofTransportationDropdown()
+        {
+            try
+            {
+                return EnumHelper.GetSelectList(typeof(TransportationMood)).Select(x => new CustomSelectList { Value = x.Value.ToString(), Text = x.Text.ToString().ToSpacedTitleCase() }).ToList();
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        public List<CustomSelectList> GetOrderTypeDropdown()
+        {
+            try
+            {
+                return EnumHelper.GetSelectList(typeof(OrderType)).Select(x => new CustomSelectList { Value = x.Value.ToString(), Text = x.Text.ToString().ToSpacedTitleCase() }).ToList();
+
+            }
+            catch (Exception ex)
+            {
+                return null;
             }
         }
 
@@ -99,15 +136,15 @@ namespace WebApp.Controllers
                     model.OrderNo = orderbookingRepo.GetNextSrNo();
 
                     var res = orderbookingRepo.Create(model);
-                    if (res.HasValue)
-                    {
-                        var lsToSave = CPCOrderBookingDetail.Where(x => x.DenominationId.HasValue && x.NoOfBundles > 0).ToList();
-                        lsToSave.ForEach(x => { x.Id = Guid.NewGuid(); x.OrderbookingId = model.Id; x.CreatedOn = DateTime.Now; x.CreatedBy = CurrentUser.Id; });
-                        #region Save Details
-                        orderbookingRepo.Create(lsToSave);
-                        #endregion
-                        model.Id = res.Value;
-                    }
+                    //if (res.HasValue)
+                    //{
+                    //    var lsToSave = CPCOrderBookingDetail.Where(x => x.DenominationId.HasValue && x.NoOfBundles > 0).ToList();
+                    //    lsToSave.ForEach(x => { x.Id = Guid.NewGuid(); x.OrderbookingId = model.Id; x.CreatedOn = DateTime.Now; x.CreatedBy = CurrentUser.Id; });
+                    //    #region Save Details
+                    //    orderbookingRepo.Create(lsToSave);
+                    //    #endregion
+                    //    model.Id = res.Value;
+                    //}
 
                     #region Activity Log
                     //appLog.Create(CurrentUser.OfficeId, model.Id, CurrentUser.Id, AppLogType.Activity, "CRM - Lead", model.FullName + " lead created", "~/CRM/Contact/LeadRecord > HttpPost", "<table class='table table-hover table-striped table-condensed' style='margin-bottom:15px;'><tr><th class='text-center'>Description</th></tr><tr><td><strong>" + model.FullName + "</strong> lead created by <strong>" + CurrentUser.FullName + "</strong>.</td></tr></table>");
@@ -239,7 +276,8 @@ namespace WebApp.Controllers
                 {
                     List.FirstOrDefault().OrderNo,
                     List.FirstOrDefault().Id,
-                    Details = List.Select(x => new {
+                    Details = List.Select(x => new
+                    {
                         x.ProjectId,
                         x.CPCProjectName,
                         x.CashProcessingCellId,
@@ -266,7 +304,7 @@ namespace WebApp.Controllers
         {
             try
             {
-                orderbookingRepo.ChangeStatus(Id,CurrentUser.Id, AnnexureStatus.PendingDelivery);
+                orderbookingRepo.ChangeStatus(Id, CurrentUser.Id, AnnexureStatus.PendingDelivery);
                 return Json(true, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -296,7 +334,7 @@ namespace WebApp.Controllers
             try
             {
                 #region Activity Log
-               //appLog.Create(CurrentUser.OfficeId, Id, CurrentUser.Id, AppLogType.Activity, "CRM", "Contact Deleted", "~/CRM/Contact/Delete > HttpPost", "<table class='table table-hover table-striped table-condensed' style='margin-bottom:15px;'><tr><th class='text-center'>Description</th></tr><tr><td>Contact deleted by <strong>" + CurrentUser.FullName + "</strong>.</td></tr></table>");
+                //appLog.Create(CurrentUser.OfficeId, Id, CurrentUser.Id, AppLogType.Activity, "CRM", "Contact Deleted", "~/CRM/Contact/Delete > HttpPost", "<table class='table table-hover table-striped table-condensed' style='margin-bottom:15px;'><tr><th class='text-center'>Description</th></tr><tr><td>Contact deleted by <strong>" + CurrentUser.FullName + "</strong>.</td></tr></table>");
                 #endregion
                 orderbookingRepo.InActiveRecord(Id);
                 TempData["SuccessMsg"] = "Order has been deleted successfully.";
@@ -368,6 +406,27 @@ namespace WebApp.Controllers
         //}
         #endregion
 
+
+        #region Order Delivery
+        public ActionResult OrderDelivery()
+        {
+            return View();
+        }
+        public PartialViewResult _AllOrderDeliverys()
+        {
+            var branchId = CurrentUser.BranchId;
+            var model = orderbookingRepo.GetAll();
+            if (branchId.HasValue)
+            {
+                model = model.Where(x => x.DeliveryBranchId == branchId.Value).ToList();
+            }
+
+            //ViewBag.DetailsList = orderbookingRepo.GetAllDetails();
+            ViewBag.EmployeeList = employeeRepo.GetAll();
+
+            return PartialView(model);
+        }
+        #endregion
 
     }
 }

@@ -56,6 +56,7 @@
           <Property Name="EmploymentStatus" Type="tinyint" />
           <Property Name="PageLength" Type="varchar" MaxLength="50" />
           <Property Name="EmployeeId" Type="uniqueidentifier" />
+          <Property Name="BranchId" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="CITRegion">
           <Key>
@@ -376,6 +377,8 @@
           <Property Name="DeliveryBranchId" Type="uniqueidentifier" />
           <Property Name="BilledBranchId" Type="uniqueidentifier" />
           <Property Name="VehicleId" Type="uniqueidentifier" />
+          <Property Name="TransportationMood" Type="tinyint" />
+          <Property Name="OrderType" Type="tinyint" />
         </EntityType>
         <EntityType Name="CPCProject">
           <Key>
@@ -644,7 +647,6 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_Orderbookings' does not have a 
             <PropertyRef Name="Date" />
             <PropertyRef Name="CreatedOn" />
             <PropertyRef Name="CreatedBy" />
-            <PropertyRef Name="CPCOrderBookingDetailsId" />
             <PropertyRef Name="IsActive" />
             <PropertyRef Name="Status" />
           </Key>
@@ -655,7 +657,7 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_Orderbookings' does not have a 
           <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
           <Property Name="UpdatedOn" Type="datetime" />
           <Property Name="UpdatedBy" Type="uniqueidentifier" />
-          <Property Name="CPCOrderBookingDetailsId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CPCOrderBookingDetailsId" Type="uniqueidentifier" />
           <Property Name="ProjectBranchId" Type="uniqueidentifier" />
           <Property Name="BranchCode" Type="nvarchar" MaxLength="20" />
           <Property Name="BranchName" Type="nvarchar" MaxLength="200" />
@@ -682,6 +684,8 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_Orderbookings' does not have a 
           <Property Name="BilledBranchName" Type="nvarchar" MaxLength="500" />
           <Property Name="VehicleId" Type="uniqueidentifier" />
           <Property Name="VehicleNumber" Type="nvarchar" MaxLength="15" />
+          <Property Name="OrderType" Type="tinyint" />
+          <Property Name="TransportationMood" Type="tinyint" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'SOSTechCIT.dbo.Vew_SortedCash' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -2043,7 +2047,9 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
     [Vew_Orderbookings].[BilledBranchId] AS [BilledBranchId], 
     [Vew_Orderbookings].[BilledBranchName] AS [BilledBranchName], 
     [Vew_Orderbookings].[VehicleId] AS [VehicleId], 
-    [Vew_Orderbookings].[VehicleNumber] AS [VehicleNumber]
+    [Vew_Orderbookings].[VehicleNumber] AS [VehicleNumber], 
+    [Vew_Orderbookings].[OrderType] AS [OrderType], 
+    [Vew_Orderbookings].[TransportationMood] AS [TransportationMood]
     FROM [dbo].[Vew_Orderbookings] AS [Vew_Orderbookings]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Vew_SortedCash" EntityType="Self.Vew_SortedCash" store:Type="Views" store:Schema="dbo">
@@ -2904,7 +2910,6 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
           </FunctionImport>
           <FunctionImport Name="TaxTypes_SelectAll" ReturnType="Collection(SOSTechCPCModel.TaxTypes_SelectAll_Result)" />
           <EntitySet Name="AppRoles" EntityType="SOSTechCPCModel.AppRole" />
-          <EntitySet Name="AppUsers" EntityType="SOSTechCPCModel.AppUser" />
           <EntitySet Name="CPCAnnexureIDetails" EntityType="SOSTechCPCModel.CPCAnnexureIDetail" />
           <EntitySet Name="CPCAnnexureIIs" EntityType="SOSTechCPCModel.CPCAnnexureII" />
           <EntitySet Name="CPCAnnexureIIDetails" EntityType="SOSTechCPCModel.CPCAnnexureIIDetail" />
@@ -3056,8 +3061,6 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
           <EntitySet Name="CITVehicleCrews" EntityType="SOSTechCPCModel.CITVehicleCrew" />
           <EntitySet Name="CPCCities" EntityType="SOSTechCPCModel.CPCCity" />
           <EntitySet Name="CPCEmployees" EntityType="SOSTechCPCModel.CPCEmployee" />
-          <EntitySet Name="CPCOrderBookings" EntityType="SOSTechCPCModel.CPCOrderBooking" />
-          <EntitySet Name="Vew_Orderbookings" EntityType="SOSTechCPCModel.Vew_Orderbookings" />
           <AssociationSet Name="FK__CPCCity__RegionI__52E34C9D" Association="SOSTechCPCModel.FK__CPCCity__RegionI__52E34C9D">
             <End Role="CITRegion" EntitySet="CITRegions" />
             <End Role="CPCCity" EntitySet="CPCCities" />
@@ -3073,10 +3076,6 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
           <AssociationSet Name="FK__CITVehicl__Emplo__57A801BA" Association="SOSTechCPCModel.FK__CITVehicl__Emplo__57A801BA">
             <End Role="CPCEmployee" EntitySet="CPCEmployees" />
             <End Role="CITVehicleCrew" EntitySet="CITVehicleCrews" />
-          </AssociationSet>
-          <AssociationSet Name="FK__CPCAnnexu__Order__2739D489" Association="SOSTechCPCModel.FK__CPCAnnexu__Order__2739D489">
-            <End Role="CPCOrderBooking" EntitySet="CPCOrderBookings" />
-            <End Role="CPCAnnexureI" EntitySet="CPCAnnexureIs" />
           </AssociationSet>
           <AssociationSet Name="FK__CPCProjec__CityI__40C49C62" Association="SOSTechCPCModel.FK__CPCProjec__CityI__40C49C62">
             <End Role="CPCCity" EntitySet="CPCCities" />
@@ -3098,6 +3097,14 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
             <End Role="CPCEmployee" EntitySet="CPCEmployees" />
             <End Role="CPCVaultConsolidatedBundlesDetail" EntitySet="CPCVaultConsolidatedBundlesDetails" />
           </AssociationSet>
+          <FunctionImport Name="SP_CPC_GetCrewByVehicleId" ReturnType="Collection(SOSTechCPCModel.SP_CPC_GetCrewByVehicleId_Result)">
+          <Parameter Name="Id" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <EntitySet Name="CPCOrderBookings" EntityType="SOSTechCPCModel.CPCOrderBooking" />
+          <AssociationSet Name="FK__CPCAnnexu__Order__2739D489" Association="SOSTechCPCModel.FK__CPCAnnexu__Order__2739D489">
+            <End Role="CPCOrderBooking" EntitySet="CPCOrderBookings" />
+            <End Role="CPCAnnexureI" EntitySet="CPCAnnexureIs" />
+          </AssociationSet>
           <AssociationSet Name="FK__CPCOrderB__Order__79C80F94" Association="SOSTechCPCModel.FK__CPCOrderB__Order__79C80F94">
             <End Role="CPCOrderBooking" EntitySet="CPCOrderBookings" />
             <End Role="CPCOrderBookingDetail" EntitySet="CPCOrderBookingDetails" />
@@ -3114,9 +3121,8 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
             <End Role="CPCOrderBooking" EntitySet="CPCOrderBookings" />
             <End Role="CPCVaultCustodian" EntitySet="CPCVaultCustodians" />
           </AssociationSet>
-          <FunctionImport Name="SP_CPC_GetCrewByVehicleId" ReturnType="Collection(SOSTechCPCModel.SP_CPC_GetCrewByVehicleId_Result)">
-            <Parameter Name="Id" Mode="In" Type="Guid" />
-          </FunctionImport>
+          <EntitySet Name="Vew_Orderbookings" EntityType="SOSTechCPCModel.Vew_Orderbookings" />
+          <EntitySet Name="AppUsers" EntityType="SOSTechCPCModel.AppUser" />
           </EntityContainer>
         <ComplexType Name="AppLogs_GetAll_Result">
           <Property Type="Guid" Name="Id" Nullable="false" />
@@ -4153,46 +4159,6 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Permissions" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
-        <EntityType Name="AppUser">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="RoleId" Type="Guid" />
-          <Property Name="OfficeId" Type="Guid" />
-          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Status" Type="Byte" Nullable="false" />
-          <Property Name="Username" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="Password" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="LastLogin" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="MiddleName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="LastName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="Theme" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Gender" Type="Byte" Nullable="false" />
-          <Property Name="DateOfBirth" Type="DateTime" Precision="3" />
-          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="HomePhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="WorkPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="AddressLine1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="AddressLine2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="City" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="State" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="ZipCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Country" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="Question1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Answer1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Question2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Answer2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="UpdatedByUserId" Type="Guid" Nullable="false" />
-          <Property Name="CreatedByUserId" Type="Guid" Nullable="false" />
-          <Property Name="UpdatedOn" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Type" Type="Byte" />
-          <Property Name="EmploymentStatus" Type="Byte" />
-          <Property Name="PageLength" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="EmployeeId" Type="Guid" />
         </EntityType>
         <EntityType Name="CPCAnnexureIDetail">
           <Key>
@@ -5338,77 +5304,6 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
           <NavigationProperty Name="CITVehicleCrews" Relationship="SOSTechCPCModel.FK__CITVehicl__Emplo__57A801BA" FromRole="CPCEmployee" ToRole="CITVehicleCrew" />
           <NavigationProperty Name="CPCVaultConsolidatedBundlesDetails" Relationship="SOSTechCPCModel.FK__CPCVaultC__Sorte__489AC854" FromRole="CPCEmployee" ToRole="CPCVaultConsolidatedBundlesDetail" />
         </EntityType>
-        <EntityType Name="CPCOrderBooking">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="OrderNo" Type="Int32" Nullable="false" />
-          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
-          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
-          <Property Name="UpdatedBy" Type="Guid" />
-          <Property Name="Status" Type="Byte" Nullable="false" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="ApprovedById" Type="Guid" />
-          <Property Name="ApprovedOn" Type="DateTime" Precision="3" />
-          <Property Name="CollectionBranchId" Type="Guid" />
-          <Property Name="DeliveryBranchId" Type="Guid" />
-          <Property Name="BilledBranchId" Type="Guid" />
-          <Property Name="VehicleId" Type="Guid" />
-          <NavigationProperty Name="CPCAnnexureIs" Relationship="SOSTechCPCModel.FK__CPCAnnexu__Order__2739D489" FromRole="CPCOrderBooking" ToRole="CPCAnnexureI" />
-          <NavigationProperty Name="CPCOrderBookingDetails" Relationship="SOSTechCPCModel.FK__CPCOrderB__Order__79C80F94" FromRole="CPCOrderBooking" ToRole="CPCOrderBookingDetail" />
-          <NavigationProperty Name="CPCUnsortedCashes" Relationship="SOSTechCPCModel.FK__CPCUnsort__Order__2F9A1060" FromRole="CPCOrderBooking" ToRole="CPCUnsortedCash" />
-          <NavigationProperty Name="CPCVaultConsolidateds" Relationship="SOSTechCPCModel.FK__CPCVaultC__Order__00AA174D" FromRole="CPCOrderBooking" ToRole="CPCVaultConsolidated" />
-          <NavigationProperty Name="CPCVaultCustodians" Relationship="SOSTechCPCModel.FK__CPCVaultCustodian__Order__2F9A1060" FromRole="CPCOrderBooking" ToRole="CPCVaultCustodian" />
-        </EntityType>
-        <EntityType Name="Vew_Orderbookings">
-          <Key>
-            <PropertyRef Name="Id" />
-            <PropertyRef Name="OrderNo" />
-            <PropertyRef Name="Date" />
-            <PropertyRef Name="CreatedOn" />
-            <PropertyRef Name="CreatedBy" />
-            <PropertyRef Name="CPCOrderBookingDetailsId" />
-            <PropertyRef Name="IsActive" />
-            <PropertyRef Name="Status" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="OrderNo" Type="Int32" Nullable="false" />
-          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
-          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
-          <Property Name="UpdatedBy" Type="Guid" />
-          <Property Name="CPCOrderBookingDetailsId" Type="Guid" Nullable="false" />
-          <Property Name="ProjectBranchId" Type="Guid" />
-          <Property Name="BranchCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="BranchName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="DenominationId" Type="Guid" />
-          <Property Name="DenominationTitle" Type="Int32" />
-          <Property Name="CashProcessingCellId" Type="Guid" />
-          <Property Name="CashProcessingCellTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="ProjectId" Type="Guid" />
-          <Property Name="CPCProjectName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="NoOfBundles" Type="Int32" />
-          <Property Name="TotalAmount" Type="Int32" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="ApprovedById" Type="Guid" />
-          <Property Name="ApprovedByName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ApprovedOn" Type="DateTime" Precision="3" />
-          <Property Name="Status" Type="Byte" Nullable="false" />
-          <Property Name="CashCollectionPoint" Type="Byte" />
-          <Property Name="CashDeliveryPoint" Type="Byte" />
-          <Property Name="CollectionBranchId" Type="Guid" />
-          <Property Name="CollectionBranchName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="DeliveryBranchId" Type="Guid" />
-          <Property Name="DeliveryBranchName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="BilledBranchId" Type="Guid" />
-          <Property Name="BilledBranchName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="VehicleId" Type="Guid" />
-          <Property Name="VehicleNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-        </EntityType>
         <Association Name="FK__CPCCity__RegionI__52E34C9D">
           <End Type="SOSTechCPCModel.CITRegion" Role="CITRegion" Multiplicity="0..1" />
           <End Type="SOSTechCPCModel.CPCCity" Role="CPCCity" Multiplicity="*" />
@@ -5454,18 +5349,6 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
             </Principal>
             <Dependent Role="CITVehicleCrew">
               <PropertyRef Name="EmployeeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__CPCAnnexu__Order__2739D489">
-          <End Type="SOSTechCPCModel.CPCOrderBooking" Role="CPCOrderBooking" Multiplicity="0..1" />
-          <End Type="SOSTechCPCModel.CPCAnnexureI" Role="CPCAnnexureI" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="CPCOrderBooking">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="CPCAnnexureI">
-              <PropertyRef Name="OrderBookingId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5529,6 +5412,51 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="SP_CPC_GetCrewByVehicleId_Result">
+          <Property Type="Guid" Name="VehicleId" Nullable="true" />
+          <Property Type="String" Name="VehicleNumber" Nullable="false" MaxLength="15" />
+          <Property Type="Guid" Name="EmployeeId" Nullable="true" />
+          <Property Type="String" Name="CrewName" Nullable="true" MaxLength="223" />
+        </ComplexType>
+        <EntityType Name="CPCOrderBooking">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="OrderNo" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedBy" Type="Guid" />
+          <Property Name="Status" Type="Byte" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="ApprovedById" Type="Guid" />
+          <Property Name="ApprovedOn" Type="DateTime" Precision="3" />
+          <Property Name="CollectionBranchId" Type="Guid" />
+          <Property Name="DeliveryBranchId" Type="Guid" />
+          <Property Name="BilledBranchId" Type="Guid" />
+          <Property Name="VehicleId" Type="Guid" />
+          <Property Name="TransportationMood" Type="Byte" />
+          <Property Name="OrderType" Type="Byte" />
+          <NavigationProperty Name="CPCAnnexureIs" Relationship="SOSTechCPCModel.FK__CPCAnnexu__Order__2739D489" FromRole="CPCOrderBooking" ToRole="CPCAnnexureI" />
+          <NavigationProperty Name="CPCOrderBookingDetails" Relationship="SOSTechCPCModel.FK__CPCOrderB__Order__79C80F94" FromRole="CPCOrderBooking" ToRole="CPCOrderBookingDetail" />
+          <NavigationProperty Name="CPCUnsortedCashes" Relationship="SOSTechCPCModel.FK__CPCUnsort__Order__2F9A1060" FromRole="CPCOrderBooking" ToRole="CPCUnsortedCash" />
+          <NavigationProperty Name="CPCVaultConsolidateds" Relationship="SOSTechCPCModel.FK__CPCVaultC__Order__00AA174D" FromRole="CPCOrderBooking" ToRole="CPCVaultConsolidated" />
+          <NavigationProperty Name="CPCVaultCustodians" Relationship="SOSTechCPCModel.FK__CPCVaultCustodian__Order__2F9A1060" FromRole="CPCOrderBooking" ToRole="CPCVaultCustodian" />
+        </EntityType>
+        <Association Name="FK__CPCAnnexu__Order__2739D489">
+          <End Type="SOSTechCPCModel.CPCOrderBooking" Role="CPCOrderBooking" Multiplicity="0..1" />
+          <End Type="SOSTechCPCModel.CPCAnnexureI" Role="CPCAnnexureI" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CPCOrderBooking">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CPCAnnexureI">
+              <PropertyRef Name="OrderBookingId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__CPCOrderB__Order__79C80F94">
           <End Type="SOSTechCPCModel.CPCOrderBooking" Role="CPCOrderBooking" Multiplicity="1" />
           <End Type="SOSTechCPCModel.CPCOrderBookingDetail" Role="CPCOrderBookingDetail" Multiplicity="*" />
@@ -5577,12 +5505,94 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="SP_CPC_GetCrewByVehicleId_Result">
-          <Property Type="Guid" Name="VehicleId" Nullable="true" />
-          <Property Type="String" Name="VehicleNumber" Nullable="false" MaxLength="15" />
-          <Property Type="Guid" Name="EmployeeId" Nullable="true" />
-          <Property Type="String" Name="CrewName" Nullable="true" MaxLength="223" />
-        </ComplexType>
+        <EntityType Name="Vew_Orderbookings">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="OrderNo" />
+            <PropertyRef Name="Date" />
+            <PropertyRef Name="CreatedOn" />
+            <PropertyRef Name="CreatedBy" />
+            <PropertyRef Name="IsActive" />
+            <PropertyRef Name="Status" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="OrderNo" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedBy" Type="Guid" />
+          <Property Name="CPCOrderBookingDetailsId" Type="Guid" />
+          <Property Name="ProjectBranchId" Type="Guid" />
+          <Property Name="BranchCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="BranchName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="DenominationId" Type="Guid" />
+          <Property Name="DenominationTitle" Type="Int32" />
+          <Property Name="CashProcessingCellId" Type="Guid" />
+          <Property Name="CashProcessingCellTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ProjectId" Type="Guid" />
+          <Property Name="CPCProjectName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="NoOfBundles" Type="Int32" />
+          <Property Name="TotalAmount" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="ApprovedById" Type="Guid" />
+          <Property Name="ApprovedByName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ApprovedOn" Type="DateTime" Precision="3" />
+          <Property Name="Status" Type="Byte" Nullable="false" />
+          <Property Name="CashCollectionPoint" Type="Byte" />
+          <Property Name="CashDeliveryPoint" Type="Byte" />
+          <Property Name="CollectionBranchId" Type="Guid" />
+          <Property Name="CollectionBranchName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="DeliveryBranchId" Type="Guid" />
+          <Property Name="DeliveryBranchName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="BilledBranchId" Type="Guid" />
+          <Property Name="BilledBranchName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="VehicleId" Type="Guid" />
+          <Property Name="VehicleNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="OrderType" Type="Byte" />
+          <Property Name="TransportationMood" Type="Byte" />
+        </EntityType>
+        <EntityType Name="AppUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="RoleId" Type="Guid" />
+          <Property Name="OfficeId" Type="Guid" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Byte" Nullable="false" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LastLogin" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="MiddleName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Theme" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Gender" Type="Byte" Nullable="false" />
+          <Property Name="DateOfBirth" Type="DateTime" Precision="3" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="HomePhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="WorkPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AddressLine1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AddressLine2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="State" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="ZipCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Question1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Answer1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Question2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Answer2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UpdatedByUserId" Type="Guid" Nullable="false" />
+          <Property Name="CreatedByUserId" Type="Guid" Nullable="false" />
+          <Property Name="UpdatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Type" Type="Byte" />
+          <Property Name="EmploymentStatus" Type="Byte" />
+          <Property Name="PageLength" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmployeeId" Type="Guid" />
+          <Property Name="BranchId" Type="Guid" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -6926,47 +6936,6 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="AppUsers">
-            <EntityTypeMapping TypeName="SOSTechCPCModel.AppUser">
-              <MappingFragment StoreEntitySet="AppUsers">
-                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
-                <ScalarProperty Name="PageLength" ColumnName="PageLength" />
-                <ScalarProperty Name="EmploymentStatus" ColumnName="EmploymentStatus" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
-                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
-                <ScalarProperty Name="CreatedByUserId" ColumnName="CreatedByUserId" />
-                <ScalarProperty Name="UpdatedByUserId" ColumnName="UpdatedByUserId" />
-                <ScalarProperty Name="Answer2" ColumnName="Answer2" />
-                <ScalarProperty Name="Question2" ColumnName="Question2" />
-                <ScalarProperty Name="Answer1" ColumnName="Answer1" />
-                <ScalarProperty Name="Question1" ColumnName="Question1" />
-                <ScalarProperty Name="Country" ColumnName="Country" />
-                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
-                <ScalarProperty Name="State" ColumnName="State" />
-                <ScalarProperty Name="City" ColumnName="City" />
-                <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
-                <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
-                <ScalarProperty Name="WorkPhone" ColumnName="WorkPhone" />
-                <ScalarProperty Name="HomePhone" ColumnName="HomePhone" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
-                <ScalarProperty Name="Gender" ColumnName="Gender" />
-                <ScalarProperty Name="Theme" ColumnName="Theme" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="LastLogin" ColumnName="LastLogin" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="Username" ColumnName="Username" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="Code" ColumnName="Code" />
-                <ScalarProperty Name="OfficeId" ColumnName="OfficeId" />
-                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="CPCAnnexureIDetails">
             <EntityTypeMapping TypeName="SOSTechCPCModel.CPCAnnexureIDetail">
               <MappingFragment StoreEntitySet="CPCAnnexureIDetails">
@@ -7666,9 +7635,21 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_CPC_GetCrewByVehicleId" FunctionName="SOSTechCPCModel.Store.SP_CPC_GetCrewByVehicleId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SOSTechCPCModel.SP_CPC_GetCrewByVehicleId_Result">
+                <ScalarProperty Name="VehicleId" ColumnName="VehicleId" />
+                <ScalarProperty Name="VehicleNumber" ColumnName="VehicleNumber" />
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="CrewName" ColumnName="CrewName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <EntitySetMapping Name="CPCOrderBookings">
             <EntityTypeMapping TypeName="SOSTechCPCModel.CPCOrderBooking">
               <MappingFragment StoreEntitySet="CPCOrderBookings">
+                <ScalarProperty Name="OrderType" ColumnName="OrderType" />
+                <ScalarProperty Name="TransportationMood" ColumnName="TransportationMood" />
                 <ScalarProperty Name="VehicleId" ColumnName="VehicleId" />
                 <ScalarProperty Name="BilledBranchId" ColumnName="BilledBranchId" />
                 <ScalarProperty Name="DeliveryBranchId" ColumnName="DeliveryBranchId" />
@@ -7690,6 +7671,8 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
           <EntitySetMapping Name="Vew_Orderbookings">
             <EntityTypeMapping TypeName="SOSTechCPCModel.Vew_Orderbookings">
               <MappingFragment StoreEntitySet="Vew_Orderbookings">
+                <ScalarProperty Name="TransportationMood" ColumnName="TransportationMood" />
+                <ScalarProperty Name="OrderType" ColumnName="OrderType" />
                 <ScalarProperty Name="VehicleNumber" ColumnName="VehicleNumber" />
                 <ScalarProperty Name="VehicleId" ColumnName="VehicleId" />
                 <ScalarProperty Name="BilledBranchName" ColumnName="BilledBranchName" />
@@ -7727,16 +7710,48 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="SP_CPC_GetCrewByVehicleId" FunctionName="SOSTechCPCModel.Store.SP_CPC_GetCrewByVehicleId">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="SOSTechCPCModel.SP_CPC_GetCrewByVehicleId_Result">
-                <ScalarProperty Name="VehicleId" ColumnName="VehicleId" />
-                <ScalarProperty Name="VehicleNumber" ColumnName="VehicleNumber" />
+          <EntitySetMapping Name="AppUsers">
+            <EntityTypeMapping TypeName="SOSTechCPCModel.AppUser">
+              <MappingFragment StoreEntitySet="AppUsers">
+                <ScalarProperty Name="BranchId" ColumnName="BranchId" />
                 <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
-                <ScalarProperty Name="CrewName" ColumnName="CrewName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
+                <ScalarProperty Name="PageLength" ColumnName="PageLength" />
+                <ScalarProperty Name="EmploymentStatus" ColumnName="EmploymentStatus" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+                <ScalarProperty Name="CreatedByUserId" ColumnName="CreatedByUserId" />
+                <ScalarProperty Name="UpdatedByUserId" ColumnName="UpdatedByUserId" />
+                <ScalarProperty Name="Answer2" ColumnName="Answer2" />
+                <ScalarProperty Name="Question2" ColumnName="Question2" />
+                <ScalarProperty Name="Answer1" ColumnName="Answer1" />
+                <ScalarProperty Name="Question1" ColumnName="Question1" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
+                <ScalarProperty Name="AddressLine1" ColumnName="AddressLine1" />
+                <ScalarProperty Name="WorkPhone" ColumnName="WorkPhone" />
+                <ScalarProperty Name="HomePhone" ColumnName="HomePhone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Theme" ColumnName="Theme" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastLogin" ColumnName="LastLogin" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="OfficeId" ColumnName="OfficeId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -46,42 +46,68 @@
         </div>
     </div>
 
-    @{ 
+    @{
         if (CurrentUser.HasAnyPermission(BaseApp.Entity.AppPermission.All, BaseApp.Entity.AppPermission.ViewBank, BaseApp.Entity.AppPermission.Bank))
         {
-        <div>
-            <div class="panel panel-default">
-                <div class="panel-heading no-padding" role="tab">
-                    <h4 class="panel-title">
-                        <a class="list-group-item @SetActiveController("Home")" href="@Url.Action("Index", "Home")"><i class="fa fa-dashboard clr-green"></i> Dashboard</a>
-                    </h4>
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading no-padding" role="tab">
-                    <h4 class="panel-title">
-                        <a class="list-group-item @SetActiveController("Orderbooking")" href="@Url.Action("Orderbookings", "Orderbooking")"><i class="fa fa-list-alt clr-green"></i> Order Booking</a>
-                    </h4>
-                </div>
+    <div>
+
+        <div class="panel panel-default">
+            <div class="text-center">
+                <a href="javascript://">
+                    <img src="~/Content/Uploads/Dp/@(CurrentUser.Id).jpg" style="width: 100px; height: 100px;" onerror="this.onerror = null; this.src = '/Content/Images/user.png';">
+                    <div class="caption">
+                        <h5 class="text-bold">@CurrentUser.FullName</h5>
+                    </div>
+                </a>
             </div>
 
-            <div class="panel panel-default">
-                <div class="panel-heading no-padding" role="tab" id="heading-companySettings">
-                    <h4 class="panel-title">
-                        <a class="list-group-item  @SetActiveAction("Employee", "Settings") @SetActiveAction("Employee", "TimesheetSettings")" role="button" data-toggle="collapse" data-parent="#sideBar-accordion" href="#collapse-companySettings" aria-expanded="false" aria-controls="collapse-companySettings">
-                            <i class="fa fa-th-list clr-yellow"></i> Reports <span class="badge"><i class="fa fa-angle-down"></i></span>
-                        </a>
-                    </h4>
-                </div>
-                <div id="collapse-companySettings" class="panel-collapse collapse @SetActiveAction("Employee", "Settings") @SetActiveAction("Employee", "TimesheetSettings") @SetActiveAction("Employee", "PayrollSettings")" role="tabpanel" aria-labelledby="heading-companySettings">
-                    <div class="list-group">
-                        <a href="javascript://" data-toggle="modal" data-target="#comingSoon-Modal" class="list-group-item"><i class="fa fa-th-list clr-yellow"></i> Demo Report 1 </a>
-                        <a href="javascript://" data-toggle="modal" data-target="#comingSoon-Modal" class="list-group-item"><i class="fa fa-th-list clr-yellow"></i> Demo Report 2</a>
-                        <a href="javascript://" data-toggle="modal" data-target="#comingSoon-Modal" class="list-group-item"><i class="fa fa-th-list clr-yellow"></i> Demo Report 3</a>
-                    </div>
+            @*<div class="panel-heading no-padding" role="tab">
+                <h4 class="panel-title">
+                <a class="list-group-item @SetActiveController("Home")" href="@Url.Action("Index", "Home")"><i class="fa fa-dashboard clr-green"></i> Dashboard</a>
+            </h4>
+            </div>*@
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading no-padding" role="tab">
+                <h4 class="panel-title">
+                    <a class="list-group-item @SetActiveController("Home")" href="@Url.Action("Index", "Home")"><i class="fa fa-dashboard clr-green"></i> Dashboard</a>
+                </h4>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading no-padding" role="tab">
+                <h4 class="panel-title">
+                    <a class="list-group-item @SetActiveAction("Orderbooking", "Record") @SetActiveAction("Orderbooking", "Orderbookings")" href="@Url.Action("Orderbookings", "Orderbooking")"><i class="fa fa-list-alt clr-green"></i> Order Booking</a>
+                </h4>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading no-padding" role="tab">
+                <h4 class="panel-title">
+                    <a class="list-group-item @SetActiveAction("Orderbooking", "OrderDelivery")" href="@Url.Action("OrderDelivery", "Orderbooking")"><i class="fa fa-list-alt clr-green"></i> Order Delivery</a>
+                </h4>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading no-padding" role="tab" id="heading-companySettings">
+                <h4 class="panel-title">
+                    <a class="list-group-item  @SetActiveAction("Employee", "Settings") @SetActiveAction("Employee", "TimesheetSettings")" role="button" data-toggle="collapse" data-parent="#sideBar-accordion" href="#collapse-companySettings" aria-expanded="false" aria-controls="collapse-companySettings">
+                        <i class="fa fa-th-list clr-yellow"></i> Reports <span class="badge"><i class="fa fa-angle-down"></i></span>
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse-companySettings" class="panel-collapse collapse @SetActiveAction("Employee", "Settings") @SetActiveAction("Employee", "TimesheetSettings") @SetActiveAction("Employee", "PayrollSettings")" role="tabpanel" aria-labelledby="heading-companySettings">
+                <div class="list-group">
+                    <a href="javascript://" data-toggle="modal" data-target="#comingSoon-Modal" class="list-group-item"><i class="fa fa-th-list clr-yellow"></i> Demo Report 1 </a>
+                    <a href="javascript://" data-toggle="modal" data-target="#comingSoon-Modal" class="list-group-item"><i class="fa fa-th-list clr-yellow"></i> Demo Report 2</a>
+                    <a href="javascript://" data-toggle="modal" data-target="#comingSoon-Modal" class="list-group-item"><i class="fa fa-th-list clr-yellow"></i> Demo Report 3</a>
                 </div>
             </div>
         </div>
-            }
+    </div>
         }
+    }
 </div>

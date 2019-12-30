@@ -6,7 +6,6 @@
     <edmx:Diagrams>
       <Diagram DiagramId="42eae355de1748a3ac5ef07d44027e91" Name="Diagram1" ZoomLevel="65">
         <EntityTypeShape EntityType="SOSTechCPCModel.AppRole" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="SOSTechCPCModel.AppUser" Width="1.5" PointX="2.75" PointY="0.75" />
         <EntityTypeShape EntityType="SOSTechCPCModel.CPCAnnexureIDetail" Width="2.75" PointX="8.25" PointY="22.625" />
         <EntityTypeShape EntityType="SOSTechCPCModel.CPCAnnexureII" Width="1.5" PointX="5.25" PointY="57" />
         <EntityTypeShape EntityType="SOSTechCPCModel.CPCAnnexureIIDetail" Width="1.5" PointX="7.5" PointY="56.5" />
@@ -71,22 +70,23 @@
         <EntityTypeShape EntityType="SOSTechCPCModel.CITVehicleCrew" Width="1.5" PointX="19.625" PointY="8.75" />
         <EntityTypeShape EntityType="SOSTechCPCModel.CPCCity" Width="1.5" PointX="0.75" PointY="23.125" />
         <EntityTypeShape EntityType="SOSTechCPCModel.CPCEmployee" Width="1.5" PointX="17.375" PointY="8" />
-        <EntityTypeShape EntityType="SOSTechCPCModel.CPCOrderBooking" Width="1.5" PointX="3" PointY="27.875" />
-        <EntityTypeShape EntityType="SOSTechCPCModel.Vew_Orderbookings" Width="1.5" PointX="5.375" PointY="3.75" />
         <AssociationConnector Association="SOSTechCPCModel.FK__CPCCity__RegionI__52E34C9D" />
         <AssociationConnector Association="SOSTechCPCModel.FK__CITVehicl__CityI__55BFB948" />
         <AssociationConnector Association="SOSTechCPCModel.FK__CITVehicl__Vehic__56B3DD81" />
         <AssociationConnector Association="SOSTechCPCModel.FK__CITVehicl__Emplo__57A801BA" />
-        <AssociationConnector Association="SOSTechCPCModel.FK__CPCAnnexu__Order__2739D489" />
         <AssociationConnector Association="SOSTechCPCModel.FK__CPCProjec__CityI__40C49C62" />
         <AssociationConnector Association="SOSTechCPCModel.FK__CPCUnsort__CityI__51EF2864" />
         <AssociationConnector Association="SOSTechCPCModel.FK__CPCVaultC__CityI__7FB5F314" />
         <AssociationConnector Association="SOSTechCPCModel.FK__CPCVaultCustodian__CityI__51EF2864" />
         <AssociationConnector Association="SOSTechCPCModel.FK__CPCVaultC__Sorte__489AC854" />
+        <EntityTypeShape EntityType="SOSTechCPCModel.CPCOrderBooking" Width="1.5" PointX="3" PointY="28.625" />
+        <AssociationConnector Association="SOSTechCPCModel.FK__CPCAnnexu__Order__2739D489" />
         <AssociationConnector Association="SOSTechCPCModel.FK__CPCOrderB__Order__79C80F94" />
         <AssociationConnector Association="SOSTechCPCModel.FK__CPCUnsort__Order__2F9A1060" />
         <AssociationConnector Association="SOSTechCPCModel.FK__CPCVaultC__Order__00AA174D" />
         <AssociationConnector Association="SOSTechCPCModel.FK__CPCVaultCustodian__Order__2F9A1060" />
+        <EntityTypeShape EntityType="SOSTechCPCModel.Vew_Orderbookings" Width="1.5" PointX="5.375" PointY="3.75" />
+        <EntityTypeShape EntityType="SOSTechCPCModel.AppUser" Width="1.5" PointX="18.375" PointY="12.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
