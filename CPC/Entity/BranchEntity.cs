@@ -51,7 +51,8 @@ namespace CPC
                     var ls = new List<CPCProjectBranch>();
                     if (Id.HasValue)
                     {
-                        ls = context.CPCProjectBranches.Where(x => x.CPHId == Id).ToList();
+                        var projectId = context.CPCProjectBranches.Include(x => x.CPCCashProcessingHouse).Where(x => x.Id == Id).Select(x => x.CPCCashProcessingHouse.ProjectId).FirstOrDefault();
+                        ls = context.CPCProjectBranches.Where(x => x.CPCCashProcessingHouse.ProjectId == projectId).ToList();
                         return ls.Select(x => new CustomSelectList { Value = x.Id.ToString(), Text = x.BranchCode + " - " + x.BranchName }).ToList();
                     }
                     ls = context.CPCProjectBranches.ToList();

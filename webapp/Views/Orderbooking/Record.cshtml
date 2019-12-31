@@ -81,7 +81,7 @@
                                             <label class="label label-primary">Delivery Branch</label>
                                         </label>
                                         <div class="col-sm-9">
-                                            @Html.DropDownListFor(x => x.DeliveryBranchId, (SelectList)ViewBag.BrachList, new { @class = "form-control input-sm select2", @required = "required" })
+                                            @Html.DropDownListFor(x => x.DeliveryBranchId, (SelectList)ViewBag.DeliveryBrachList, new { @class = "form-control input-sm select2", @required = "required" })
                                             @Html.ValidationMessageFor(m => m.DeliveryBranchId)
                                         </div>
                                     </div>
@@ -94,7 +94,7 @@
                                             <label class="label label-primary">To be Billed Branch</label>
                                         </label>
                                         <div class="col-sm-8">
-                                            @Html.DropDownListFor(x => x.BilledBranchId, (SelectList)ViewBag.BrachList, new { @class = "form-control input-sm select2", @required = "required" })
+                                            @Html.DropDownListFor(x => x.BilledBranchId, (SelectList)ViewBag.DeliveryBrachList, new { @class = "form-control input-sm select2", @required = "required" })
                                             @Html.ValidationMessageFor(m => m.BilledBranchId)
                                         </div>
                                     </div>

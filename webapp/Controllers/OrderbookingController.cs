@@ -71,7 +71,16 @@ namespace WebApp.Controllers
                 model.Date = DateTime.Now;
                 model.OrderNo = orderbookingRepo.GetNextSrNo();
             }
-            ViewBag.BrachList = new SelectList(branchRepo.GetDropdown(), "Value", "Text");
+
+            if (CurrentUser.BranchId.HasValue)
+            {
+                ViewBag.BrachList = new SelectList(branchRepo.GetDropdown().Where(x=> Guid.Parse(x.Value) == CurrentUser.BranchId.Value).ToList(), "Value", "Text");
+                ViewBag.DeliveryBrachList = new SelectList(branchRepo.GetDropdown(CurrentUser.BranchId).ToList(), "Value", "Text");
+            }
+            else {
+                ViewBag.BrachList = new SelectList(branchRepo.GetDropdown(), "Value", "Text");
+                ViewBag.DeliveryBrachList = new SelectList(branchRepo.GetDropdown(), "Value", "Text");
+            }
             ViewBag.TransportaionMoodList = new SelectList(GetMoodofTransportationDropdown(), "Value", "Text");
             ViewBag.OrderTypeList = new SelectList(GetOrderTypeDropdown(), "Value", "Text");
             ViewBag.DenominationList = new SelectList(commonRepo.GetAllDenominationDropdown().Where(x => x.Text != Convert.ToString(1) && x.Text != Convert.ToString(2) && x.Text != Convert.ToString(5)), "Value", "Text");
@@ -410,6 +419,8 @@ namespace WebApp.Controllers
         #region Order Delivery
         public ActionResult OrderDelivery()
         {
+            //var model = orderbookingRepo.GetAll();
+            //return Pdf("OrderDelivery", model, "test.pdf");
             return View();
         }
         public PartialViewResult _AllOrderDeliverys()
@@ -420,10 +431,8 @@ namespace WebApp.Controllers
             {
                 model = model.Where(x => x.DeliveryBranchId == branchId.Value).ToList();
             }
-
             //ViewBag.DetailsList = orderbookingRepo.GetAllDetails();
             ViewBag.EmployeeList = employeeRepo.GetAll();
-
             return PartialView(model);
         }
         #endregion
