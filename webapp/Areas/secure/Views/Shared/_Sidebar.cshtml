@@ -215,73 +215,73 @@
                     </div>
                 </div>
                 @*@if ((IsCurrentArea("CPC") && (CurrentUser.HasAnyPermission(BaseApp.Entity.AppPermission.ViewOrderCollection, BaseApp.Entity.AppPermission.OrderCollection, BaseApp.Entity.AppPermission.All))))
-                {
-                    <div class="panel panel-default">
-                        <div class="panel-heading no-padding" role="tab">
-                            <h4 class="panel-title">
-                                <a class="list-group-item @SetActiveController("AnnexureI")" href="@Url.Action("AnnexureIs", "AnnexureI")"><i class="fa fa-list-alt clr-green"></i> Cash Receiving</a>
-                            </h4>
+                    {
+                        <div class="panel panel-default">
+                            <div class="panel-heading no-padding" role="tab">
+                                <h4 class="panel-title">
+                                    <a class="list-group-item @SetActiveController("AnnexureI")" href="@Url.Action("AnnexureIs", "AnnexureI")"><i class="fa fa-list-alt clr-green"></i> Cash Receiving</a>
+                                </h4>
+                            </div>
                         </div>
-                    </div>
-                }
-                @if ((IsCurrentArea("CPC") && (CurrentUser.HasAnyPermission(BaseApp.Entity.AppPermission.ViewVaultUnsortedHandler, BaseApp.Entity.AppPermission.VaultUnsortedHandler, BaseApp.Entity.AppPermission.All))))
-                {
-                    <div class="panel panel-default">
-                        <div class="panel-heading no-padding" role="tab">
-                            <h4 class="panel-title">
-                                <a class="list-group-item @SetActiveController("UnsortedCash")" href="@Url.Action("UnsortedCashs", "UnsortedCash")"><i class="fa fa-list-alt clr-green"></i>Unsorted Cash</a>
-                            </h4>
+                    }
+                    @if ((IsCurrentArea("CPC") && (CurrentUser.HasAnyPermission(BaseApp.Entity.AppPermission.ViewVaultUnsortedHandler, BaseApp.Entity.AppPermission.VaultUnsortedHandler, BaseApp.Entity.AppPermission.All))))
+                    {
+                        <div class="panel panel-default">
+                            <div class="panel-heading no-padding" role="tab">
+                                <h4 class="panel-title">
+                                    <a class="list-group-item @SetActiveController("UnsortedCash")" href="@Url.Action("UnsortedCashs", "UnsortedCash")"><i class="fa fa-list-alt clr-green"></i>Unsorted Cash</a>
+                                </h4>
+                            </div>
                         </div>
-                    </div>
-                }
-                @if ((IsCurrentArea("CPC") && (CurrentUser.HasAnyPermission(BaseApp.Entity.AppPermission.ViewVaultManager, BaseApp.Entity.AppPermission.VaultManager, BaseApp.Entity.AppPermission.All))))
-                {
-                    <div class="panel panel-default">
-                        <div class="panel-heading no-padding" role="tab">
-                            <h4 class="panel-title">
-                                <a class="list-group-item @SetActiveController("VaultCustodian")" href="@Url.Action("VaultCustodians", "VaultCustodian")"><i class="fa fa-list-alt clr-green"></i>Vault Custodian</a>
-                            </h4>
+                    }
+                    @if ((IsCurrentArea("CPC") && (CurrentUser.HasAnyPermission(BaseApp.Entity.AppPermission.ViewVaultManager, BaseApp.Entity.AppPermission.VaultManager, BaseApp.Entity.AppPermission.All))))
+                    {
+                        <div class="panel panel-default">
+                            <div class="panel-heading no-padding" role="tab">
+                                <h4 class="panel-title">
+                                    <a class="list-group-item @SetActiveController("VaultCustodian")" href="@Url.Action("VaultCustodians", "VaultCustodian")"><i class="fa fa-list-alt clr-green"></i>Vault Custodian</a>
+                                </h4>
+                            </div>
                         </div>
-                    </div>
-                }
-                @if ((IsCurrentArea("CPC") && (CurrentUser.HasAnyPermission(BaseApp.Entity.AppPermission.ViewSupervisor, BaseApp.Entity.AppPermission.Supervisor, BaseApp.Entity.AppPermission.All))))
-                {
-                    <div class="panel panel-default">
-                        <div class="panel-heading no-padding" role="tab">
-                            <h4 class="panel-title">
-                                <a class="list-group-item @SetActiveController("VaultConsolidated")" href="@Url.Action("VaultConsolidateds", "VaultConsolidated")"><i class="fa fa-list-alt clr-green"></i>Vault Consolidated</a>
-                            </h4>
+                    }
+                    @if ((IsCurrentArea("CPC") && (CurrentUser.HasAnyPermission(BaseApp.Entity.AppPermission.ViewSupervisor, BaseApp.Entity.AppPermission.Supervisor, BaseApp.Entity.AppPermission.All))))
+                    {
+                        <div class="panel panel-default">
+                            <div class="panel-heading no-padding" role="tab">
+                                <h4 class="panel-title">
+                                    <a class="list-group-item @SetActiveController("VaultConsolidated")" href="@Url.Action("VaultConsolidateds", "VaultConsolidated")"><i class="fa fa-list-alt clr-green"></i>Vault Consolidated</a>
+                                </h4>
+                            </div>
                         </div>
-                    </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading no-padding" role="tab">
-                            <h4 class="panel-title">
-                                <a class="list-group-item @SetActiveController("SortedCash")" href="@Url.Action("SortedCashs", "SortedCash")"><i class="fa fa-list-alt clr-green"></i>Sorted Cash</a>
-                            </h4>
+                        <div class="panel panel-default">
+                            <div class="panel-heading no-padding" role="tab">
+                                <h4 class="panel-title">
+                                    <a class="list-group-item @SetActiveController("SortedCash")" href="@Url.Action("SortedCashs", "SortedCash")"><i class="fa fa-list-alt clr-green"></i>Sorted Cash</a>
+                                </h4>
+                            </div>
                         </div>
-                    </div>
-                }*@
+                    }*@
                 @*<div class="panel panel-default">
-                    <div class="panel-heading no-padding" role="tab">
-                        <h4 class="panel-title">
-                            <a class="list-group-item @SetActiveController("AnnexureII")" href="@Url.Action("AnnexureIIs", "AnnexureII")"><i class="fa fa-list-alt clr-green"></i> Branch Cash Receipt</a>
-                        </h4>
+                        <div class="panel-heading no-padding" role="tab">
+                            <h4 class="panel-title">
+                                <a class="list-group-item @SetActiveController("AnnexureII")" href="@Url.Action("AnnexureIIs", "AnnexureII")"><i class="fa fa-list-alt clr-green"></i> Branch Cash Receipt</a>
+                            </h4>
+                        </div>
                     </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading no-padding" role="tab">
-                        <h4 class="panel-title">
-                            <a class="list-group-item @SetActiveController("AnnexureIII")" href="@Url.Action("AnnexureIIIs", "AnnexureIII")"><i class="fa fa-list-alt clr-green"></i> Cash Reconciliation</a>
-                        </h4>
+                    <div class="panel panel-default">
+                        <div class="panel-heading no-padding" role="tab">
+                            <h4 class="panel-title">
+                                <a class="list-group-item @SetActiveController("AnnexureIII")" href="@Url.Action("AnnexureIIIs", "AnnexureIII")"><i class="fa fa-list-alt clr-green"></i> Cash Reconciliation</a>
+                            </h4>
+                        </div>
                     </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading no-padding" role="tab">
-                        <h4 class="panel-title">
-                            <a class="list-group-item @SetActiveController("CashInTransit")" href="@Url.Action("CashInTransits", "CashInTransit")"><i class="fa fa-list-alt clr-green"></i> CIT Shipment</a>
-                        </h4>
-                    </div>
-                </div>*@
+                    <div class="panel panel-default">
+                        <div class="panel-heading no-padding" role="tab">
+                            <h4 class="panel-title">
+                                <a class="list-group-item @SetActiveController("CashInTransit")" href="@Url.Action("CashInTransits", "CashInTransit")"><i class="fa fa-list-alt clr-green"></i> CIT Shipment</a>
+                            </h4>
+                        </div>
+                    </div>*@
                 @if ((IsCurrentArea("CPC") && (CurrentUser.HasAnyPermission(BaseApp.Entity.AppPermission.ViewOrderRequests, BaseApp.Entity.AppPermission.OrderRequests, BaseApp.Entity.AppPermission.All))))
                 {
                     <div class="panel panel-default">
@@ -420,6 +420,13 @@
             <div class="panel-heading no-padding" role="tab">
                 <h4 class="panel-title">
                     <a class="list-group-item @SetActiveAction("AccessControl", "Index")" href="~/Secure/AccessControl"><i class="fa fa-users"></i> All Users</a>
+                </h4>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading no-padding" role="tab">
+                <h4 class="panel-title">
+                    <a class="list-group-item @SetActiveAction("AccessControl", "Index")" href="~/Secure/AccessControl/Roles"><i class="fa fa-key"></i> User Roles</a>
                 </h4>
             </div>
         </div>

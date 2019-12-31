@@ -1,13 +1,16 @@
 ﻿using BaseApp.Entity;
+using BaseApp.Logic;
 using BaseApp.System;
 using CPC;
 using CPC.Model;
+using Insight.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using WebApp.Hubs;
 
 namespace WebApp.Controllers
 {
@@ -15,15 +18,20 @@ namespace WebApp.Controllers
 
     public class OrderbookingController : AppController
     {
+        RealTimeHub realtime = new RealTimeHub();
+        private IAppNotification notify;
         private AnnexureIEntity annexureIRepo;
         private OrderbookingEntity orderbookingRepo;
         private BranchEntity branchRepo;
         private Common commonRepo;
         private CPHEntity cashpPocessinHousegRepo;
         private EmployeeEntity employeeRepo;
+        private IAppUser appUserRepo;
 
         public OrderbookingController()
         {
+            appUserRepo = db.As<IAppUser>();
+            notify = db.As<IAppNotification>();
             orderbookingRepo = new OrderbookingEntity();
             branchRepo = new BranchEntity();
             commonRepo = new Common();
@@ -155,8 +163,31 @@ namespace WebApp.Controllers
                     //    model.Id = res.Value;
                     //}
 
+                    #region Notifications
+                    if (AppSettings.GetVal<bool>("notification:Email"))
+                    {
+                        var ls = appUserRepo.GetByPermission(AppPermission.Bank);
+                        ls.AddRange(appUserRepo.GetByPermission(AppPermission.CIT));
+                        foreach (var x in ls)
+                        {
+                            Emailer.Send(x.Email, "Order No. "+ model.OrderNo + " has Booked by " + CurrentUser.FullName + ".", "New Order Booked");
+                        }
+                    }
+                    if (AppSettings.GetVal<bool>("notification:Notify"))
+                    {
+                        var ls = appUserRepo.GetByPermission(AppPermission.Bank);
+                        ls.AddRange(appUserRepo.GetByPermission(AppPermission.CIT));
+                        foreach (var x in ls)
+                        {
+                            notify.Create(x.OfficeId, x.Id, CurrentUser.BranchId, AppNotificationType.Alert, "New Order Booked", Request.Url.ToString(), "Order No. " + model.OrderNo + " has Booked by " + CurrentUser.FullName + ".");
+                        }
+                    }
+
+                    realtime.UpdateNotifications("Order No. " + model.OrderNo + " has Booked by " + CurrentUser.FullName + ".");
+                    #endregion
+
                     #region Activity Log
-                    //appLog.Create(CurrentUser.OfficeId, model.Id, CurrentUser.Id, AppLogType.Activity, "CRM - Lead", model.FullName + " lead created", "~/CRM/Contact/LeadRecord > HttpPost", "<table class='table table-hover table-striped table-condensed' style='margin-bottom:15px;'><tr><th class='text-center'>Description</th></tr><tr><td><strong>" + model.FullName + "</strong> lead created by <strong>" + CurrentUser.FullName + "</strong>.</td></tr></table>");
+                    //notify.Create(CurrentUser.OfficeId, model.Id, CurrentUser.Id, AppLogType.Activity, "CRM - Lead", model.FullName + " lead created", "~/CRM/Contact/LeadRecord > HttpPost", "<table class='table table-hover table-striped table-condensed' style='margin-bottom:15px;'><tr><th class='text-center'>Description</th></tr><tr><td><strong>" + model.FullName + "</strong> lead created by <strong>" + CurrentUser.FullName + "</strong>.</td></tr></table>");
                     #endregion
 
                     #region EmailSending

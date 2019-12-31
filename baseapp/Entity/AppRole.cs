@@ -45,6 +45,7 @@ namespace BaseApp.Entity
         public const string ViewCRM = "ViewCRM";
         public const string ViewHRMS = "ViewHRMS";
         public const string ViewCPC = "ViewCPC";
+        public const string ViewCIT = "ViewCIT";
         public const string ViewBank = "ViewBank";
         public const string ViewOrderRequests = "ViewOrderRequests";
         public const string ViewOrderCollection = "ViewOrderCollection";
@@ -63,6 +64,7 @@ namespace BaseApp.Entity
         public const string CRM = "CRM";
         public const string HRMS = "HRMS";
         public const string CPC = "CPC";
+        public const string CIT = "CIT";
         public const string Bank = "Bank";
         public const string CPC_RGM = "CPC_RGM";
         public const string OrderRequests = "OrderRequests";

@@ -64,7 +64,7 @@ namespace BaseApp.System
             mailMessage.To.Clear();
             mailMessage.To.Add(toEmail);
             mailMessage.Subject = subject;
-            mailMessage.IsBodyHtml = true;
+            mailMessage.IsBodyHtml = false;
             mailMessage.Body = body;
             try
             {

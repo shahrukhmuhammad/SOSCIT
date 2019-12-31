@@ -8,6 +8,7 @@ using BaseApp.Entity;
 using BaseApp.System;
 using BaseApp.Logic;
 using WebApp.Hubs;
+using CPC;
 
 namespace WebApp.Areas.Secure.Controllers
 {
@@ -21,6 +22,10 @@ namespace WebApp.Areas.Secure.Controllers
         private IOffice ofcRepo;
         private IAppNotification notify;
         private IAppRole appRole;
+        private VehicleEntity vehicleRepo;
+        private BranchEntity branchRepo;
+        private EmployeeEntity employeeRepo;
+
         public AccessControlController()
         {
             appUser = db.As<IAppUser>();
@@ -28,6 +33,9 @@ namespace WebApp.Areas.Secure.Controllers
             ofcRepo = db.As<IOffice>();
             notify = db.As<IAppNotification>();
             appRole = db.As<IAppRole>();
+            vehicleRepo = new VehicleEntity();
+            branchRepo = new BranchEntity();
+            employeeRepo = new EmployeeEntity();
 
             ViewBag.AllOffices = ofcRepo.GetAll();
         }
@@ -278,11 +286,13 @@ namespace WebApp.Areas.Secure.Controllers
             {
                 model = appUser.GetUserById(Id.Value);
                 //model.Office = ofcRepo.GetById(model.OfficeId.Value);
+                
 
                 //ViewBag.Office = model.Office;
             }
             else
             {
+                model.Code = appUser.GetMaxCode();
                 //if (o.HasValue)
                 //{
                 //    ViewBag.Office = ofcRepo.GetById(o.Value);
@@ -290,6 +300,11 @@ namespace WebApp.Areas.Secure.Controllers
 
                 model.DateOfBirth = DateTime.UtcNow;
             }
+
+            ViewBag.BrachList = new SelectList(branchRepo.GetDropdown(), "Value", "Text");
+            ViewBag.VehicleList = new SelectList(vehicleRepo.GetDropdownAll(), "Value", "Text");
+            ViewBag.EmployeeList = new SelectList(employeeRepo.GetDropdown(), "Value", "Text");
+
             return View(model);
         }
         [HttpPost, ValidateAntiForgeryToken, AppAuthorize(AppPermission.All, AppPermission.Contact)]

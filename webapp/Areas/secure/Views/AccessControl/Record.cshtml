@@ -28,22 +28,23 @@
             </div>
             <div class="col-md-8">
                 <div class="row">
-                    <div class="hidden">
+
+                    @*<div class="col-md-4">
+                <div class="form-group">
+                    <label>Office</label>
+                    <input type="text" class="form-control input-sm" value="@(office.Title == null ? "*Auto-Generated" : office.Title )" readonly />
+                </div>
+            </div>*@
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label>Code</label>
                             <input type="text" class="form-control input-sm" name="Code" value="@(queryId == null ? "*Auto-Generated" : Model.Code)" readonly />
                         </div>
                     </div>
-                    @*<div class="col-md-4">
-                        <div class="form-group">
-                            <label>Office</label>
-                            <input type="text" class="form-control input-sm" value="@(office.Title == null ? "*Auto-Generated" : office.Title )" readonly />
-                        </div>
-                    </div>*@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Role</label>
-                            <select name="RoleId" class="form-control input-sm" required autofocus>
+                            <select name="RoleId" class="form-control input-sm select2" required autofocus>
                                 @foreach (var x in allRoles)
                                 {
                                     <option value="@x.Id" @(Model.RoleId == x.Id ? "selected" : "")>@x.Code @x.Title</option>
@@ -80,6 +81,36 @@
                     </div>
                 </div>
                 <div class="row">
+                    @if (ViewBag.EmployeeList != null)
+                    {
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Employee</label>
+                                @Html.DropDownListFor(x => x.EmployeeId, (SelectList)ViewBag.EmployeeList, new { @class = "form-control input-sm select2" })
+                            </div>
+                        </div>
+                    }
+                    @if (ViewBag.BrachList != null)
+                    {
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Brach</label>
+                                @Html.DropDownListFor(x => x.BranchId, (SelectList)ViewBag.BrachList, new { @class = "form-control input-sm select2" })
+                            </div>
+                        </div>
+                    }
+                    @if (ViewBag.VehicleList != null)
+                    {
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Vehicle</label>
+                                @Html.DropDownListFor(x => x.VehicleId, (SelectList)ViewBag.VehicleList, new { @class = "form-control input-sm select2" })
+                            </div>
+                        </div>
+                    }
+                    
+                </div>
+                <div class="row">
                     <div class="col-md-8">
                         <div class="form-group">
                             <label>Email</label>
@@ -104,7 +135,7 @@
                 <div class="form-group">
                     <label>Date of Birth</label>
                     <div class="input-group input-group-sm datePicker">
-                        <input name="DateOfBirth" class="form-control input-sm" type="text" value="@Model.DateOfBirth.ToShortDateString()" required autocomplete="off">
+                        <input name="DateOfBirth" class="form-control input-sm" type="text" value="@Model.DateOfBirth.ToString("dd/MM/yyyy")" required autocomplete="off">
                         <span class="input-group-addon">
                             <span class="fa fa-calendar"></span>
                         </span>
@@ -113,18 +144,18 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label>Home Phone</label>
+                    <label>Phone</label>
                     <input type="text" class="form-control input-sm phoneMask" name="HomePhone" value="@Model.HomePhone" />
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 hidden">
                 <div class="form-group">
                     <label>Work Phone</label>
                     <input type="text" class="form-control input-sm phoneMask" name="WorkPhone" value="@Model.WorkPhone" />
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row hidden">
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Address Line 1</label>
@@ -138,7 +169,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row hidden">
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Town/City</label>
@@ -180,6 +211,10 @@
 
 @section scripts{
     <script type="text/javascript">
+        $(document).ready(function () {
+            //$("#DateOfBirth").data("DateTimePicker").date(moment('@Model.DateOfBirth.ToShortDateString()'));
+            $(".select2").select2();
+        });
         $("#user-frm").validate({
             rules: {
                 Username: {

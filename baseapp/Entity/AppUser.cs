@@ -49,7 +49,7 @@ namespace BaseApp.Entity
         public DateTime CreatedOn { get; set; }
         public Guid? EmployeeId { get; set; }
         public Guid? BranchId { get; set; }
-
+        public Guid? VehicleId { get; set; }
 
         public virtual Office Office { get; set; }
         public virtual AppRole Role { get; set; }
