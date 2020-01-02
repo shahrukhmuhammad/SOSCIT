@@ -221,7 +221,7 @@
                                     {
                                         <td><a href="javascript://">@x.Office.Title</a></td>
                                     }*@
-                                <td><a href="javascript://">@x.Office.Title</a></td>
+                                <td><a href="javascript://">@(x.Office != null ? x.Office.Title : "")</a></td>
                                 <td><a href="@Url.Action("Roles","AccessControl")">@x.Role.Code @x.Role.Title</a></td>
                                 <td>@x.Username</td>
                                 <td>@x.FullName</td>

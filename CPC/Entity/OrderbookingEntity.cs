@@ -72,6 +72,21 @@ namespace CPC
             }
         }
 
+        public Vew_Orderbookings GetOrderbyVehicleNumber(Guid Id)
+        {
+            try
+            {
+                using (context = new SOSTechCPCEntities())
+                {
+                    return context.Vew_Orderbookings.Where(x => x.VehicleId == Id && (AnnexureStatus)x.Status == AnnexureStatus.Approved).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public List<Vew_Orderbookings> GetAllDetailsById(Guid Id)
         {
             try

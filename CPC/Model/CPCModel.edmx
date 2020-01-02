@@ -57,6 +57,7 @@
           <Property Name="PageLength" Type="varchar" MaxLength="50" />
           <Property Name="EmployeeId" Type="uniqueidentifier" />
           <Property Name="BranchId" Type="uniqueidentifier" />
+          <Property Name="VehicleId" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="CITRegion">
           <Key>
@@ -5592,6 +5593,7 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
           <Property Name="PageLength" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="EmployeeId" Type="Guid" />
           <Property Name="BranchId" Type="Guid" />
+          <Property Name="VehicleId" Type="Guid" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -7713,6 +7715,7 @@ warning 6002: The table/view 'SOSTechCIT.dbo.Vew_VaultCustodian' does not have a
           <EntitySetMapping Name="AppUsers">
             <EntityTypeMapping TypeName="SOSTechCPCModel.AppUser">
               <MappingFragment StoreEntitySet="AppUsers">
+                <ScalarProperty Name="VehicleId" ColumnName="VehicleId" />
                 <ScalarProperty Name="BranchId" ColumnName="BranchId" />
                 <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
                 <ScalarProperty Name="PageLength" ColumnName="PageLength" />

@@ -28,6 +28,35 @@ namespace CPC
             }
         }
 
+        public string AuthnticateVehicle(VehicleLoginModel objUser)
+        {
+            try
+            {
+                using (var context = new SOSTechCPCEntities())
+                {
+                    context.Configuration.LazyLoadingEnabled = false;
+                    //var scc = context.CITVehicles.FirstOrDefault(u => u.IsActive == true && u.VehicleNumber == objUser.vehicleNumber.Trim());
+
+                    var dbUser = context.CITVehicles.FirstOrDefault(u => u.IsActive == true && u.VehicleNumber.Trim() == objUser.vehicleNumber.Trim());
+                    if (dbUser == null)
+                        return "Vehicle does not exist";
+                    else
+                    {
+                        var backUser = context.AppUsers.FirstOrDefault(x => x.VehicleId == dbUser.Id && x.Password == objUser.password.Trim());
+                        if (backUser != null)
+                        {
+                            return "Login Successfully!";
+                        }
+                        else
+                            return "Incorrect Password, try again with correct one";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Error : " + ex.Message;
+            }
+        }
         //public List<CITVehicle> GetById(Guid Id)
         //{
         //    try
@@ -273,5 +302,11 @@ namespace CPC
         //        return 0;
         //    }
         //}
+    }
+
+    public class VehicleLoginModel
+    {
+        public string vehicleNumber { get; set; }
+        public string password { get; set; }
     }
 }

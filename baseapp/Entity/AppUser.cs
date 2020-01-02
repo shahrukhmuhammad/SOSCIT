@@ -27,35 +27,26 @@ namespace BaseApp.Entity
         public string State { get; set; }
         public string ZipCode { get; set; }
         public string Country { get; set; }
-
-
         public string Username { get; set; }
         public string Password { get; set; }
         public AppUserStatus Status { get; set; }
         public DateTime LastLogin { get; set; }
         public string Theme { get; set; }
         public string PageLength { get; set; }
-
         public string Question1 { get; set; }
         public string Answer1 { get; set; }
         public string Question2 { get; set; }
         public string Answer2 { get; set; }
-
-
         public Guid UpdatedByUserId { get; set; }
         public Guid CreatedByUserId { get; set; }
-
         public DateTime UpdatedOn { get; set; }
         public DateTime CreatedOn { get; set; }
         public Guid? EmployeeId { get; set; }
         public Guid? BranchId { get; set; }
         public Guid? VehicleId { get; set; }
-
         public virtual Office Office { get; set; }
         public virtual AppRole Role { get; set; }
         public virtual CPCEmployee Employee { get; set; }
-
-
         public virtual List<AppUserExtra> Extras { get; set; }
         public virtual AppUserEmployment Employment { get; set; }
     }
@@ -94,7 +85,7 @@ namespace BaseApp.Entity
     }
 
     public enum AppUserType { Administrator = 1, Manager = 2, Employee = 3, Bank = 4, OrderRequests = 5, OrderCollection = 6, VaultUnsortedHandler = 7, VaultManager = 8,
-        Supervisor = 9 }
+        Supervisor = 9, Vehicle = 10 }
 
     #region Extras
     public class AppUserExtra

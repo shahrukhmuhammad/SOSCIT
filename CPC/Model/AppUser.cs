@@ -50,5 +50,6 @@ namespace CPC.Model
         public string PageLength { get; set; }
         public Nullable<System.Guid> EmployeeId { get; set; }
         public Nullable<System.Guid> BranchId { get; set; }
+        public Nullable<System.Guid> VehicleId { get; set; }
     }
 }

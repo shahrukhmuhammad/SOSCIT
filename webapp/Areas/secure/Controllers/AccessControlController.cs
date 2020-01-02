@@ -316,6 +316,9 @@ namespace WebApp.Areas.Secure.Controllers
                 {
                     model.Code = appUser.GetMaxCode();
                     model.Status = AppUserStatus.Active;
+                    model.EmploymentStatus = AppUserEmploymentStatus.FullTime;
+                   // model.Type = AppUserType.;
+                    model.Status = AppUserStatus.Active;
                     model.Password = Uuid.Random(8);
                     model.CreatedByUserId = model.UpdatedByUserId = CurrentUser.Id;
                     model.Id = appUser.Create(model);

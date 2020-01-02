@@ -86,7 +86,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Employee</label>
-                                @Html.DropDownListFor(x => x.EmployeeId, (SelectList)ViewBag.EmployeeList, new { @class = "form-control input-sm select2" })
+                                @Html.DropDownListFor(x => x.EmployeeId, (SelectList)ViewBag.EmployeeList, "- Select Employee -", new { @class = "form-control input-sm select2" })
                             </div>
                         </div>
                     }
@@ -95,7 +95,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Brach</label>
-                                @Html.DropDownListFor(x => x.BranchId, (SelectList)ViewBag.BrachList, new { @class = "form-control input-sm select2" })
+                                @Html.DropDownListFor(x => x.BranchId, (SelectList)ViewBag.BrachList, "- Select Brach -", new { @class = "form-control input-sm select2" })
                             </div>
                         </div>
                     }
@@ -104,7 +104,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Vehicle</label>
-                                @Html.DropDownListFor(x => x.VehicleId, (SelectList)ViewBag.VehicleList, new { @class = "form-control input-sm select2" })
+                                @Html.DropDownListFor(x => x.VehicleId, (SelectList)ViewBag.VehicleList, "- Select Vehicle -", new { @class = "form-control input-sm select2" })
                             </div>
                         </div>
                     }
@@ -117,11 +117,11 @@
                             <input type="email" class="form-control input-sm" name="Email" value="@Model.Email" required />
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 hidden">
                         <div class="form-group">
                             <label>Gender</label>
                             <select name="Gender" class="form-control input-sm" required>
-                                <option value="@((int)BaseApp.Entity.AppUserGender.Male)" @(Model.Gender == BaseApp.Entity.AppUserGender.Male ? "selected" : "")>@BaseApp.Entity.AppUserGender.Male.ToSpacedTitleCase()</option>
+                                <option selected value="@((int)BaseApp.Entity.AppUserGender.Male)" @(Model.Gender == BaseApp.Entity.AppUserGender.Male ? "selected" : "")>@BaseApp.Entity.AppUserGender.Male.ToSpacedTitleCase()</option>
                                 <option value="@((int)BaseApp.Entity.AppUserGender.Female)" @(Model.Gender == BaseApp.Entity.AppUserGender.Female ? "selected" : "")>@BaseApp.Entity.AppUserGender.Female.ToSpacedTitleCase()</option>
                             </select>
                         </div>
