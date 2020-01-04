@@ -163,23 +163,35 @@ namespace WebApp.Controllers
                     //    model.Id = res.Value;
                     //}
 
+                    //Get Bank Ids
+                    var ids = new List<Guid>();
+                    ids.Add(model.CollectionBranchId.Value);
+                    ids.Add(model.DeliveryBranchId.Value);
+                    ids.Add(model.BilledBranchId.Value);
+                    var collectionBranch = branchRepo.GetById(model.CollectionBranchId.Value);
+                    var deliveryBranch = branchRepo.GetById(model.DeliveryBranchId.Value);
+                    var lsUsers = orderbookingRepo.GetByIds(ids).Select(x => new BaseApp.Entity.AppUser { Email = x.Email, OfficeId = x.OfficeId, EmployeeId = x.EmployeeId, }).ToList();
+
                     #region Notifications
                     if (AppSettings.GetVal<bool>("notification:Email"))
                     {
-                        var ls = appUserRepo.GetByPermission(AppPermission.Bank);
-                        ls.AddRange(appUserRepo.GetByPermission(AppPermission.CIT));
-                        foreach (var x in ls)
+                        lsUsers.AddRange(appUserRepo.GetByPermission(AppPermission.ControlRoom));
+                        lsUsers.AddRange(appUserRepo.GetByPermission(AppPermission.All));
+                        lsUsers.AddRange(appUserRepo.GetByPermission(AppPermission.Bank));
+                        foreach (var x in lsUsers)
                         {
-                            Emailer.Send(x.Email, "Order No. "+ model.OrderNo + " has Booked by " + CurrentUser.FullName + ".", "New Order Booked");
+                            Emailer.Send(x.Email, "Order number "+ model.OrderNo + " has Booked by " + collectionBranch.BranchCode +" - "+ collectionBranch.BranchName + ", Delivered to "+ collectionBranch.BranchCode +" - "+ collectionBranch.BranchName + ".", "New Order Booked");
                         }
                     }
                     if (AppSettings.GetVal<bool>("notification:Notify"))
                     {
-                        var ls = appUserRepo.GetByPermission(AppPermission.Bank);
-                        ls.AddRange(appUserRepo.GetByPermission(AppPermission.CIT));
-                        foreach (var x in ls)
+                        //var ls = appUserRepo.GetByPermission(AppPermission.Bank);
+                        lsUsers.AddRange(appUserRepo.GetByPermission(AppPermission.ControlRoom));
+                        lsUsers.AddRange(appUserRepo.GetByPermission(AppPermission.All));
+                        lsUsers.AddRange(appUserRepo.GetByPermission(AppPermission.Bank));
+                        foreach (var x in lsUsers)
                         {
-                            notify.Create(x.OfficeId, x.Id, CurrentUser.BranchId, AppNotificationType.Alert, "New Order Booked", Request.Url.ToString(), "Order No. " + model.OrderNo + " has Booked by " + CurrentUser.FullName + ".");
+                            notify.Create(x.OfficeId, x.Id, CurrentUser.BranchId, AppNotificationType.Alert, "New Order Booked", Request.Url.ToString(), "Order number " + model.OrderNo + " has Booked by " + collectionBranch.BranchCode + " - " + collectionBranch.BranchName + ", Delivered to " + collectionBranch.BranchCode + " - " + collectionBranch.BranchName + ".");
                         }
                     }
 

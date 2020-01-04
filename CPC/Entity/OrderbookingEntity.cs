@@ -72,13 +72,13 @@ namespace CPC
             }
         }
 
-        public Vew_Orderbookings GetOrderbyVehicleNumber(Guid Id)
+        public Vew_Orderbookings GetOrderbyVehicleNumber(string vNumber)
         {
             try
             {
                 using (context = new SOSTechCPCEntities())
                 {
-                    return context.Vew_Orderbookings.Where(x => x.VehicleId == Id && (AnnexureStatus)x.Status == AnnexureStatus.Approved).FirstOrDefault();
+                    return context.Vew_Orderbookings.Where(x => x.VehicleNumber == vNumber && (AnnexureStatus)x.Status == AnnexureStatus.Approved).FirstOrDefault();
                 }
             }
             catch (Exception ex)
@@ -333,6 +333,52 @@ namespace CPC
                 return null;
             }
         }
+        #endregion
+
+        #region Proceed Order
+        public CPCOrderBooking ProceedOrder(Guid Id, Guid UserId, AnnexureStatus status)
+        {
+            try
+            {
+                using (context = new SOSTechCPCEntities())
+                {
+                    #region Update Status
+                    var res = context.CPCOrderBookings.Where(x => x.Id == Id).FirstOrDefault();
+                    if (res != null)
+                    {
+                        res.UpdatedBy = UserId;
+                        res.UpdatedOn = DateTime.Now;
+                        res.Status = (byte)status;
+                        context.SaveChanges();
+                    }
+                    #endregion
+                    return res;
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        #endregion
+
+        #region Users
+        public List<AppUser> GetByIds(List<Guid> Ids)
+        {
+            try
+            {
+                using (context = new SOSTechCPCEntities())
+                {
+                    var res = context.AppUsers.Where(x => Ids.Contains(x.BranchId.Value)).ToList();
+                    return res;
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         #endregion
 
         #region Change Status

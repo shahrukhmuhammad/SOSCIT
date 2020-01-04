@@ -28,6 +28,27 @@ namespace CPC
             }
         }
 
+        public CITVehicle GetCrewListByVehicleId(Guid Id)
+        {
+            try
+            {
+                using (context = new SOSTechCPCEntities())
+                {
+                    return context.CITVehicles.Include(x=> x.CITVehicleCrews.Select(y=> y.CPCEmployee)).Where(x => x.IsActive).Where(x=> x.Id == Id).FirstOrDefault();
+                    //var empList = new List<CPCEmployee>();
+                    //foreach (var item in crewList.CITVehicleCrews)
+                    //{
+                    //    var ss = item.EmployeeId;
+                    //    var sss = item.CPCEmployee.Name;
+                    //}
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public string AuthnticateVehicle(VehicleLoginModel objUser)
         {
             try

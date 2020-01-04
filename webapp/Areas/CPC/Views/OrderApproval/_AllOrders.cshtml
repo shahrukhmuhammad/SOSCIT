@@ -16,7 +16,7 @@
     <div class="modal-content bg-transparent">
         <div class="modal-header">
             <h3 class="modal-title">
-                Order Requests - Controll Room
+                Order Requests - Control Room
                 <span class="pull-right menu-links">
                     <a href="javascript://" class="text-muted" title="go to previous" style="margin:0 8px;" onclick="window.history.back()">
                         <i class="fa fa-angle-left"></i> <span class="grid-buttons"> Go Back</span>
@@ -62,9 +62,9 @@
                             @*<td>@(detailsList.Where(ab => ab.Id == x.Id).ToList() != null ? detailsList.Where(ab => ab.Id == x.Id).Sum(y => y.NoOfBundles) : 0)</td>
                             <td>@(detailsList.Where(ab => ab.Id == x.Id).ToList() != null ? detailsList.Where(ab => ab.Id == x.Id).Sum(y => y.TotalAmount) : 0)</td>*@
                             <td>
-                                @if (x.Status == (int)AnnexureStatus.Sorted)
+                                @if (x.Status == (int)AnnexureStatus.Proceeded)
                                 {
-                                    <label class="label label-primary">Cash Sorted</label> <br />
+                                    <label class="label label-success">Proceeded</label> <br />
                                 }
                                 else if (x.Status == (int)AnnexureStatus.Approved)
                                 {
@@ -92,9 +92,16 @@
                                     <a href="javascript://" class="btn btn-primary mg-r addNewCompany" data-id="@x.Id" title="Details"><i class="fa fa-eye"></i> </a>
                                     @if (CurrentUser.HasAnyPermission(BaseApp.Entity.AppPermission.All, BaseApp.Entity.AppPermission.ViewOrderRequests, BaseApp.Entity.AppPermission.OrderRequests))
                                     {
-                                        if (x.Status == (int)AnnexureStatus.Inprocess)
+                                        if (x.Status == (int)AnnexureStatus.Proceeded)
                                         {
-                                            @*<a href="javascript://" onclick="changeStatus('@Url.Action("Approve")', '@x.Id','','Are you sure you want to Approve this record ?','Approve Order Request')" class="btn btn-success mg-r" title="Approve"><i class="fa fa-check"></i> </a>*@
+                                            <a href="javascript://" onclick="changeStatus('@Url.Action("OrderCollected")', '@x.Id','', 'Are you sure you want to Proceed this Order?','Proceed Order')" class="btn btn-success mg-r" title="Proceed"><i class="fa fa-arrow-circle-o-right"></i> </a>
+                                        }
+                                        else if (x.Status == (int)AnnexureStatus.Approved)
+                                        {
+                                            <a href="javascript://" onclick="changeStatus('@Url.Action("Proceed")', '@x.Id','', 'Are you sure you want to Proceed this Order?','Proceed Order')" class="btn btn-success mg-r" title="Proceed"><i class="fa fa-arrow-circle-o-right"></i> </a>
+                                        }
+                                        else if (x.Status == (int)AnnexureStatus.Inprocess)
+                                        {
                                             <a href="javascript://" class="btn btn-primary mg-r approveOrder" data-id="@x.Id" title="Approve Order"><i class="fa fa-check"></i> </a>
                                             <a href="javascript://" onclick="changeStatus('@Url.Action("Decline")', '@x.Id','', 'Are you sure you want to Reject this record ?','Reject Order Request')" class="btn btn-danger mg-r" title="Decline"><i class="fa fa-trash"></i> </a>
                                         }

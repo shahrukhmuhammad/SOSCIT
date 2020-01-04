@@ -273,6 +273,65 @@ namespace WebApp.Areas.CPC.Controllers
         }
         #endregion
 
+        #region ProceedOrder
+        [HttpPost]
+        public JsonResult Proceed(Guid Id)
+        {
+            try
+            {
+                #region Activity Log
+                //appLog.Create(CurrentUser.OfficeId, Id, CurrentUser.Id, AppLogType.Activity, "CRM", "Contact Deleted", "~/CRM/Contact/Delete > HttpPost", "<table class='table table-hover table-striped table-condensed' style='margin-bottom:15px;'><tr><th class='text-center'>Description</th></tr><tr><td>Contact deleted by <strong>" + CurrentUser.FullName + "</strong>.</td></tr></table>");
+                #endregion
+                var res = orderbookingRepo.ProceedOrder(Id, CurrentUser.Id, AnnexureStatus.Proceeded);
+                if (res != null)
+                {
+                    TempData["SuccessMsg"] = "Order No " + res.OrderNo + " has been Proceeded successfully.";
+                    Emailer.Send("muhammad.shahrukh@sosgroup.com.pk", "Order No " + res.OrderNo + " has been Proceeded successfully. by " + CurrentUser.Code + " - " + CurrentUser.FullName + ".", "Order Proceeded");
+                }
+                else
+                    TempData["ErrorMsg"] = "We have encountered an error while processing your request, Please see log for details.";
+            }
+            catch (Exception ex)
+            {
+                #region Error Log
+                //appLog.Create(CurrentUser.OfficeId, null, CurrentUser.Id, AppLogType.Error, "CRM", ex.GetType().Name.ToSpacedTitleCase(), "~/CRM/Contact/Delete > HttpPost", "<table class='table table-hover table-striped'><tr><th class='text-right'>Source</th><td>" + ex.Source + "</td></tr><tr><th class='text-right'>URL</th><td>" + Request.Url.ToString() + "</td></tr><tr><th class='text-right'>Message</th><td>" + ex.Message + "</td></tr></table><table class='table table-hover table-striped table-condensed'><tr><th class='text-center'>Inner Exception</th></tr><tr><td>" + ex.InnerException + "</td></tr><tr><th class='text-center'>Stack Trace</th></tr><tr><td>" + ex.StackTrace.ToString() + "</td></tr></table>");
+                #endregion
+
+                TempData["ErrorMsg"] = "We have encountered an error while processing your request, Please see log for details.";
+            }
+            return Json(true);
+        }
+        #endregion
+
+        #region Collected
+        [HttpPost]
+        public JsonResult OrderCollected(Guid Id)
+        {
+            try
+            {
+                #region Activity Log
+                //appLog.Create(CurrentUser.OfficeId, Id, CurrentUser.Id, AppLogType.Activity, "CRM", "Contact Deleted", "~/CRM/Contact/Delete > HttpPost", "<table class='table table-hover table-striped table-condensed' style='margin-bottom:15px;'><tr><th class='text-center'>Description</th></tr><tr><td>Contact deleted by <strong>" + CurrentUser.FullName + "</strong>.</td></tr></table>");
+                #endregion
+                var res = orderbookingRepo.ProceedOrder(Id, CurrentUser.Id, AnnexureStatus.Collected);
+                if (res != null)
+                {
+                    TempData["SuccessMsg"] = "Order No " + res.OrderNo + " has been Collected successfully.";
+                    Emailer.Send("muhammad.shahrukh@sosgroup.com.pk", "Order No " + res.OrderNo + " has been Collected successfully. by " + CurrentUser.Code + " - " + CurrentUser.FullName + ".", "Order Collected");
+                }
+                else
+                    TempData["ErrorMsg"] = "We have encountered an error while processing your request, Please see log for details.";
+            }
+            catch (Exception ex)
+            {
+                #region Error Log
+                //appLog.Create(CurrentUser.OfficeId, null, CurrentUser.Id, AppLogType.Error, "CRM", ex.GetType().Name.ToSpacedTitleCase(), "~/CRM/Contact/Delete > HttpPost", "<table class='table table-hover table-striped'><tr><th class='text-right'>Source</th><td>" + ex.Source + "</td></tr><tr><th class='text-right'>URL</th><td>" + Request.Url.ToString() + "</td></tr><tr><th class='text-right'>Message</th><td>" + ex.Message + "</td></tr></table><table class='table table-hover table-striped table-condensed'><tr><th class='text-center'>Inner Exception</th></tr><tr><td>" + ex.InnerException + "</td></tr><tr><th class='text-center'>Stack Trace</th></tr><tr><td>" + ex.StackTrace.ToString() + "</td></tr></table>");
+                #endregion
+
+                TempData["ErrorMsg"] = "We have encountered an error while processing your request, Please see log for details.";
+            }
+            return Json(true);
+        }
+        #endregion
         #region Decline
         [HttpPost]
         public JsonResult Decline(Guid Id)

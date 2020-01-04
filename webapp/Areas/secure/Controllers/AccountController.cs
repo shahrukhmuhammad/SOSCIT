@@ -310,7 +310,7 @@ namespace WebApp.Areas.Secure.Controllers
             try
             {
                 user = appUser.GetUserByLogin(Username, Password);
-
+                //var ss = appUser.GetAll();
                 if (user == null)
                 {
                     #region Activity Log

@@ -52,6 +52,7 @@ namespace BaseApp.Entity
         public const string ViewVaultUnsortedHandler = "ViewVaultUnsortedHandler";
         public const string ViewVaultManager = "ViewVaultManager";
         public const string ViewSupervisor = "ViewSupervisor";
+        public const string ViewControlRoom = "ViewControlRoom";
         #endregion
 
         #region Control Permissions
@@ -72,6 +73,7 @@ namespace BaseApp.Entity
         public const string VaultUnsortedHandler = "VaultUnsortedHandler";
         public const string VaultManager = "VaultManager";
         public const string Supervisor = "Supervisor";
+        public const string ControlRoom = "ControlRoom";
         #endregion
 
 

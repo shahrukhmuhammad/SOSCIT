@@ -10,7 +10,7 @@ namespace WebApp
     {
         public static void Register(HttpConfiguration configuration)
         {
-            configuration.Routes.MapHttpRoute("API Default", "api/{APIController}/{controller}/{id}",
+            configuration.Routes.MapHttpRoute("API Default", "api/{APIController}/{controller}/{action}/{id}",
                 new { id = RouteParameter.Optional });
         }
 

@@ -400,7 +400,7 @@ namespace CPC
 
                             #region Update Bank Status
                             var orderbookingEntity = new OrderbookingEntity();
-                            orderbookingEntity.ChangeStatus(bookingId, userId, AnnexureStatus.Sorted);
+                            orderbookingEntity.ChangeStatus(bookingId, userId, AnnexureStatus.Collected);
                             #endregion
                         }
                         context.SaveChanges();

@@ -62,9 +62,9 @@
                                 </td>
 
                                 <td>
-                                    @if (x.Status == (int)AnnexureStatus.Sorted)
+                                    @if (x.Status == (int)AnnexureStatus.Proceeded)
                                     {
-                                        <label class="label label-primary">Cash Sorted</label> <br />
+                                        <label class="label label-success">Proceeded</label>
                                     }
                                     else if (x.Status == (int)AnnexureStatus.Approved)
                                     {
